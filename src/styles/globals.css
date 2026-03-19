@@ -55,7 +55,84 @@ body {
   image-rendering: crisp-edges;
 }
 
-/* CRT scanline overlay */
+/* ===== CRT Display Effect Layers ===== */
+
+/* Static scanlines — horizontal dark bands */
+.crt-scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 1px,
+    rgba(0, 0, 0, 0.3) 1px,
+    rgba(0, 0, 0, 0.3) 2px
+  );
+  background-size: 100% 4px;
+  opacity: 0.5;
+}
+
+/* RGB phosphor dot grid — simulates the individual phosphor dots on a CRT */
+.crt-rgb-grid {
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.03) 0px,
+      rgba(0, 255, 0, 0.03) 1px,
+      rgba(0, 0, 255, 0.03) 2px,
+      transparent 3px
+    );
+  background-size: 3px 100%;
+  opacity: 0.6;
+}
+
+/* Moving scanline band — a bright band that slowly sweeps down the screen */
+.crt-moving-line {
+  background: linear-gradient(
+    0deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 48%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 52%,
+    transparent 100%
+  );
+  background-size: 100% 20%;
+  animation: crt-scan-move 6s linear infinite;
+}
+
+@keyframes crt-scan-move {
+  0% {
+    background-position: 0% -20%;
+  }
+  100% {
+    background-position: 0% 120%;
+  }
+}
+
+/* Vignette — dark curved edges like a CRT screen */
+.crt-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0, 0, 0, 0.35) 80%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}
+
+/* Screen flicker — subtle brightness oscillation */
+.crt-flicker {
+  animation: crt-flicker-anim 0.15s infinite;
+  opacity: 0;
+}
+
+@keyframes crt-flicker-anim {
+  0% { opacity: 0; }
+  5% { opacity: 0.02; background: white; }
+  10% { opacity: 0; }
+  15% { opacity: 0.01; background: white; }
+  20% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Legacy class — kept for backward compat */
 .crt-overlay::after {
   content: '';
   position: absolute;
