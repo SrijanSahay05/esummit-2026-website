@@ -1,0 +1,73 @@
+name: Guard – No Direct Push to Main
+
+# This workflow fires on every push to main.
+# If the commit was NOT created by a merged pull-request (i.e. a direct push),
+# it opens a GitHub issue to alert maintainers and fails the run so the
+# violation is visible in the commit status.
+#
+# The proper long-term fix is to enable branch protection rules via
+# .github/workflows/setup-branch-protection.yml so that direct pushes are
+# rejected server-side before they ever land.
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-direct-push:
+    name: Reject direct push to main
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check whether this push came from a merged PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const sha   = context.sha;
+            const actor = context.actor;
+
+            // Use the dedicated API that lists all PRs associated with this commit.
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner:       context.repo.owner,
+              repo:        context.repo.repo,
+              commit_sha:  sha,
+            });
+
+            const mergedViaPR = prs.some(pr => pr.merged_at !== null && pr.base.ref === 'main');
+
+            if (mergedViaPR) {
+              core.info(`✅ Push ${sha} arrived via a merged pull request — OK.`);
+              return;
+            }
+
+            // It's a direct push — open an issue and fail.
+            const body = [
+              `### 🚫 Direct push to \`main\` detected`,
+              '',
+              `**Commit:** ${sha}`,
+              `**Actor:** ${actor}`,
+              '',
+              'Please use a feature branch and open a Pull Request instead of pushing directly to `main`.',
+              '',
+              'To prevent this in the future, run the **Setup Branch Protection** workflow:',
+              '`Actions → Setup Branch Protection → Run workflow`',
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              title: `🚫 Direct push to main by ${actor} (${sha.slice(0,7)})`,
+              body,
+              labels: ['direct-push'],
+            });
+
+            core.setFailed(
+              `Direct push to main is not allowed. ` +
+              `Please use a pull request. (actor: ${actor}, sha: ${sha})`
+            );
