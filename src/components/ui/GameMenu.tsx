@@ -6,7 +6,11 @@ interface GameMenuProps {
   onStart: () => void;
 }
 
-const MENU_ITEMS = ['START', 'CONTINUE'] as const;
+const MENU_ITEMS = [
+  { label: 'Event Details', href: '/events' },
+  { label: 'Registration', href: '/register' },
+  { label: 'Sponsors', href: '/sponsors' },
+] as const;
 
 export function GameMenu({ onStart }: GameMenuProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -14,7 +18,7 @@ export function GameMenu({ onStart }: GameMenuProps) {
   const handleSelect = useCallback(
     (index: number) => {
       setSelectedIndex(index);
-      // Both options trigger the same action for now
+      // Trigger scroll into the campus reveal
       onStart();
     },
     [onStart],
@@ -50,25 +54,26 @@ export function GameMenu({ onStart }: GameMenuProps) {
 
   return (
     <nav
-      className="flex flex-col items-start gap-3 sm:gap-4"
+      className="flex flex-col items-start gap-2.5 sm:gap-3"
       role="menu"
       aria-label="Game menu"
     >
       {MENU_ITEMS.map((item, index) => (
         <button
-          key={item}
+          key={item.label}
           role="menuitem"
           onClick={() => handleSelect(index)}
           onMouseEnter={() => setSelectedIndex(index)}
-          className={`font-pixel group flex items-center gap-3 text-base transition-colors sm:text-lg md:text-xl ${
+          className={`font-pixel group flex items-center gap-2.5 text-[10px] transition-all duration-150 sm:gap-3 sm:text-sm md:text-base ${
             selectedIndex === index
               ? 'text-text-primary'
               : 'text-text-muted hover:text-text-primary'
           }`}
           aria-current={selectedIndex === index ? 'true' : undefined}
         >
+          {/* Pixel arrow selector */}
           <span
-            className={`inline-block transition-transform duration-200 ${
+            className={`inline-block text-xs transition-all duration-200 sm:text-sm ${
               selectedIndex === index
                 ? 'translate-x-0 opacity-100'
                 : '-translate-x-2 opacity-0'
@@ -77,7 +82,7 @@ export function GameMenu({ onStart }: GameMenuProps) {
           >
             &#9658;
           </span>
-          <span>{item}</span>
+          <span className="whitespace-nowrap">{item.label}</span>
         </button>
       ))}
     </nav>
