@@ -19,6 +19,9 @@
     "animejs": "^3.2.2",
     "framer-motion": "^12.12.1"
   },
+  "pnpm": {
+    "ignoredBuiltDependencies": ["sharp", "unrs-resolver"]
+  },
   "devDependencies": {
     "@types/node": "^22.15.18",
     "@types/react": "^19.1.4",
