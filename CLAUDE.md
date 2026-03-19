@@ -67,15 +67,41 @@ The visual identity draws from classic arcade and console games. The landing pag
 - Grid/scanline overlays for retro CRT feel (subtle)
 - Diamond/geometric shapes behind logo (red, orange, blue layers)
 
-### Animation Guidelines
-- Use Framer Motion for all animations
+### Animation Architecture
+
+#### Act 1: Logo Reveal (viewport-locked, before scroll)
+1. Black screen → E-Summit 2026 logo materializes pixel-by-pixel (anime.js SVG path animation)
+2. Diamond shapes assemble behind logo (staggered, retro power-up feel)
+3. Tagline types in: "Where ideas meet execution. Where Founders meet the Future."
+4. Retro game menu fades in: `► START` / `CONTINUE`
+5. Clicking START or scrolling triggers transition to Act 2
+
+#### Act 2: Clock Tower Zoom-Out (scroll-driven, GSAP ScrollTrigger)
+- Camera starts **tight on the clock face** of the pixel art clock tower
+- As user scrolls, camera smoothly **zooms out / pans back**:
+  1. Clock face close-up → Full clock tower
+  2. Full clock tower → Surrounding campus buildings
+  3. Campus buildings → Wide panorama with content sections
+- **Implementation**: Pre-rendered frame sequence encoded as WebM, played frame-by-frame synced to scroll position
+- Content sections (stats, features, events) overlay as specific campus areas are revealed
+- Mobile: Vertical pan variant with optimized frame sequence
+
+#### Asset Requirements for Act 2
+The pixel art zoom-out sequence needs to be provided as:
+- 60-120 PNG frames (1920x1080) showing the progressive zoom-out
+- OR a high-quality MP4/MOV animation that will be converted to WebM + frame extraction
+- Mobile variant at 1080x1920 (portrait) or simplified version
+
+#### General Animation Rules
+- GSAP for scroll-driven and complex timeline animations
+- anime.js for SVG path animations and pixel assembly effects
+- Framer Motion for component enter/exit and layout animations
 - Typewriter effects for text reveals
-- Pixel-by-pixel fade-ins for images
 - Glitch/flicker effects (subtle, not distracting)
-- Parallax scrolling on the clock tower
-- Menu selection animations (arrow bounce, highlight glow)
 - Lightning strike animations on scroll triggers
-- Keep animations performant — prefer `transform` and `opacity`
+- All animations MUST respect `prefers-reduced-motion`
+- Keep animations performant — prefer `transform` and `opacity`, use `will-change` sparingly
+- Mobile: Reduce frame count, simplify particle effects, skip non-essential animations
 
 ---
 
@@ -83,10 +109,23 @@ The visual identity draws from classic arcade and console games. The landing pag
 
 - **Framework**: Next.js 15 (App Router)
 - **Styling**: Tailwind CSS v4
-- **Animations**: Framer Motion
+- **Animations**:
+  - **GSAP + ScrollTrigger**: Scroll-driven animations, timeline sequencing, scroll-synced video playback
+  - **anime.js**: SVG path animations, pixel assembly effects, logo reveal
+  - **Three.js** (optional): If 3D pixel effects or WebGL shaders are needed for the campus reveal
+  - **Framer Motion**: Component-level enter/exit animations, layout transitions
 - **Rendering**: SSR/SSG hybrid (static where possible, SSR for dynamic content)
+- **Data Layer**: Supabase (future phase — for dynamic content like events, speakers, sponsors)
 - **Deployment**: Vercel (assumed)
 - **Package Manager**: pnpm
+
+### Responsive-First Design
+The majority of the audience will be on mobile devices. Every feature must be designed mobile-first:
+- Breakpoints: `sm` (640px), `md` (768px), `lg` (1024px), `xl` (1280px), `2xl` (1536px)
+- Touch-friendly interactions (no hover-only states)
+- Scroll animations must be performant on mobile (use `will-change`, GPU compositing)
+- Video frame sequences need mobile-optimized versions (lower resolution, fewer frames)
+- Test on real devices, not just browser resize
 
 ---
 
@@ -191,29 +230,109 @@ This project uses specialized agents for different aspects of development. Each 
 ```
 esummit-website/
 ├── CLAUDE.md                 # This file
-├── inspo/                    # Design inspiration assets (SVGs, PDFs)
+├── inspo/                    # Design inspiration assets (gitignored, local only)
 ├── lessons/                  # User preference ledger
-│   ├── README.md
-│   ├── architecture.md
-│   ├── development-style.md
-│   └── misc.md
 ├── skills/                   # Agent skill definitions
-│   ├── research-agent.md
-│   ├── design-agent.md
-│   ├── development-agent.md
-│   ├── writing-agent.md
-│   └── qa-agent.md
-├── src/                      # Next.js source (to be created)
-│   ├── app/                  # App Router pages
-│   ├── components/           # React components
-│   ├── lib/                  # Utilities
-│   └── styles/               # Global styles
-├── public/                   # Static assets
+├── src/
+│   ├── app/                  # App Router pages & layouts
+│   │   ├── layout.tsx        # Root layout (fonts, metadata, providers)
+│   │   ├── page.tsx          # Landing page (scroll sections)
+│   │   ├── events/
+│   │   ├── sponsors/
+│   │   ├── register/
+│   │   ├── about/
+│   │   └── contact/
+│   ├── components/
+│   │   ├── ui/               # Reusable primitives (PixelButton, RetroCard, etc.)
+│   │   ├── sections/         # Landing page scroll sections
+│   │   ├── animations/       # Animation wrappers (ScrollSequence, PixelReveal, etc.)
+│   │   └── layout/           # Header, Footer, Navigation
+│   ├── hooks/                # Custom React hooks (useScrollProgress, useMediaQuery, etc.)
+│   ├── lib/                  # Utilities, constants, helpers
+│   │   ├── constants.ts      # Site-wide constants, color tokens
+│   │   ├── fonts.ts          # Font loading config
+│   │   ├── metadata.ts       # SEO metadata helpers
+│   │   └── supabase.ts       # Supabase client (future)
+│   ├── styles/
+│   │   └── globals.css       # Tailwind directives, custom properties, base styles
+│   └── types/                # Shared TypeScript types
+├── public/
+│   ├── fonts/                # Self-hosted pixel fonts
+│   ├── images/               # Optimized static images
+│   └── videos/               # WebM frame sequences for scroll animations
 ├── package.json
 ├── tailwind.config.ts
 ├── tsconfig.json
-└── next.config.ts
+├── next.config.ts
+└── eslint.config.mjs
 ```
+
+---
+
+## Phased Development Plan
+
+### Phase 1: Project Foundation ✅
+- Next.js 15 + TypeScript + Tailwind CSS v4 setup
+- ESLint + Prettier configuration
+- Font loading (pixel font + body font)
+- Global styles, CSS custom properties (color palette)
+- Base layout (root layout, responsive container)
+- Directory structure scaffolding
+
+### Phase 2: Hero & Logo Animation
+- E-Summit logo pixel reveal animation (anime.js)
+- Retro game menu (START/CONTINUE) with keyboard + click interaction
+- CRT scanline overlay effect
+- Black screen → logo → menu flow
+- Responsive: works on all viewport sizes
+- `prefers-reduced-motion` fallback
+
+### Phase 3: Scroll-Driven Campus Reveal
+- Scroll-synced video/frame sequence player (GSAP ScrollTrigger)
+- Clock tower zoom-out animation integration (once assets provided)
+- Placeholder/dev mode with CSS-based zoom for development
+- Section pinning and content reveal triggers
+- Mobile-optimized variant
+
+### Phase 4: Content Sections
+- Stats counter section (animated numbers)
+- Features section (Workshops, Competitions, Networking, Experiences)
+- Timeline / schedule section
+- Speakers/guests section
+- Sponsors section with tier layout
+- FAQ accordion
+- Footer
+
+### Phase 5: Subpages & Navigation
+- Navigation component (retro game menu style)
+- `/events` — event listings
+- `/sponsors` — sponsor details and tiers
+- `/register` — registration flow
+- `/about` — PIEDS history, E-Summit legacy
+- `/contact` — contact form
+
+### Phase 6: Data Layer (Supabase)
+- Supabase project setup and client integration
+- Events data model and queries
+- Speakers data model and queries
+- Sponsors data model and queries
+- Admin-friendly data updates
+
+### Phase 7: SEO & Performance
+- Meta tags, Open Graph, Twitter Cards on all pages
+- JSON-LD structured data (Event, Organization)
+- Sitemap + robots.txt
+- Image optimization audit
+- Lighthouse score optimization
+- Core Web Vitals tuning
+
+### Phase 8: Polish & Launch
+- Cross-browser testing
+- Mobile device testing
+- Animation performance profiling
+- Accessibility audit (WCAG AA)
+- Final content review
+- Production deployment
 
 ---
 

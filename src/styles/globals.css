@@ -1,0 +1,103 @@
+@import 'tailwindcss';
+
+/*
+ * E-Summit 2026 — Design Tokens
+ * Retro pixel game aesthetic on black backgrounds
+ */
+@theme {
+  --color-bg-primary: #000000;
+  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+  --color-text-primary: #ffffff;
+  --color-text-muted: #a0a0a0;
+  --color-accent-blue: #1a5bc4;
+  --color-accent-blue-light: #4a90d9;
+  --color-accent-orange: #e87a20;
+  --color-accent-yellow: #f5c842;
+  --color-accent-red: #c43030;
+  --color-pixel-purple: #6b3fa0;
+
+  --font-pixel: var(--font-pixel);
+  --font-body: var(--font-body);
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Pixel art rendering — keeps edges crisp */
+.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* CRT scanline overlay */
+.crt-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Pixel font utility */
+.font-pixel {
+  font-family: var(--font-pixel), monospace;
+}
+
+/* Selection colors */
+::selection {
+  background-color: var(--color-accent-blue);
+  color: var(--color-text-primary);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-blue);
+  border-radius: 0;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-accent-yellow);
+  outline-offset: 2px;
+}

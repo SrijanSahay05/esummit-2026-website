@@ -10,6 +10,7 @@ out/
 dist/
 build/
 inspo/
+
 # Environment
 .env
 .env.local
