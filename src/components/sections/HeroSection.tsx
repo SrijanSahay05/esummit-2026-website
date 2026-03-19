@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { LogoReveal } from '@/components/animations/LogoReveal';
 import { GameMenu } from '@/components/ui/GameMenu';
-import { Scanlines } from '@/components/ui/Scanlines';
+import { CRTEffect } from '@/components/ui/CRTEffect';
 import { TopBar } from '@/components/layout/TopBar';
 import { SITE } from '@/lib/constants';
 
@@ -41,8 +41,16 @@ export function HeroSection() {
       className="relative flex min-h-[100dvh] flex-col overflow-hidden"
       aria-label="E-Summit 2026 Hero"
     >
-      {/* Background */}
+      {/* Background with subtle phosphor glow */}
       <div className="absolute inset-0 bg-bg-primary" />
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          background:
+            'radial-gradient(ellipse at 50% 40%, rgba(26,91,196,0.08) 0%, transparent 60%)',
+        }}
+        aria-hidden="true"
+      />
 
       {/* Orange top bar with "REGISTRATIONS OPEN NOW" */}
       <TopBar
@@ -99,8 +107,8 @@ export function HeroSection() {
         </p>
       </div>
 
-      {/* CRT scanline overlay */}
-      <Scanlines />
+      {/* Full CRT display effect */}
+      <CRTEffect />
     </section>
   );
 }
