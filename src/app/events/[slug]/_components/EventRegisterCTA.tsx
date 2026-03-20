@@ -17,10 +17,11 @@ export function EventRegisterCTA({ event }: Props) {
         style={{
           position: 'relative',
           zIndex: 10,
-          padding: 'clamp(12px, 3.5vw, 20px) clamp(14px, 4vw, 28px)',
+          padding: 'clamp(8px, 1.5dvh, 16px) clamp(14px, 4vw, 28px)',
           background: '#0D0800',
           borderBottom: '3px solid #FFD700',
           textAlign: 'center',
+          flexShrink: 0,
         }}
       >
         <style>{`
@@ -166,10 +167,11 @@ export function EventRegisterCTA({ event }: Props) {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: 'clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px)',
+          padding: 'clamp(5px, 1dvh, 10px) clamp(12px, 3vw, 20px)',
           position: 'relative',
           zIndex: 10,
           background: '#050508',
+          flexShrink: 0,
         }}
       >
         <div

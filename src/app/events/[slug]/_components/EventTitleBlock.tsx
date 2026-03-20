@@ -12,7 +12,8 @@ export function EventTitleBlock({ event }: Props) {
         zIndex: 10,
         textAlign: 'center',
         padding:
-          'clamp(14px, 3.5vw, 22px) clamp(14px, 3vw, 24px) clamp(10px, 2.2vw, 16px)',
+          'clamp(8px, 1.5dvh, 18px) clamp(14px, 3vw, 24px) clamp(6px, 1.2dvh, 14px)',
+        flexShrink: 0,
         borderBottom: '2px dashed rgba(255,215,0,0.2)',
       }}
     >
@@ -51,7 +52,7 @@ export function EventTitleBlock({ event }: Props) {
           key={i}
           className="font-pixel"
           style={{
-            fontSize: 'clamp(24px, 7vw, 44px)',
+            fontSize: 'clamp(18px, min(6vw, 5.5dvh), 42px)',
             color: '#FFD700',
             display: 'block',
             lineHeight: 1.1,
@@ -69,11 +70,11 @@ export function EventTitleBlock({ event }: Props) {
       <span
         className="font-pixel"
         style={{
-          fontSize: 'clamp(14px, 4vw, 24px)',
+          fontSize: 'clamp(10px, min(3.5vw, 3.5dvh), 22px)',
           color: '#FF6600',
           display: 'block',
           lineHeight: 1,
-          marginTop: 'clamp(6px, 1.5vw, 10px)',
+          marginTop: 'clamp(4px, 1vw, 8px)',
           letterSpacing: 'clamp(1px, 0.5vw, 3px)',
           textShadow: '2px 0 0 #993300, 0 2px 0 #993300, 2px 2px 0 #661100',
           position: 'relative',
@@ -92,9 +93,9 @@ export function EventTitleBlock({ event }: Props) {
             fontSize: 'clamp(8px, 1.8vw, 11px)',
             color: '#00FFCC',
             display: 'block',
-            marginTop: i === 0 ? 'clamp(10px, 2.5vw, 16px)' : 0,
+            marginTop: i === 0 ? 'clamp(6px, 1.5dvh, 14px)' : 0,
             letterSpacing: 1,
-            lineHeight: 2,
+            lineHeight: 1.8,
             textShadow: '0 0 12px rgba(0,255,200,0.4)',
             position: 'relative',
             zIndex: 2,

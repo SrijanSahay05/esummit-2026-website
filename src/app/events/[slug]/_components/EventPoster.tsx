@@ -41,6 +41,10 @@ export function EventPoster({ event }: Props) {
           fontFamily: 'var(--font-pixel), monospace',
           outline: '3px solid #FFD700',
           outlineOffset: 4,
+          // Flex column so sections distribute within exact viewport height
+          display: 'flex',
+          flexDirection: 'column',
+          height: '98dvh',
           boxShadow: [
             '0 0 0 7px #08080C',
             '0 0 0 10px #FFD700',
@@ -152,6 +156,7 @@ export function EventPoster({ event }: Props) {
         <div
           style={{
             height: 8,
+            flexShrink: 0,
             background:
               'repeating-linear-gradient(90deg, #FFD700 0px, #FFD700 8px, #FF6600 8px, #FF6600 16px, #FF3300 16px, #FF3300 24px, #FF6600 24px, #FF6600 32px)',
             position: 'relative',
@@ -170,6 +175,7 @@ export function EventPoster({ event }: Props) {
         <div
           style={{
             height: 10,
+            flexShrink: 0,
             background:
               'repeating-linear-gradient(-45deg, #FFD700 0px, #FFD700 8px, #08080C 8px, #08080C 16px)',
             position: 'relative',

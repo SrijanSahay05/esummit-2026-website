@@ -20,6 +20,7 @@ export function EventMarquee({ event }: Props) {
         overflow: 'hidden',
         position: 'relative',
         zIndex: 10,
+        flexShrink: 0,
       }}
     >
       <style>{`

@@ -41,10 +41,11 @@ export default async function EventDetailPage({
 
   return (
     <main
-      className="flex h-dvh items-start justify-center overflow-hidden"
+      className="flex items-start justify-center overflow-hidden"
       style={{
+        height: '100dvh',
         background: '#1a1008',
-        padding: 'clamp(10px, 2.5vw, 28px) clamp(8px, 2vw, 16px)',
+        padding: '1dvh clamp(6px, 1.5vw, 14px)',
       }}
     >
       <script

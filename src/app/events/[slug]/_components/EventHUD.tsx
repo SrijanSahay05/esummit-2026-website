@@ -21,6 +21,7 @@ export function EventHUD({ hudStats }: Props) {
         background: 'rgba(0,0,0,0.5)',
         position: 'relative',
         zIndex: 10,
+        flexShrink: 0,
       }}
       role="region"
       aria-label="Event stats"

@@ -20,6 +20,7 @@ export function EventStatsRow({ stats }: Props) {
         borderBottom: '2px solid #222',
         position: 'relative',
         zIndex: 10,
+        flexShrink: 0,
       }}
       role="region"
       aria-label="Event statistics"

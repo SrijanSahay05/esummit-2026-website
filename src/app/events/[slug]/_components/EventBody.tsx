@@ -35,6 +35,10 @@ export function EventBody({ event }: Props) {
         borderBottom: '2px solid #222',
         position: 'relative',
         zIndex: 10,
+        // Grow to fill all remaining poster height
+        flex: 1,
+        minHeight: 0,
+        overflow: 'hidden',
       }}
     >
       {/* Left: Mission Map */}
