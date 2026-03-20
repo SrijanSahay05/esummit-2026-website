@@ -46,10 +46,14 @@ export function EventBody({ event }: Props) {
         style={{
           padding: 'clamp(10px, 2.5vw, 16px)',
           borderRight: '2px solid #222',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          minHeight: 0,
         }}
       >
         <ColHeading>MISSION MAP</ColHeading>
-        <ol style={{ listStyle: 'none' }}>
+        <ol style={{ listStyle: 'none', overflowY: 'auto', maxHeight: '100%' }}>
           {event.timeline.map((phase, i) => {
             const stepStr =
               typeof phase.step === 'number' ? String(phase.step) : phase.step
