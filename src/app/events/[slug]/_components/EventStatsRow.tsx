@@ -1,10 +1,10 @@
 import type { Event } from '@/types/event'
 
 const STAT_COLORS = {
-  gold: { val: '#FFD700', shadow: '2px 2px 0 #664400' },
+  gold:  { val: '#FFD700', shadow: '2px 2px 0 #664400' },
   green: { val: '#00FF88', shadow: '2px 2px 0 #004422' },
-  cyan: { val: '#00FFCC', shadow: '2px 2px 0 #004433' },
-  red: { val: '#FF4444', shadow: '2px 2px 0 #440000' },
+  cyan:  { val: '#00FFCC', shadow: '2px 2px 0 #004433' },
+  red:   { val: '#FF4444', shadow: '2px 2px 0 #440000' },
 }
 
 interface Props {
@@ -33,18 +33,13 @@ export function EventStatsRow({ stats }: Props) {
             key={stat.label}
             style={{
               textAlign: 'center',
-              padding: 'clamp(8px, 2vw, 14px) clamp(4px, 1vw, 10px)',
+              padding: 'clamp(6px, 1.2dvh, 12px) clamp(4px, 1vw, 8px)',
               borderRight: i < 3 ? '2px solid #222' : 'none',
-              position: 'relative',
             }}
           >
             {stat.icon && (
               <span
-                style={{
-                  fontSize: 'clamp(14px, 3.5vw, 20px)',
-                  display: 'block',
-                  marginBottom: 5,
-                }}
+                style={{ fontSize: 'clamp(12px, 2dvh, 18px)', display: 'block', marginBottom: 4 }}
                 aria-hidden="true"
               >
                 {stat.icon}
@@ -53,7 +48,7 @@ export function EventStatsRow({ stats }: Props) {
             <span
               className="font-pixel"
               style={{
-                fontSize: 'clamp(9px, 2.2vw, 13px)',
+                fontSize: 'clamp(8px, 1.4dvh, 12px)',
                 color: scheme.val,
                 display: 'block',
                 lineHeight: 1.4,
@@ -61,18 +56,16 @@ export function EventStatsRow({ stats }: Props) {
               }}
             >
               {lines.map((l, j) => (
-                <span key={j} style={{ display: 'block' }}>
-                  {l}
-                </span>
+                <span key={j} style={{ display: 'block' }}>{l}</span>
               ))}
             </span>
             <span
               className="font-pixel"
               style={{
-                fontSize: 'clamp(6px, 1.2vw, 8px)',
+                fontSize: 'clamp(5px, 0.9dvh, 7px)',
                 color: '#444',
                 display: 'block',
-                marginTop: 4,
+                marginTop: 3,
                 letterSpacing: 1,
               }}
             >

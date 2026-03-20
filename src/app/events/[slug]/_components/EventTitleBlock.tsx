@@ -34,7 +34,7 @@ export function EventTitleBlock({ event }: Props) {
       <span
         className="font-pixel"
         style={{
-          fontSize: 'clamp(8px, 1.8vw, 11px)',
+          fontSize: 'clamp(8px, 1.3dvh, 10px)',
           color: '#FF6600',
           letterSpacing: 'clamp(2px, 0.6vw, 4px)',
           display: 'block',
@@ -90,7 +90,7 @@ export function EventTitleBlock({ event }: Props) {
           key={i}
           className="font-pixel"
           style={{
-            fontSize: 'clamp(8px, 1.8vw, 11px)',
+            fontSize: 'clamp(8px, 1.3dvh, 10px)',
             color: '#00FFCC',
             display: 'block',
             marginTop: i === 0 ? 'clamp(6px, 1.5dvh, 14px)' : 0,

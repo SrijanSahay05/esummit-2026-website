@@ -41,11 +41,11 @@ export function EventRegisterCTA({ event }: Props) {
         <span
           className="font-pixel"
           style={{
-            fontSize: 'clamp(7px, 1.6vw, 10px)',
+            fontSize: 'clamp(7px, 1.2dvh, 9px)',
             color: '#555',
-            letterSpacing: 'clamp(1px, 0.5vw, 3px)',
+            letterSpacing: 'clamp(1px, 0.4dvh, 3px)',
             display: 'block',
-            marginBottom: 'clamp(8px, 2vw, 12px)',
+            marginBottom: 'clamp(6px, 1.2dvh, 10px)',
           }}
         >
           — HOW TO ENTER —
@@ -61,13 +61,13 @@ export function EventRegisterCTA({ event }: Props) {
           style={{
             textDecoration: 'none',
             display: 'inline-block',
-            marginBottom: 'clamp(8px, 2vw, 12px)',
+            marginBottom: 'clamp(6px, 1.2dvh, 10px)',
           }}
         >
           <span
             className="font-pixel reg-cta-text"
             style={{
-              fontSize: 'clamp(11px, 2.8vw, 16px)',
+              fontSize: 'clamp(10px, 1.9dvh, 15px)',
               color: '#FFD700',
               letterSpacing: 1,
               textShadow: '2px 2px 0 #664400, 0 0 20px rgba(255,215,0,0.3)',
@@ -82,10 +82,10 @@ export function EventRegisterCTA({ event }: Props) {
         <span
           className="font-pixel"
           style={{
-            fontSize: 'clamp(8px, 1.8vw, 11px)',
+            fontSize: 'clamp(8px, 1.3dvh, 10px)',
             color: '#FF4444',
             display: 'block',
-            letterSpacing: 'clamp(1px, 0.4vw, 2px)',
+            letterSpacing: 'clamp(1px, 0.3dvh, 2px)',
             marginBottom: 'clamp(10px, 2.5vw, 14px)',
             textShadow: '1px 1px 0 #440000',
           }}
@@ -98,7 +98,7 @@ export function EventRegisterCTA({ event }: Props) {
           style={{
             display: 'inline-block',
             border: '2px solid #FFD700',
-            padding: 'clamp(7px, 1.8vw, 10px) clamp(20px, 5vw, 32px)',
+            padding: 'clamp(6px, 1.1dvh, 9px) clamp(20px, 4vw, 30px)',
             position: 'relative',
             background: 'rgba(255,215,0,0.04)',
           }}
@@ -110,7 +110,7 @@ export function EventRegisterCTA({ event }: Props) {
               top: '50%',
               transform: 'translateY(-50%)',
               color: '#FFD700',
-              fontSize: 'clamp(8px, 2vw, 11px)',
+              fontSize: 'clamp(8px, 1.3dvh, 10px)',
               fontFamily: 'var(--font-pixel), monospace',
             }}
             aria-hidden="true"
@@ -120,7 +120,7 @@ export function EventRegisterCTA({ event }: Props) {
           <span
             className="font-pixel"
             style={{
-              fontSize: 'clamp(8px, 2vw, 12px)',
+              fontSize: 'clamp(8px, 1.4dvh, 11px)',
               color: '#00FFCC',
               letterSpacing: 1,
               textShadow: '0 0 10px rgba(0,255,200,0.4)',
@@ -135,7 +135,7 @@ export function EventRegisterCTA({ event }: Props) {
               top: '50%',
               transform: 'translateY(-50%)',
               color: '#FFD700',
-              fontSize: 'clamp(8px, 2vw, 11px)',
+              fontSize: 'clamp(8px, 1.3dvh, 10px)',
               fontFamily: 'var(--font-pixel), monospace',
             }}
             aria-hidden="true"
@@ -149,11 +149,11 @@ export function EventRegisterCTA({ event }: Props) {
           <span
             className="font-pixel"
             style={{
-              fontSize: 'clamp(6px, 1.3vw, 8px)',
+              fontSize: 'clamp(6px, 0.9dvh, 8px)',
               color: '#555',
               display: 'block',
               marginTop: 'clamp(6px, 1.5vw, 8px)',
-              letterSpacing: 'clamp(1px, 0.4vw, 2px)',
+              letterSpacing: 'clamp(1px, 0.3dvh, 2px)',
             }}
           >
             {event.registerPlatformHint}
@@ -177,7 +177,7 @@ export function EventRegisterCTA({ event }: Props) {
         <div
           className="font-pixel"
           style={{
-            fontSize: 'clamp(6px, 1.3vw, 8px)',
+            fontSize: 'clamp(6px, 0.9dvh, 8px)',
             color: '#333',
             lineHeight: 1.9,
             letterSpacing: 1,
@@ -194,7 +194,7 @@ export function EventRegisterCTA({ event }: Props) {
         <div
           className="font-pixel"
           style={{
-            fontSize: 'clamp(7px, 1.6vw, 10px)',
+            fontSize: 'clamp(7px, 1.2dvh, 9px)',
             color: '#FFD700',
             letterSpacing: 1,
             textAlign: 'right',

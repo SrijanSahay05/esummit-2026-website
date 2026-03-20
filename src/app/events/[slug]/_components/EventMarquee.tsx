@@ -40,7 +40,7 @@ export function EventMarquee({ event }: Props) {
       <div
         className="event-marquee-inner font-pixel"
         style={{
-          fontSize: 'clamp(8px, 1.8vw, 11px)',
+          fontSize: 'clamp(8px, 1.3dvh, 10px)',
           color: '#08080C',
           letterSpacing: 'clamp(1px, 0.4vw, 3px)',
         }}

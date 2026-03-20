@@ -16,7 +16,7 @@ export function EventHUD({ hudStats }: Props) {
       style={{
         display: 'flex',
         justifyContent: 'space-between',
-        padding: 'clamp(8px, 2vw, 12px) clamp(12px, 3vw, 20px)',
+        padding: 'clamp(6px, 1.2dvh, 10px) clamp(12px, 3vw, 20px)',
         borderBottom: '2px solid #333',
         background: 'rgba(0,0,0,0.5)',
         position: 'relative',
@@ -31,7 +31,7 @@ export function EventHUD({ hudStats }: Props) {
           <span
             className="font-pixel"
             style={{
-              fontSize: 'clamp(7px, 1.5vw, 9px)',
+              fontSize: 'clamp(7px, 1.1dvh, 9px)',
               color: '#555',
               letterSpacing: 1,
               display: 'block',
@@ -43,7 +43,7 @@ export function EventHUD({ hudStats }: Props) {
           <span
             className="font-pixel"
             style={{
-              fontSize: 'clamp(11px, 2.4vw, 15px)',
+              fontSize: 'clamp(10px, 1.7dvh, 14px)',
               color: COLOR_MAP[stat.colorVariant ?? 'gold'],
               display: 'block',
             }}
