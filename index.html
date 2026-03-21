@@ -172,24 +172,31 @@ body {
 /* Top-right: logo + countdown */
 .hud-top-right {
   position: absolute;
-  top: 12px;
-  right: 16px;
+  top: 20px;
+  right: 24px;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
   pointer-events: auto;
 }
 
 .hud-logo {
-  height: 28px;
+  height: 52px;
   image-rendering: pixelated;
 }
 
 .hud-countdown {
   font-family: var(--font-pixel);
-  font-size: 9px;
-  color: var(--accent-yellow);
-  text-shadow: 0 0 8px rgba(245, 200, 66, 0.5);
+  font-size: 13px;
+  color: var(--gold);
+  text-align: right;
+  line-height: 1.8;
+  letter-spacing: 1px;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+  background: rgba(10, 8, 20, 0.6);
+  padding: 8px 12px;
+  border-left: 2px solid var(--gold);
 }
 
 /* Top-left: scroll indicator */
@@ -198,7 +205,7 @@ body {
   top: 16px;
   left: 16px;
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 9px;
   color: var(--text-muted);
   pointer-events: none;
   animation: bob 2s ease-in-out infinite;
@@ -213,32 +220,41 @@ body {
 /* Bottom-right: nav buttons */
 .hud-nav {
   position: absolute;
-  bottom: 20px;
-  right: 16px;
+  bottom: 24px;
+  right: 24px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   pointer-events: auto;
+  align-items: flex-end;
 }
 
 .hud-nav-btn {
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid var(--accent-blue);
-  color: var(--text-primary);
   font-family: var(--font-pixel);
-  font-size: 7px;
-  padding: 6px 10px;
+  font-size: 10px;
+  color: var(--gold);
+  background: rgba(10, 8, 20, 0.85);
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  padding: 10px 16px;
   cursor: pointer;
-  text-align: right;
-  transition: all 0.2s ease;
+  letter-spacing: 1px;
+  border-radius: 0;
+  min-width: 160px;
+  text-align: left;
   white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s;
 }
 
-.hud-nav-btn:hover, .hud-nav-btn.active {
-  background: var(--accent-blue);
-  border-color: var(--accent-blue-light);
-  color: white;
-  box-shadow: 0 0 12px rgba(26, 91, 196, 0.4);
+.hud-nav-btn:hover {
+  border-color: var(--gold);
+  background: rgba(255, 215, 0, 0.12);
+}
+
+.hud-nav-btn.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(255, 215, 0, 0.08);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
 }
 
 /* ========================================
@@ -253,7 +269,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.6s ease;
+  transition: opacity 0.2s ease;
 }
 
 #bp0-title.hidden {
@@ -391,93 +407,81 @@ body {
 }
 
 /* ========================================
-   6: BP0.5 Clock Face + Countdown
+   6: BP0.5 Clock Tower — Analog Clock Overlay
    ======================================== */
-#bp05-section {
+#clock-svg-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 2;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  overflow: visible;
 }
 
-#bp05-section.visible {
-  opacity: 1;
-}
-
-.bp05-countdown {
-  position: absolute;
+/* Day counter pill — below clock face */
+#clock-pill {
+  position: fixed;
+  z-index: 2;
   font-family: var(--font-pixel);
-  color: var(--accent-yellow);
-  text-shadow: 0 0 20px rgba(245, 200, 66, 0.6);
-  text-align: center;
+  font-size: 20px;
+  line-height: 2;
+  letter-spacing: 1px;
+  color: var(--gold);
+  background: rgba(10, 10, 20, 0.75);
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  padding: 14px 28px;
   white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: none;
 }
 
-.bp05-countdown .days { font-size: clamp(20px, 5vw, 48px); }
-.bp05-countdown .sub { font-size: clamp(8px, 1.5vw, 14px); margin-top: 6px; }
-
-.bp05-logo {
-  position: absolute;
-  image-rendering: pixelated;
-}
-
-/* Pac-Man */
-.pacman-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.pacman {
-  width: 30px;
-  height: 30px;
-  background: var(--accent-yellow);
-  border-radius: 50%;
-  position: absolute;
-  animation: pacman-chomp 0.3s steps(2) infinite;
-}
-
-@keyframes pacman-chomp {
-  0% { clip-path: polygon(100% 50%, 50% 0%, 0% 0%, 0% 100%, 50% 100%, 100% 50%); }
-  100% { clip-path: polygon(100% 50%, 50% 15%, 0% 0%, 0% 100%, 50% 85%, 100% 50%); }
-}
-
-.ghost {
-  width: 24px;
-  height: 24px;
-  position: absolute;
-  border-radius: 12px 12px 4px 4px;
-  font-family: var(--font-pixel);
-  font-size: 5px;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  line-height: 1.1;
-}
-
-.bp05-flavor {
-  position: absolute;
-  bottom: 20%;
+/* Top banner — persistent HUD day counter */
+#clock-top-banner {
+  position: fixed;
+  top: 18px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 10;
   font-family: var(--font-pixel);
-  font-size: clamp(7px, 1.2vw, 11px);
-  color: var(--accent-orange);
-  text-align: center;
-  text-shadow: 0 0 10px rgba(232, 122, 32, 0.5);
-  opacity: 0;
-  transition: opacity 0.5s ease;
+  font-size: 13px;
+  line-height: 2;
+  letter-spacing: 1px;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
   white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: none;
 }
 
 /* ========================================
-   7: BP1 NPC Dialogue
+   7: BP1 NPC Dialogue — Cinematic JRPG Style
    ======================================== */
+
+/* Blur overlay behind NPC section */
+#bp1-blur-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, rgba(10,8,25,0.0) 40%, rgba(10,8,25,0.6) 100%),
+    rgba(10, 8, 25, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+#bp1-blur-overlay.visible {
+  opacity: 1;
+}
+
 #bp1-section {
   position: fixed;
   inset: 0;
@@ -492,132 +496,287 @@ body {
   pointer-events: auto;
 }
 
-/* NPC pixel character */
-.npc-character {
-  position: absolute;
-  bottom: 180px;
-  left: -60px;
-  width: 40px;
-  height: 60px;
+/* NPC — large pixel art character */
+.npc-wrapper {
+  position: fixed;
+  bottom: 40vh;
+  left: 8vw;
+  z-index: 3;
+  opacity: 0;
+  transform: translateX(-200px);
+}
+
+.npc-sprite {
+  height: 28vh;
+  min-height: 180px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* CSS fallback NPC — scaled up pixel character */
+.npc-css-fallback {
+  height: 28vh;
+  min-height: 180px;
+  aspect-ratio: 2/3;
   display: flex;
   flex-direction: column;
   align-items: center;
+  image-rendering: pixelated;
 }
 
-.npc-body {
-  width: 24px;
-  height: 30px;
-  background: var(--accent-blue);
-  border-radius: 4px 4px 0 0;
+.npc-css-head {
+  width: 45%;
+  aspect-ratio: 1;
+  background: var(--accent-yellow);
+  border-radius: 20% 20% 5% 5%;
   position: relative;
+  border: 3px solid #c4a020;
 }
 
-.npc-body::before {
+.npc-css-head::before, .npc-css-head::after {
   content: '';
   position: absolute;
-  top: 6px;
-  left: 4px;
-  width: 16px;
-  height: 8px;
-  background: var(--text-primary);
+  top: 40%;
+  width: 18%;
+  height: 18%;
+  background: var(--bg-primary);
   border-radius: 2px;
 }
 
-.npc-head {
-  width: 28px;
-  height: 20px;
-  background: var(--accent-yellow);
-  border-radius: 6px 6px 2px 2px;
+.npc-css-head::before { left: 22%; }
+.npc-css-head::after { right: 22%; }
+
+.npc-css-body {
+  width: 50%;
+  height: 40%;
+  background: var(--accent-blue);
+  border-radius: 8% 8% 0 0;
+  border: 3px solid #1248a0;
+  margin-top: -2px;
   position: relative;
 }
 
-.npc-head::before, .npc-head::after {
+.npc-css-body::before {
   content: '';
   position: absolute;
-  top: 8px;
-  width: 4px;
-  height: 4px;
-  background: var(--bg-primary);
-  border-radius: 1px;
-}
-
-.npc-head::before { left: 7px; }
-.npc-head::after { right: 7px; }
-
-.npc-legs {
-  display: flex;
-  gap: 4px;
-}
-
-.npc-leg {
-  width: 8px;
-  height: 12px;
-  background: var(--accent-blue-light);
-  border-radius: 0 0 2px 2px;
-}
-
-/* Dialog box */
-.dialog-box {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(70vw, 600px);
-  background: rgba(0, 0, 0, 0.92);
-  border: 3px solid var(--gold);
+  top: 15%;
+  left: 15%;
+  width: 70%;
+  height: 30%;
+  background: var(--text-primary);
   border-radius: 4px;
-  padding: 20px 24px;
-  font-family: var(--font-body);
-  font-size: clamp(12px, 1.8vw, 15px);
-  line-height: 1.7;
-  color: var(--text-primary);
-  position: relative;
+  opacity: 0.8;
 }
 
-/* Pixel corner decorations */
-.dialog-box::before, .dialog-box::after {
-  content: '◆';
+.npc-css-legs {
+  display: flex;
+  gap: 8%;
+  width: 42%;
+}
+
+.npc-css-leg {
+  flex: 1;
+  height: 0;
+  padding-bottom: 60%;
+  background: var(--accent-blue-light);
+  border-radius: 0 0 4px 4px;
+  border: 2px solid #3a78b8;
+}
+
+@keyframes npcIdle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.npc-wrapper.idle {
+  animation: npcIdle 1.4s ease-in-out infinite;
+}
+
+/* Dialog box — full width, cinematic JRPG style */
+.dialog-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 38vh;
+  min-height: 240px;
+  z-index: 5;
+  background: rgba(8, 6, 20, 0.96);
+  border-top: 4px solid var(--gold);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 0;
+  box-shadow:
+    0 -8px 0 0 rgba(255, 215, 0, 0.15),
+    inset 0 2px 0 0 rgba(255, 215, 0, 0.3);
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0;
+  overflow: hidden;
+  transform: translateY(100%);
+  transition: none;
+}
+
+.dialog-box.visible {
+  transform: translateY(0);
+}
+
+/* Scanline texture inside dialog */
+.dialog-box::before {
+  content: '';
   position: absolute;
-  color: var(--gold);
-  font-size: 10px;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
 }
 
-.dialog-box::before { top: -7px; left: -7px; }
-.dialog-box::after { top: -7px; right: -7px; }
+/* Corner decorations */
+.dialog-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--gold);
+  z-index: 1;
+}
 
-.dialog-speaker {
+.dialog-corner--top-left { top: -4px; left: 0; }
+.dialog-corner--top-right { top: -4px; right: 0; }
+
+/* Portrait panel (left) */
+.dialog-portrait-panel {
+  width: 180px;
+  min-width: 180px;
+  border-right: 3px solid var(--gold);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(20, 15, 40, 0.8);
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.dialog-portrait-image {
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+  border: 3px solid var(--gold);
+  background: #1a0e2e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.dialog-portrait-image .portrait-fallback {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.portrait-fallback-head {
+  width: 36px;
+  height: 30px;
+  background: var(--accent-yellow);
+  border-radius: 6px 6px 2px 2px;
+  border: 2px solid #c4a020;
+}
+
+.portrait-fallback-body {
+  width: 40px;
+  height: 28px;
+  background: var(--accent-blue);
+  border-radius: 4px 4px 0 0;
+  margin-top: -1px;
+}
+
+.dialog-speaker-name {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--gold);
+  text-align: center;
+  line-height: 1.8;
+  letter-spacing: 1px;
+}
+
+/* Text panel (right) */
+.dialog-text-panel {
+  flex: 1;
+  padding: 28px 40px 24px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.dialog-slide-counter {
+  position: absolute;
+  top: 16px;
+  right: 28px;
   font-family: var(--font-pixel);
   font-size: 9px;
-  color: var(--gold);
-  margin-bottom: 10px;
+  color: rgba(255, 215, 0, 0.5);
+  letter-spacing: 1px;
 }
 
 .dialog-text {
-  min-height: 60px;
+  font-family: var(--font-pixel);
+  font-size: 15px;
+  color: #f0f0f0;
+  line-height: 2.2;
+  letter-spacing: 1px;
+  max-width: 85%;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .dialog-next-btn {
-  position: absolute;
-  bottom: 10px;
-  right: 16px;
+  align-self: flex-end;
   font-family: var(--font-pixel);
-  font-size: 8px;
-  color: var(--accent-yellow);
-  background: none;
-  border: 1px solid var(--accent-yellow);
-  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--gold);
+  background: transparent;
+  border: 2px solid var(--gold);
+  padding: 10px 20px;
   cursor: pointer;
-  animation: blink-text 1.2s steps(1) infinite;
+  letter-spacing: 2px;
+  border-radius: 0;
   pointer-events: auto;
+  transition: background 0.1s;
 }
 
 .dialog-next-btn:hover {
-  background: var(--accent-yellow);
-  color: var(--bg-primary);
+  background: rgba(255, 215, 0, 0.15);
+}
+
+/* Border flash on slide advance */
+@keyframes dialog-flash {
+  0% { border-top-color: #ffffff; }
+  100% { border-top-color: var(--gold); }
+}
+
+.dialog-box.flash {
+  animation: dialog-flash 0.08s steps(1) 1;
 }
 
 /* ========================================
-   8: BP2 Gem Menu
+   8: BP2 Radial HUD — Scroll-Driven Event Showcase
    ======================================== */
 #bp2-section {
   position: fixed;
@@ -627,9 +786,9 @@ body {
   opacity: 0;
   transition: opacity 0.4s ease;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 #bp2-section.visible {
@@ -637,104 +796,223 @@ body {
   pointer-events: auto;
 }
 
-.bp2-title {
-  font-family: var(--font-pixel);
-  font-size: clamp(10px, 2vw, 16px);
-  color: var(--gold);
-  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-.gem-ring {
-  position: relative;
-  width: clamp(260px, 40vw, 380px);
-  height: clamp(260px, 40vw, 380px);
-  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.gem {
+/* Left text content panel */
+.bp2-content-left {
   position: absolute;
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-  transition: transform 0.3s ease, filter 0.3s ease;
-  /* Centered at ring center, then rotated out */
-  left: 50%;
+  left: 5vw;
   top: 50%;
-  margin-left: -30px;
-  margin-top: -30px;
+  transform: translateY(-50%);
+  width: 320px;
+  z-index: 10;
 }
 
-.gem:hover {
-  transform: scale(1.15);
-  filter: brightness(1.3);
-}
-
-.gem-shape {
-  width: 100%;
-  height: 100%;
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-pixel);
-  font-size: 7px;
-  color: white;
-  text-align: center;
-  text-shadow: 0 0 4px rgba(0,0,0,0.8);
-  animation: gem-pulse 2s ease-in-out infinite;
-  position: relative;
-}
-
-.gem-shape::after {
-  content: '';
+.bp2-section-content {
   position: absolute;
-  inset: 3px;
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-  background: inherit;
-  filter: brightness(1.3);
-  opacity: 0.4;
-}
-
-@keyframes gem-pulse {
-  0%, 100% { box-shadow: 0 0 15px currentColor; }
-  50% { box-shadow: 0 0 30px currentColor, 0 0 60px currentColor; }
-}
-
-/* Hub-spoke lines */
-.gem-line {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: 1px;
-  transform-origin: 0 0;
-  background: linear-gradient(90deg, var(--gold), transparent);
-  opacity: 0.3;
-  animation: line-pulse 2s ease-in-out infinite;
-}
-
-@keyframes line-pulse {
-  0%, 100% { opacity: 0.2; }
-  50% { opacity: 0.5; }
-}
-
-.gem-label {
-  position: absolute;
-  font-family: var(--font-pixel);
-  font-size: 6px;
-  color: var(--text-muted);
-  white-space: nowrap;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
   pointer-events: none;
 }
 
-/* Event Card Modal */
+.bp2-section-content.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.bp2-section-content h2 {
+  font-family: var(--font-pixel);
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 700;
+  line-height: 2;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.2);
+}
+
+.bp2-section-content p {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #d0d0d0;
+  line-height: 1.8;
+  margin-bottom: 22px;
+}
+
+.bp2-section-content .bp2-divider {
+  width: 80px;
+  height: 2px;
+  background: rgba(255, 215, 0, 0.4);
+  margin-bottom: 18px;
+}
+
+.bp2-section-content .bp2-features {
+  list-style: none;
+  padding: 0;
+}
+
+.bp2-section-content .bp2-features li {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: #ccc;
+  padding: 8px 0;
+  padding-left: 22px;
+  position: relative;
+  line-height: 2.2;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+.bp2-section-content .bp2-features li::before {
+  content: '►';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+}
+
+/* Color accents per event section */
+.bp2-s0 h2 { color: var(--gold); }
+.bp2-s1 h2 { color: #ff4444; }
+.bp2-s2 h2 { color: #3366ff; }
+.bp2-s3 h2 { color: #33cc66; }
+.bp2-s4 h2 { color: #ffaa00; }
+
+/* --- Radial HUD container --- */
+.bp2-hud-container {
+  position: relative;
+  width: clamp(320px, 42vw, 560px);
+  height: clamp(320px, 42vw, 560px);
+  flex-shrink: 0;
+}
+
+.bp2-hud-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* --- Inner animation canvas --- */
+.bp2-inner-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 215, 0, 0.12);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.bp2-anim-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  padding: 20px;
+  text-align: center;
+}
+
+.bp2-anim-layer.active {
+  opacity: 1;
+}
+
+/* Event display inside radial */
+.bp2-event-icon {
+  font-size: clamp(36px, 5vw, 60px);
+  margin-bottom: 16px;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
+}
+
+.bp2-event-inner-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(12px, 1.8vw, 18px);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 2px;
+  line-height: 2;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.bp2-event-inner-subtitle {
+  font-family: var(--font-pixel);
+  font-size: clamp(8px, 1.1vw, 11px);
+  font-weight: 500;
+  color: #ccc;
+  letter-spacing: 2px;
+  line-height: 2;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.1);
+}
+
+/* Dot grid background in inner canvas */
+.bp2-dot-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+}
+
+/* --- Progress bar at bottom --- */
+.bp2-progress-bar {
+  position: absolute;
+  bottom: 8vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  z-index: 10;
+  display: flex;
+  gap: 2px;
+}
+
+.bp2-progress-segment {
+  flex: 1;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bp2-progress-segment .bp2-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.bp2-progress-segment:nth-child(1) .bp2-fill { background: var(--gold); }
+.bp2-progress-segment:nth-child(2) .bp2-fill { background: #ff4444; }
+.bp2-progress-segment:nth-child(3) .bp2-fill { background: #3366ff; }
+.bp2-progress-segment:nth-child(4) .bp2-fill { background: #33cc66; }
+.bp2-progress-segment:nth-child(5) .bp2-fill { background: #ffaa00; }
+
+/* Event Card Modal — RPG style matching BP1 */
 .modal-overlay {
   position: fixed;
   inset: 0;
   z-index: 5;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -749,72 +1027,131 @@ body {
 }
 
 .event-card {
-  background: rgba(10, 10, 30, 0.95);
-  border: 2px solid var(--gold);
-  border-radius: 4px;
-  padding: 28px 32px;
-  max-width: 450px;
-  width: 90vw;
+  background: rgba(8, 6, 20, 0.96);
+  border: 3px solid var(--gold);
+  border-radius: 0;
+  padding: 32px 36px;
+  max-width: 640px;
+  width: 92vw;
   position: relative;
-  transform: scale(0.8);
-  transition: transform 0.3s ease;
+  transform: translateY(80px);
+  opacity: 0;
+  box-shadow:
+    0 0 0 1px rgba(255, 215, 0, 0.15),
+    inset 0 1px 0 0 rgba(255, 215, 0, 0.2);
+}
+
+/* Scanline texture in card */
+.event-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 4px
+  );
+  pointer-events: none;
+}
+
+/* Card corner decorations */
+.event-card::after {
+  content: '';
+  position: absolute;
+  top: -3px; left: -3px;
+  width: 12px; height: 12px;
+  background: var(--gold);
+}
+
+.event-card-corner-tr {
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 12px; height: 12px;
+  background: var(--gold);
 }
 
 .modal-overlay.open .event-card {
-  transform: scale(1);
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .event-card-category {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 10px;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  line-height: 2;
 }
 
 .event-card-name {
   font-family: var(--font-pixel);
-  font-size: clamp(12px, 2vw, 16px);
+  font-size: 16px;
   color: var(--gold);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  line-height: 2;
+  letter-spacing: 1px;
 }
 
 .event-card-meta {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 16px;
-  margin-bottom: 16px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px 0;
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
 }
 
 .event-card-meta-item {
-  font-size: 12px;
+  font-family: var(--font-pixel);
+  font-size: 9px;
   color: var(--text-muted);
+  line-height: 2;
+  letter-spacing: 1px;
 }
 
 .event-card-meta-item span {
+  display: block;
   color: var(--text-primary);
-  font-weight: 600;
+  font-size: 10px;
+  margin-top: 4px;
 }
 
 .event-card-desc {
-  font-size: 13px;
-  line-height: 1.6;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  line-height: 2;
+  letter-spacing: 1px;
   color: var(--text-muted);
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+}
+
+.event-card-difficulty {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--gold);
+  margin-bottom: 24px;
+  line-height: 2;
+  letter-spacing: 1px;
 }
 
 .event-card-actions {
   display: flex;
-  gap: 12px;
+  gap: 16px;
 }
 
 .btn-register {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 10px;
   background: var(--accent-orange);
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   cursor: pointer;
+  letter-spacing: 1px;
   transition: background 0.2s;
 }
 
@@ -822,18 +1159,19 @@ body {
 
 .btn-close {
   font-family: var(--font-pixel);
-  font-size: 8px;
+  font-size: 10px;
   background: none;
-  border: 1px solid var(--text-muted);
+  border: 2px solid var(--text-muted);
   color: var(--text-muted);
-  padding: 10px 20px;
+  padding: 12px 24px;
   cursor: pointer;
+  letter-spacing: 1px;
   transition: all 0.2s;
 }
 
 .btn-close:hover {
-  border-color: var(--text-primary);
-  color: var(--text-primary);
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 /* ========================================
@@ -1230,30 +1568,26 @@ body {
    13: Responsive
    ======================================== */
 @media (max-width: 768px) {
-  .hud-countdown { font-size: 7px; }
-  .hud-logo { height: 20px; }
-  .hud-nav-btn { font-size: 6px; padding: 5px 8px; }
-  .hud-scroll-hint { font-size: 7px; }
+  .hud-countdown { font-size: 10px; padding: 6px 10px; }
+  .hud-logo { height: 36px; }
+  .hud-nav-btn { font-size: 8px; padding: 8px 12px; min-width: 130px; }
+  .hud-scroll-hint { font-size: 8px; }
 
-  .dialog-box {
-    width: 95vw;
-    padding: 16px;
-    bottom: 16px;
-  }
+  #clock-pill { font-size: 14px; padding: 10px 20px; }
+  #clock-top-banner { font-size: 10px; }
 
-  .gem-ring {
-    width: 240px;
-    height: 240px;
-  }
+  /* BP1 dialog */
+  .dialog-portrait-panel { width: 120px; min-width: 120px; padding: 12px; }
+  .dialog-portrait-image { width: 72px; height: 72px; }
+  .dialog-text { font-size: 12px; max-width: 95%; }
+  .dialog-text-panel { padding: 20px 24px 20px 20px; }
+  .dialog-next-btn { font-size: 10px; padding: 8px 16px; }
+  .npc-wrapper { left: 4vw; bottom: 42vh; }
 
-  .gem {
-    width: 48px;
-    height: 48px;
-    margin-left: -24px;
-    margin-top: -24px;
-  }
-
-  .gem-shape { font-size: 6px; }
+  /* BP2 radial HUD */
+  .bp2-content-left { display: none; }
+  .bp2-hud-container { width: 85vw; height: 85vw; }
+  .bp2-progress-bar { width: 200px; }
 
   .bp3-side-card {
     width: 90vw;
@@ -1261,22 +1595,39 @@ body {
     right: auto !important;
   }
 
-  .event-card { padding: 20px; }
+  .event-card { padding: 20px 24px; }
+  .event-card-meta { grid-template-columns: 1fr 1fr; }
 
   .map-pin .pin-label { font-size: 6px; }
-
   .flyto-panel { padding: 24px; }
 }
 
 @media (max-width: 480px) {
   .title-logo { width: 220px; }
   .rpg-menu-item { font-size: 8px; }
-  .gem-ring { width: 200px; height: 200px; }
-  .gem { width: 42px; height: 42px; margin-left: -21px; margin-top: -21px; }
-  .bp2-title { font-size: 9px; }
-  .bp3-title { font-size: 8px; }
+
+  .hud-countdown { font-size: 8px; }
+  .hud-logo { height: 28px; }
   .hud-nav { bottom: 12px; right: 8px; }
-  .hud-nav-btn { font-size: 5px; padding: 4px 6px; min-height: 44px; min-width: 44px; display: flex; align-items: center; justify-content: flex-end; }
+  .hud-nav-btn { font-size: 7px; padding: 8px 10px; min-height: 44px; min-width: 44px; }
+
+  #clock-pill { font-size: 11px; padding: 8px 14px; }
+  #clock-top-banner { font-size: 8px; }
+
+  /* BP1 dialog mobile */
+  .dialog-portrait-panel { display: none; }
+  .dialog-box { height: 42vh; }
+  .dialog-text { font-size: 11px; }
+  .dialog-text-panel { padding: 16px 20px; }
+  .npc-wrapper { bottom: 46vh; }
+  .npc-sprite, .npc-css-fallback { min-height: 120px; height: 20vh; }
+
+  /* BP2 */
+  .bp2-hud-container { width: 90vw; height: 90vw; }
+  .bp2-event-inner-title { font-size: 7px; }
+  .bp2-event-inner-subtitle { font-size: 6px; }
+  .bp2-progress-bar { width: 160px; }
+  .bp3-title { font-size: 8px; }
 }
 
 /* ========================================
@@ -1378,57 +1729,222 @@ body {
   <div class="title-footer">© APRIL 2026 PIEDS™ | BITS Pilani, Pilani Campus</div>
 </div>
 
-<!-- ============ BP0.5: Clock Face + Countdown ============ -->
-<div id="bp05-section">
-  <div class="bp05-countdown" id="bp05-countdown">
-    <div class="days" id="bp05-days"></div>
-    <div class="sub" id="bp05-sub"></div>
-  </div>
-  <img src="public/images/logo/esummit-logo.png" alt="" class="bp05-logo" id="bp05-logo" style="width:200px;" />
-  <div class="pacman-container" id="pacman-container">
-    <div class="pacman" id="pacman"></div>
-    <div class="ghost" style="background:#E74C3C;">DEAD<br/>LINE</div>
-    <div class="ghost" style="background:#6B3FA0;">DOUBT</div>
-    <div class="ghost" style="background:#3498DB;">COMP<br/>ETITN</div>
-  </div>
-  <div class="bp05-flavor" id="bp05-flavor">THE CLOCK IS TICKING, ENTREPRENEUR</div>
-</div>
+<!-- ============ BP0.5: Clock Tower — Analog Clock Overlay ============ -->
+<svg id="clock-svg-overlay" aria-hidden="true">
+  <defs>
+    <filter id="handShadow">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  <g id="clock-hands-group">
+    <polygon id="clock-hour-hand" fill="#1a0e06" filter="url(#handShadow)" />
+    <polygon id="clock-minute-hand" fill="#1a0e06" filter="url(#handShadow)" />
+    <circle id="clock-pivot" r="6" fill="#2a1a0a" />
+  </g>
+</svg>
+<div id="clock-pill"></div>
+<div id="clock-top-banner"></div>
 
-<!-- ============ BP1: NPC Dialogue ============ -->
-<div id="bp1-section">
-  <div class="npc-character" id="npc">
-    <div class="npc-head"></div>
-    <div class="npc-body"></div>
-    <div class="npc-legs">
-      <div class="npc-leg"></div>
-      <div class="npc-leg"></div>
+<!-- ============ BP1: Blur Overlay ============ -->
+<div id="bp1-blur-overlay"></div>
+
+<!-- ============ BP1: NPC Character ============ -->
+<div class="npc-wrapper" id="npc">
+  <!-- TODO: Replace with real NPC sprite asset at assets/sprites/npc-guide.png -->
+  <div class="npc-css-fallback">
+    <div class="npc-css-head"></div>
+    <div class="npc-css-body"></div>
+    <div class="npc-css-legs">
+      <div class="npc-css-leg"></div>
+      <div class="npc-css-leg"></div>
     </div>
   </div>
+</div>
+
+<!-- ============ BP1: Cinematic Dialog Box ============ -->
+<div id="bp1-section">
   <div class="dialog-box" id="dialog-box">
-    <div class="dialog-speaker">PIEDS MENTOR</div>
-    <div class="dialog-text" id="dialog-text"></div>
-    <button class="dialog-next-btn" id="dialog-next">NEXT ▶</button>
+    <div class="dialog-corner dialog-corner--top-left"></div>
+    <div class="dialog-corner dialog-corner--top-right"></div>
+    <div class="dialog-portrait-panel">
+      <div class="dialog-portrait-image">
+        <!-- TODO: Replace with real NPC portrait -->
+        <div class="portrait-fallback">
+          <div class="portrait-fallback-head"></div>
+          <div class="portrait-fallback-body"></div>
+        </div>
+      </div>
+      <div class="dialog-speaker-name" id="dialog-speaker">CAMPUS<br/>GUIDE</div>
+    </div>
+    <div class="dialog-text-panel">
+      <div class="dialog-slide-counter" id="dialog-counter">1 / 3</div>
+      <div class="dialog-text" id="dialog-text"></div>
+      <button class="dialog-next-btn" id="dialog-next">▶ NEXT</button>
+    </div>
   </div>
 </div>
 
-<!-- ============ BP2: Gem Menu ============ -->
+<!-- ============ BP2: Radial HUD Event Showcase ============ -->
 <div id="bp2-section">
-  <div class="bp2-title">⚔ CHOOSE YOUR QUEST ⚔</div>
-  <div class="gem-ring" id="gem-ring">
-    <!-- Lines + gems injected by JS -->
+
+  <!-- Left text content -->
+  <div class="bp2-content-left" id="bp2-content-left">
+    <div class="bp2-section-content bp2-s0 active" data-bp2-section="0">
+      <h2>⚔ CHOOSE YOUR<br>QUEST ⚔</h2>
+      <p>Explore E-Summit's flagship events. Scroll to discover competitions, workshops, and experiences that await you.</p>
+    </div>
+    <div class="bp2-section-content bp2-s1" data-bp2-section="1">
+      <h2>STARTUP<br>PITCH</h2>
+      <p>Pitch your startup idea to VCs and industry leaders. Top teams win funding and mentorship.</p>
+      <div class="bp2-divider"></div>
+      <ul class="bp2-features">
+        <li>Prize Pool: ₹1,00,000</li>
+        <li>Duration: 2 Days</li>
+        <li>Difficulty: ★★★★☆</li>
+      </ul>
+    </div>
+    <div class="bp2-section-content bp2-s2" data-bp2-section="2">
+      <h2>IDEATHON</h2>
+      <p>Rapid ideation challenge. Prototype a solution in 24 hours with mentors from top startups.</p>
+      <div class="bp2-divider"></div>
+      <ul class="bp2-features">
+        <li>Prize Pool: ₹75,000</li>
+        <li>Duration: 1 Day</li>
+        <li>Difficulty: ★★★☆☆</li>
+      </ul>
+    </div>
+    <div class="bp2-section-content bp2-s3" data-bp2-section="3">
+      <h2>DESIGN<br>SPRINT</h2>
+      <p>Learn design thinking from industry experts. Build a prototype from scratch in an intensive workshop.</p>
+      <div class="bp2-divider"></div>
+      <ul class="bp2-features">
+        <li>Prize Pool: ₹50,000</li>
+        <li>Duration: 1 Day</li>
+        <li>Difficulty: ★★☆☆☆</li>
+      </ul>
+    </div>
+    <div class="bp2-section-content bp2-s4" data-bp2-section="4">
+      <h2>HACK THE<br>FUTURE</h2>
+      <p>The ultimate hackathon. Build, ship, demo. Tracks: AI/ML, FinTech, HealthTech.</p>
+      <div class="bp2-divider"></div>
+      <ul class="bp2-features">
+        <li>Prize Pool: ₹80,000</li>
+        <li>Duration: 2 Days</li>
+        <li>Difficulty: ★★★★★</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Radial HUD -->
+  <div class="bp2-hud-container" id="bp2-hud-container">
+    <svg class="bp2-hud-svg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="bp2-glow">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <linearGradient id="bp2-glassGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="white" stop-opacity="1"/>
+          <stop offset="100%" stop-color="white" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Outer colored arcs ring -->
+      <g id="bp2-ring-outer" style="transform-origin:300px 300px">
+        <circle cx="300" cy="300" r="280" fill="none" stroke="var(--accent-blue)" stroke-width="3" stroke-dasharray="200 1560" stroke-dashoffset="-400" stroke-linecap="round" opacity="0.6"/>
+        <circle cx="300" cy="300" r="280" fill="none" stroke="var(--accent-blue-light)" stroke-width="3" stroke-dasharray="300 1460" stroke-dashoffset="-700" stroke-linecap="round" opacity="0.7"/>
+        <circle cx="300" cy="300" r="275" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-dasharray="180 1500" stroke-dashoffset="-100" stroke-linecap="round" opacity="0.4"/>
+      </g>
+
+      <!-- Gold accent arcs -->
+      <g id="bp2-ring-gold" style="transform-origin:300px 300px">
+        <circle cx="300" cy="300" r="270" fill="none" stroke="var(--gold)" stroke-width="5" stroke-dasharray="160 1540" stroke-dashoffset="0" stroke-linecap="round" opacity="0.9" filter="url(#bp2-glow)"/>
+      </g>
+
+      <!-- Tick marks ring -->
+      <g id="bp2-ring-ticks" style="transform-origin:300px 300px"></g>
+
+      <!-- Inner tick ring -->
+      <g id="bp2-ring-inner-ticks" style="transform-origin:300px 300px"></g>
+
+      <!-- Accent arcs -->
+      <g id="bp2-ring-accent" style="transform-origin:300px 300px">
+        <circle cx="300" cy="300" r="252" fill="none" stroke="var(--accent-orange)" stroke-width="4" stroke-dasharray="200 1400" stroke-dashoffset="-200" stroke-linecap="round" opacity="0.7"/>
+        <circle cx="300" cy="300" r="252" fill="none" stroke="var(--accent-red)" stroke-width="4" stroke-dasharray="100 1500" stroke-dashoffset="-500" stroke-linecap="round" opacity="0.5"/>
+      </g>
+
+      <!-- Glass reflection -->
+      <ellipse cx="250" cy="220" rx="100" ry="160" fill="url(#bp2-glassGrad)" opacity="0.05" transform="rotate(-20 250 220)"/>
+    </svg>
+
+    <!-- Inner canvas for event displays -->
+    <div class="bp2-inner-canvas">
+      <svg class="bp2-dot-grid" viewBox="0 0 340 340">
+        <g id="bp2-dotGridG"></g>
+      </svg>
+
+      <!-- Section 0: Intro -->
+      <div class="bp2-anim-layer active" data-bp2-anim="0">
+        <div class="bp2-event-icon">⚔</div>
+        <div class="bp2-event-inner-title">CHOOSE YOUR QUEST</div>
+        <div class="bp2-event-inner-subtitle">SCROLL TO EXPLORE</div>
+      </div>
+
+      <!-- Section 1: Startup Pitch -->
+      <div class="bp2-anim-layer" data-bp2-anim="1">
+        <div class="bp2-event-icon">🎤</div>
+        <div class="bp2-event-inner-title">STARTUP PITCH</div>
+        <div class="bp2-event-inner-subtitle">COMPETITION • 2 DAYS</div>
+      </div>
+
+      <!-- Section 2: Ideathon -->
+      <div class="bp2-anim-layer" data-bp2-anim="2">
+        <div class="bp2-event-icon">💡</div>
+        <div class="bp2-event-inner-title">IDEATHON</div>
+        <div class="bp2-event-inner-subtitle">IDEATHON • 1 DAY</div>
+      </div>
+
+      <!-- Section 3: Design Sprint -->
+      <div class="bp2-anim-layer" data-bp2-anim="3">
+        <div class="bp2-event-icon">🎨</div>
+        <div class="bp2-event-inner-title">DESIGN SPRINT</div>
+        <div class="bp2-event-inner-subtitle">WORKSHOP • 1 DAY</div>
+      </div>
+
+      <!-- Section 4: Hack The Future -->
+      <div class="bp2-anim-layer" data-bp2-anim="4">
+        <div class="bp2-event-icon">🔥</div>
+        <div class="bp2-event-inner-title">HACK THE FUTURE</div>
+        <div class="bp2-event-inner-subtitle">HACKATHON • 2 DAYS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="bp2-progress-bar">
+    <div class="bp2-progress-segment"><div class="bp2-fill"></div></div>
+    <div class="bp2-progress-segment"><div class="bp2-fill"></div></div>
+    <div class="bp2-progress-segment"><div class="bp2-fill"></div></div>
+    <div class="bp2-progress-segment"><div class="bp2-fill"></div></div>
+    <div class="bp2-progress-segment"><div class="bp2-fill"></div></div>
   </div>
 </div>
 
 <!-- ============ BP2: Event Card Modal ============ -->
 <div class="modal-overlay" id="gem-modal">
   <div class="event-card" id="event-card">
+    <div class="event-card-corner-tr"></div>
     <div class="event-card-category" id="ec-category"></div>
     <div class="event-card-name" id="ec-name"></div>
     <div class="event-card-meta" id="ec-meta"></div>
     <div class="event-card-desc" id="ec-desc"></div>
+    <div class="event-card-difficulty" id="ec-difficulty"></div>
     <div class="event-card-actions">
-      <button class="btn-register" onclick="window.open('#register','_self')">REGISTER NOW</button>
-      <button class="btn-close" id="gem-modal-close">CLOSE</button>
+      <button class="btn-register" onclick="window.open('#register','_self')">REGISTER ▶</button>
+      <button class="btn-close" id="gem-modal-close">✕ CLOSE</button>
     </div>
   </div>
 </div>
@@ -1664,8 +2180,8 @@ function updateHUDActiveBtn(frac) {
   navBtns.forEach((b, i) => b.classList.toggle('active', i === activeIdx));
 }
 
-// Countdown updater
-setInterval(updateHUDCountdown, 60000);
+// Countdown updater — every second for clock hand accuracy
+setInterval(updateHUDCountdown, 1000);
 updateHUDCountdown();
 
 // ========================================
@@ -1734,103 +2250,180 @@ function updateBP0(frac) {
 }
 
 // ========================================
-// 8: BP0.5 — Clock Face + Countdown
+// 8: BP0.5 — Clock Tower Analog Clock Overlay
 // ========================================
-const bp05 = document.getElementById('bp05-section');
-const bp05Countdown = document.getElementById('bp05-countdown');
-const bp05Days = document.getElementById('bp05-days');
-const bp05Sub = document.getElementById('bp05-sub');
-const bp05Logo = document.getElementById('bp05-logo');
-const bp05Flavor = document.getElementById('bp05-flavor');
-const pacmanContainer = document.getElementById('pacman-container');
-const pacman = document.getElementById('pacman');
-const ghosts = pacmanContainer.querySelectorAll('.ghost');
 
-function updateBP05(frac) {
-  const local = getLocalFraction(frac, BP.CLOCK_START, BP.CLOCK_END);
-  const visible = frac >= BP.CLOCK_START && frac <= BP.CLOCK_END;
+// TUNE THESE VALUES to align SVG clock with video clock face
+// State A: scroll fraction 0.08 (clock face fills screen — extreme close-up)
+const CLOCK_STATE_A = {
+  centerX: 50,     // % of viewport width
+  centerY: 48,     // % of viewport height
+  radiusVH: 36,    // radius as % of viewport height (72% diameter)
+};
 
-  bp05.classList.toggle('visible', visible);
-  if (!visible) return;
+// State B: scroll fraction ~0.30 (clock tower zoomed out, clock small near top)
+// TUNE: run in browser and adjust until hands align perfectly with the video clock
+const CLOCK_STATE_B = {
+  centerX: 50,     // clock tower stays centered horizontally
+  centerY: 22,     // clock face is now near top of viewport
+  radiusVH: 8,     // clock face is much smaller
+};
 
-  const cd = formatCountdown(EVENT_DATE);
+const clockSvg = document.getElementById('clock-svg-overlay');
+const clockHandsGroup = document.getElementById('clock-hands-group');
+const clockHourHand = document.getElementById('clock-hour-hand');
+const clockMinuteHand = document.getElementById('clock-minute-hand');
+const clockPivot = document.getElementById('clock-pivot');
+const clockPill = document.getElementById('clock-pill');
+const clockTopBanner = document.getElementById('clock-top-banner');
 
-  // Countdown position: center → top-right (HUD)
-  const cx = lerp(50, 85, local);
-  const cy = lerp(42, 5, local);
-  const scale = lerp(1, 0.4, local);
+// Clock hand polygon shapes — tapered from base to tip
+function hourHandPoints(radius) {
+  const len = radius * 0.42;
+  const baseW = radius * 0.045;
+  const tipW = radius * 0.015;
+  return `${-baseW},${radius * 0.12} ${baseW},${radius * 0.12} ${tipW},${-len} ${-tipW},${-len}`;
+}
 
-  bp05Countdown.style.left = cx + '%';
-  bp05Countdown.style.top = cy + '%';
-  bp05Countdown.style.transform = `translate(-50%, -50%) scale(${scale})`;
-  bp05Days.textContent = `${cd.days}d ${cd.hours}h ${cd.mins}m`;
-  bp05Sub.textContent = 'UNTIL E-SUMMIT 2026';
+function minuteHandPoints(radius) {
+  const len = radius * 0.65;
+  const baseW = radius * 0.032;
+  const tipW = radius * 0.010;
+  return `${-baseW},${radius * 0.12} ${baseW},${radius * 0.12} ${tipW},${-len} ${-tipW},${-len}`;
+}
 
-  // Logo: center → top-right
-  const lx = lerp(50, 82, local);
-  const ly = lerp(58, 3, local);
-  const ls = lerp(1, 0.15, local);
-  bp05Logo.style.left = lx + '%';
-  bp05Logo.style.top = ly + '%';
-  bp05Logo.style.transform = `translate(-50%, -50%) scale(${ls})`;
-  bp05Logo.style.opacity = lerp(1, 0, Math.max(0, (local - 0.7) / 0.3));
+// Countdown-driven clock angles (NOT wall clock — shows time remaining)
+function getCountdownClockAngles() {
+  const now = new Date();
+  const msRemaining = EVENT_DATE - now;
+  if (msRemaining <= 0) {
+    return { hourAngle: 0, minuteAngle: 0, totalDays: 0 };
+  }
+  const totalSeconds = Math.floor(msRemaining / 1000);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const totalDays = Math.floor(msRemaining / 86400000);
 
-  // Pac-Man orbit
-  const orbitRadius = lerp(120, 40, local);
-  const angle = local * Math.PI * 4; // 2 full rotations
-  pacman.style.left = (Math.cos(angle) * orbitRadius - 15) + 'px';
-  pacman.style.top = (Math.sin(angle) * orbitRadius - 15) + 'px';
-  pacman.style.transform = `rotate(${angle}rad)`;
+  // Hour hand: 0-11 scale, minute hand: 0-59 scale
+  const hourAngle = ((hours % 12) / 12) * 360 + (minutes / 60) * 30;
+  const minuteAngle = (minutes / 60) * 360;
 
-  ghosts.forEach((ghost, i) => {
-    const gAngle = angle - (i + 1) * 0.5;
-    const gr = orbitRadius + 10;
-    ghost.style.left = (Math.cos(gAngle) * gr - 12) + 'px';
-    ghost.style.top = (Math.sin(gAngle) * gr - 12) + 'px';
-  });
+  return { hourAngle, minuteAngle, totalDays };
+}
 
-  // Scale down pacman container
-  pacmanContainer.style.transform = `translate(-50%, -50%) scale(${lerp(1, 0.3, local)})`;
-  pacmanContainer.style.opacity = lerp(1, 0, Math.max(0, (local - 0.6) / 0.4));
+// Update clock hands every second (tick, not smooth)
+let clockAngles = getCountdownClockAngles();
+setInterval(() => {
+  clockAngles = getCountdownClockAngles();
+}, 1000);
 
-  // Flavor text
-  const flavorIn = local >= 0.15 && local <= 0.85;
-  bp05Flavor.style.opacity = flavorIn ? 1 : 0;
+function updateClockSection(frac) {
+  const inSection = frac > BP.CLOCK_START && frac < 0.38;
 
-  // HUD transition
-  if (local > 0.8) {
+  if (!inSection) {
+    clockSvg.style.opacity = '0';
+    clockPill.style.opacity = '0';
+    // Top banner persists from 0.35 onwards
+    clockTopBanner.style.opacity = frac >= 0.35 ? '1' : '0';
+    clockTopBanner.textContent = `${clockAngles.totalDays} DAYS TO E-SUMMIT 2026`;
+    return;
+  }
+
+  // Local fraction within clock section (0.08 to 0.38 = full range)
+  const fullLocal = getLocalFraction(frac, BP.CLOCK_START, 0.38);
+
+  // A→B interpolation: first 73% of section (0.08 → 0.30)
+  const abProgress = Math.min(fullLocal / 0.733, 1); // 0.733 = (0.30-0.08)/(0.38-0.08)
+  // B→C fade out: last 27% of section (0.30 → 0.38)
+  const bcProgress = Math.max((fullLocal - 0.733) / 0.267, 0);
+
+  // Interpolate position and radius
+  const cx = lerp(CLOCK_STATE_A.centerX, CLOCK_STATE_B.centerX, abProgress);
+  const cy = lerp(CLOCK_STATE_A.centerY, CLOCK_STATE_B.centerY, abProgress);
+  const radiusVH = lerp(CLOCK_STATE_A.radiusVH, CLOCK_STATE_B.radiusVH, abProgress);
+
+  // Convert to pixels
+  const vh = window.innerHeight;
+  const vw = window.innerWidth;
+  const cxPx = (cx / 100) * vw;
+  const cyPx = (cy / 100) * vh;
+  const radiusPx = (radiusVH / 100) * vh;
+
+  // Opacity: fade out in B→C phase
+  const handOpacity = lerp(1, 0, bcProgress);
+
+  // Position the hands group
+  clockSvg.style.opacity = handOpacity;
+  clockHandsGroup.setAttribute('transform', `translate(${cxPx}, ${cyPx})`);
+
+  // Set hand shapes at current radius
+  clockHourHand.setAttribute('points', hourHandPoints(radiusPx));
+  clockMinuteHand.setAttribute('points', minuteHandPoints(radiusPx));
+
+  // Rotate hands — tick (no CSS transition)
+  clockHourHand.setAttribute('transform', `rotate(${clockAngles.hourAngle})`);
+  clockMinuteHand.setAttribute('transform', `rotate(${clockAngles.minuteAngle})`);
+
+  // Pill counter: visible from 0.08 to 0.30, positioned below clock
+  const pillVisible = frac >= BP.CLOCK_START && frac <= 0.30;
+  const pillY = cyPx + radiusPx + vh * 0.05;
+  clockPill.style.left = cx + '%';
+  clockPill.style.top = pillY + 'px';
+  clockPill.style.opacity = pillVisible ? handOpacity : '0';
+  clockPill.textContent = `${clockAngles.totalDays} DAYS TO E-SUMMIT 2026`;
+
+  // Top banner: fades IN as hands fade OUT (0.30 → 0.38)
+  clockTopBanner.style.opacity = bcProgress;
+  clockTopBanner.textContent = `${clockAngles.totalDays} DAYS TO E-SUMMIT 2026`;
+
+  // HUD: show once past 80% of clock section
+  if (fullLocal > 0.6) {
     hud.classList.add('visible');
   }
 }
 
 // ========================================
-// 9: BP1 — NPC Dialogue
+// 9: BP1 — Cinematic NPC Dialogue
 // ========================================
 const bp1 = document.getElementById('bp1-section');
+const bp1Blur = document.getElementById('bp1-blur-overlay');
 const npc = document.getElementById('npc');
 const dialogText = document.getElementById('dialog-text');
 const dialogNext = document.getElementById('dialog-next');
 const dialogBox = document.getElementById('dialog-box');
+const dialogCounter = document.getElementById('dialog-counter');
 
-// TODO: Replace dialog content with actual E-Summit copy
+// TODO: Replace all dialog text with real E-Summit 2026 content
 const dialogSlides = [
-  "Welcome, young entrepreneur! You've entered the realm of E-Summit 2026 — BITS Pilani's greatest innovation battleground.",
-  "Here, $80B+ in startup valuation was forged. 3800+ founders emerged. 13 unicorns were born. Are you ready to write your chapter?",
-  "Workshops to sharpen your blade, competitions to test your mettle, networking to forge alliances. SCROLL TO CONTINUE ▼"
+  {
+    speaker: 'CAMPUS\nGUIDE',
+    text: "Welcome to BITS Pilani,\nAdventurer. You stand\nbefore a place where\nlegends are made."
+  },
+  {
+    speaker: 'CAMPUS\nGUIDE',
+    text: "E-Summit 2026 is the\nlargest entrepreneurship\nfestival in Rajasthan.\n20+ events. 3 epic days."
+  },
+  {
+    speaker: 'CAMPUS\nGUIDE',
+    text: "Prizes. Speakers. Founders.\nAll waiting below.\n\nScroll down to begin\nyour quest."
+  }
 ];
 
 let currentSlide = 0;
 let isTyping = false;
 let typeTimer = null;
 let npcEntered = false;
+let typewriterComplete = false;
 
 function typeText(text, element, callback) {
   isTyping = true;
+  typewriterComplete = false;
   element.textContent = '';
   let i = 0;
   if (reducedMotion) {
     element.textContent = text;
     isTyping = false;
+    typewriterComplete = true;
     if (callback) callback();
     return;
   }
@@ -1840,238 +2433,396 @@ function typeText(text, element, callback) {
     if (i >= text.length) {
       clearInterval(typeTimer);
       isTyping = false;
+      typewriterComplete = true;
       if (callback) callback();
     }
-  }, 40);
+  }, 38);
 }
 
 function showSlide(idx) {
   if (idx >= dialogSlides.length) return;
   currentSlide = idx;
+  const slide = dialogSlides[idx];
   const isLast = idx === dialogSlides.length - 1;
-  dialogNext.textContent = isLast ? 'SCROLL ▼' : 'NEXT ▶';
-  typeText(dialogSlides[idx], dialogText);
+
+  // Update counter
+  dialogCounter.textContent = `${idx + 1} / ${dialogSlides.length}`;
+
+  // Update speaker
+  document.getElementById('dialog-speaker').innerHTML = slide.speaker.replace('\n', '<br/>');
+
+  // Update button label
+  dialogNext.textContent = isLast ? '▶ BEGIN QUEST' : '▶ NEXT';
+
+  // Flash border on slide change
+  if (idx > 0) {
+    dialogBox.classList.add('flash');
+    setTimeout(() => dialogBox.classList.remove('flash'), 80);
+  }
+
+  typeText(slide.text, dialogText);
 }
 
 dialogNext.addEventListener('click', () => {
   if (isTyping) {
+    // First click while typing: show full text
     clearInterval(typeTimer);
-    dialogText.textContent = dialogSlides[currentSlide];
+    dialogText.textContent = dialogSlides[currentSlide].text;
     isTyping = false;
+    typewriterComplete = true;
     return;
   }
   if (currentSlide < dialogSlides.length - 1) {
     showSlide(currentSlide + 1);
   }
+  // Last slide "BEGIN QUEST" — just let user scroll
 });
 
-function updateBP1(frac) {
-  const visible = frac >= BP.NPC_START && frac <= BP.NPC_END;
-  bp1.classList.toggle('visible', visible);
+function enterBP1() {
+  npcEntered = true;
 
-  if (visible && !npcEntered) {
-    npcEntered = true;
-    if (!reducedMotion) {
+  // Show blur overlay
+  bp1Blur.classList.add('visible');
+
+  if (!reducedMotion) {
+    // NPC walks in with stepped pixel-art movement
+    anime({
+      targets: npc,
+      translateX: [-200, 0],
+      opacity: [0, 1],
+      duration: 1200,
+      easing: 'steps(8)',
+      complete: () => {
+        npc.classList.add('idle');
+      }
+    });
+
+    // Dialog box slides up from below (400ms delay)
+    setTimeout(() => {
+      bp1.classList.add('visible');
       anime({
-        targets: npc,
-        left: ['-60px', '10%'],
-        duration: 800,
-        easing: 'easeOutCubic',
+        targets: dialogBox,
+        translateY: ['100%', '0%'],
+        duration: 600,
+        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
+        begin: () => {
+          dialogBox.classList.add('visible');
+        },
         complete: () => {
           showSlide(0);
         }
       });
-    } else {
-      npc.style.left = '10%';
-      showSlide(0);
-    }
+    }, 400);
+  } else {
+    npc.style.opacity = '1';
+    npc.style.transform = 'translateX(0)';
+    bp1.classList.add('visible');
+    dialogBox.classList.add('visible');
+    dialogBox.style.transform = 'translateY(0)';
+    showSlide(0);
+  }
+}
+
+function exitBP1() {
+  npcEntered = false;
+  currentSlide = 0;
+  typewriterComplete = false;
+  if (typeTimer) clearInterval(typeTimer);
+
+  bp1Blur.classList.remove('visible');
+  bp1.classList.remove('visible');
+  npc.classList.remove('idle');
+  npc.style.opacity = '0';
+  npc.style.transform = 'translateX(-200px)';
+  dialogBox.classList.remove('visible');
+  dialogBox.style.transform = 'translateY(100%)';
+}
+
+function updateBP1(frac) {
+  const visible = frac >= BP.NPC_START && frac <= BP.NPC_END;
+
+  if (visible && !npcEntered) {
+    enterBP1();
   }
 
-  if (!visible) {
-    npcEntered = false;
-    currentSlide = 0;
-    if (typeTimer) clearInterval(typeTimer);
-    npc.style.left = '-60px';
-  }
-
-  // Idle bounce for NPC
-  if (visible && npcEntered) {
-    const local = getLocalFraction(frac, BP.NPC_START, BP.NPC_END);
-    npc.style.bottom = (180 + Math.sin(Date.now() / 500) * 3) + 'px';
+  if (!visible && npcEntered) {
+    exitBP1();
   }
 }
 
 // ========================================
-// 10: BP2 — Gem Menu
+// 10: BP2 — Radial HUD Event Showcase
 // ========================================
 const bp2 = document.getElementById('bp2-section');
-const gemRing = document.getElementById('gem-ring');
 const gemModal = document.getElementById('gem-modal');
 const gemModalClose = document.getElementById('gem-modal-close');
-let gemsCreated = false;
-let selectedGemIndex = -1;
+let bp2Initialized = false;
+let bp2AnimatedIn = false;
 
-// TODO: Replace with actual event data
+const BP2_TOTAL_SECTIONS = 5;
+
+// Event data for the modal (kept for compatibility)
 const gemEvents = [
   {
-    name: 'Startup Pitch Arena',
-    category: 'COMPETITION',
-    color: '#E74C3C',
-    gemColor: 'ruby',
-    prize: '₹5,00,000',
-    difficulty: '★★★★☆',
+    name: 'STARTUP PITCH',
+    category: 'Competition',
+    color: '#ff4444',
+    prize: '₹1,00,000',
+    difficulty: 4,
     duration: '2 Days',
-    description: 'Pitch your startup idea to a panel of VCs and industry leaders. Top 3 teams win funding and mentorship.'
+    description: 'Pitch your startup idea to VCs and industry leaders. Top teams win funding and mentorship.',
+    announced: true
   },
   {
-    name: 'Product Design Sprint',
-    category: 'WORKSHOP',
-    color: '#3498DB',
-    gemColor: 'sapphire',
-    prize: 'Certificate + Swag',
-    difficulty: '★★★☆☆',
-    duration: '6 Hours',
-    description: 'Learn design thinking from industry experts. Build a prototype from scratch in this intensive workshop.'
+    name: 'IDEATHON',
+    category: 'Ideathon',
+    color: '#3366ff',
+    prize: '₹75,000',
+    difficulty: 3,
+    duration: '1 Day',
+    description: 'Rapid ideation challenge. Prototype a solution in 24 hours.',
+    announced: true
   },
   {
-    name: 'Green Innovation Challenge',
-    category: 'COMPETITION',
-    color: '#2ECC71',
-    gemColor: 'emerald',
-    prize: '₹3,00,000',
-    difficulty: '★★★★★',
-    duration: '3 Days',
-    description: 'Solve real-world sustainability challenges with tech. Mentored by climate-tech founders.'
+    name: 'DESIGN SPRINT',
+    category: 'Workshop',
+    color: '#33cc66',
+    prize: '₹50,000',
+    difficulty: 2,
+    duration: '1 Day',
+    description: 'Learn design thinking from industry experts. Build a prototype from scratch.',
+    announced: true
   },
   {
-    name: 'VC Masterclass',
-    category: 'TALK',
-    color: '#F39C12',
-    gemColor: 'amber',
-    prize: 'Exclusive Access',
-    difficulty: '★★☆☆☆',
-    duration: '3 Hours',
-    description: 'Learn fundraising secrets from partners at top VC firms. Includes live deal teardowns and Q&A.'
-  },
-  {
-    name: 'Hack the Future',
-    category: 'COMPETITION',
-    color: '#9B59B6',
-    gemColor: 'amethyst',
-    prize: '₹4,00,000',
-    difficulty: '★★★★★',
-    duration: '36 Hours',
-    description: 'The ultimate hackathon. Build, ship, and demo. Open tracks: AI/ML, FinTech, HealthTech, EdTech.'
+    name: 'HACK THE FUTURE',
+    category: 'Competition',
+    color: '#ffaa00',
+    prize: '₹80,000',
+    difficulty: 5,
+    duration: '2 Days',
+    description: 'The ultimate hackathon. Build, ship, demo. Tracks: AI/ML, FinTech, HealthTech.',
+    announced: true
   }
 ];
 
-function createGems() {
-  if (gemsCreated) return;
-  gemsCreated = true;
-  gemRing.innerHTML = '';
+// Generate radial HUD tick marks
+function initBP2HUD() {
+  if (bp2Initialized) return;
+  bp2Initialized = true;
 
-  const ringSize = gemRing.offsetWidth || 300;
-  const radius = ringSize / 2 - 40;
+  const tickGroup = document.getElementById('bp2-ring-ticks');
+  const innerTickGroup = document.getElementById('bp2-ring-inner-ticks');
+  const cx = 300, cy = 300;
 
-  gemEvents.forEach((evt, i) => {
-    const angle = (i / gemEvents.length) * Math.PI * 2 - Math.PI / 2;
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
+  // Outer ticks
+  for (let i = 0; i < 120; i++) {
+    const angle = (i / 120) * 360;
+    const rad = angle * Math.PI / 180;
+    const r1 = 260, r2 = i % 5 === 0 ? 250 : 254;
+    const x1 = cx + r1 * Math.cos(rad);
+    const y1 = cy + r1 * Math.sin(rad);
+    const x2 = cx + r2 * Math.cos(rad);
+    const y2 = cy + r2 * Math.sin(rad);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+    line.setAttribute('stroke', i % 5 === 0 ? '#ffd700' : '#b8960f');
+    line.setAttribute('stroke-width', i % 5 === 0 ? '2' : '1');
+    line.setAttribute('opacity', i % 5 === 0 ? '0.8' : '0.4');
+    tickGroup.appendChild(line);
+  }
 
-    // Hub-spoke line
-    const line = document.createElement('div');
-    line.className = 'gem-line';
-    const lineLen = Math.sqrt(x * x + y * y);
-    const lineAngle = Math.atan2(y, x) * 180 / Math.PI;
-    line.style.width = lineLen + 'px';
-    line.style.transform = `rotate(${lineAngle}deg)`;
-    gemRing.appendChild(line);
+  // Inner ticks
+  for (let i = 0; i < 80; i++) {
+    const angle = (i / 80) * 360;
+    const rad = angle * Math.PI / 180;
+    const r1 = 240, r2 = 235;
+    const x1 = cx + r1 * Math.cos(rad);
+    const y1 = cy + r1 * Math.sin(rad);
+    const x2 = cx + r2 * Math.cos(rad);
+    const y2 = cy + r2 * Math.sin(rad);
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+    line.setAttribute('stroke', '#886622');
+    line.setAttribute('stroke-width', '1');
+    line.setAttribute('opacity', '0.3');
+    innerTickGroup.appendChild(line);
+  }
 
-    // Gem
-    const gem = document.createElement('div');
-    gem.className = 'gem';
-    gem.style.transform = `translate(${x}px, ${y}px)`;
-    gem.dataset.index = i;
+  // Dot grid in inner canvas
+  const dotG = document.getElementById('bp2-dotGridG');
+  const cols = 11, rows = 11;
+  const spacing = 340 / (cols + 1);
+  for (let r = 1; r <= rows; r++) {
+    for (let c = 1; c <= cols; c++) {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', c * spacing);
+      circle.setAttribute('cy', r * spacing);
+      circle.setAttribute('r', '2');
+      circle.setAttribute('fill', '#444');
+      dotG.appendChild(circle);
+    }
+  }
+}
 
-    const shape = document.createElement('div');
-    shape.className = 'gem-shape';
-    shape.style.background = evt.color;
-    shape.style.color = evt.color;
-    shape.innerHTML = `<span style="color:white;position:relative;z-index:1;font-size:6px;">${evt.gemColor.toUpperCase()}</span>`;
-    gem.appendChild(shape);
-
-    gem.addEventListener('click', () => openGemModal(i));
-    gemRing.appendChild(gem);
-  });
+function fireBP2EntranceAnimation() {
+  if (!reducedMotion) {
+    anime({
+      targets: '.bp2-hud-container',
+      scale: [0.8, 1],
+      opacity: [0, 1],
+      duration: 800,
+      easing: 'easeOutExpo'
+    });
+    anime({
+      targets: '.bp2-content-left',
+      opacity: [0, 1],
+      translateX: [-30, 0],
+      duration: 600,
+      delay: 200,
+      easing: 'easeOutCubic'
+    });
+    anime({
+      targets: '.bp2-progress-bar',
+      opacity: [0, 1],
+      translateY: [20, 0],
+      duration: 500,
+      delay: 400,
+      easing: 'easeOutCubic'
+    });
+  }
 }
 
 function openGemModal(idx) {
-  selectedGemIndex = idx;
   const evt = gemEvents[idx];
+  const stars = '★'.repeat(evt.difficulty) + '☆'.repeat(5 - evt.difficulty);
   document.getElementById('ec-category').textContent = evt.category;
   document.getElementById('ec-category').style.color = evt.color;
   document.getElementById('ec-name').textContent = evt.name;
   document.getElementById('ec-meta').innerHTML = `
-    <div class="event-card-meta-item">Prize: <span>${evt.prize}</span></div>
-    <div class="event-card-meta-item">Difficulty: <span>${evt.difficulty}</span></div>
-    <div class="event-card-meta-item">Duration: <span>${evt.duration}</span></div>
-    <div class="event-card-meta-item">Category: <span>${evt.category}</span></div>
+    <div class="event-card-meta-item">PRIZE<span>${evt.prize}</span></div>
+    <div class="event-card-meta-item">DURATION<span>${evt.duration}</span></div>
+    <div class="event-card-meta-item">CATEGORY<span>${evt.category}</span></div>
   `;
   document.getElementById('ec-desc').textContent = evt.description;
+  document.getElementById('ec-difficulty').textContent = `Difficulty: ${stars}`;
 
   gemModal.classList.add('open');
 
   if (!reducedMotion) {
     anime({
       targets: '#event-card',
-      scale: [0.8, 1],
+      translateY: [80, 0],
       opacity: [0, 1],
-      duration: 400,
-      easing: 'easeOutBack'
+      duration: 500,
+      easing: 'easeOutExpo'
     });
   }
 }
 
-gemModalClose.addEventListener('click', () => {
+function closeGemModal() {
   if (!reducedMotion) {
     anime({
       targets: '#event-card',
-      scale: [1, 0.8],
+      translateY: [0, 80],
       opacity: [1, 0],
       duration: 300,
-      easing: 'easeInBack',
+      easing: 'easeInCubic',
       complete: () => gemModal.classList.remove('open')
     });
   } else {
     gemModal.classList.remove('open');
   }
-});
+}
 
+gemModalClose.addEventListener('click', closeGemModal);
 gemModal.addEventListener('click', (e) => {
-  if (e.target === gemModal) gemModalClose.click();
+  if (e.target === gemModal) closeGemModal();
 });
 
-let gemsAnimated = false;
+// Make left-panel event sections clickable to open modal
+document.querySelectorAll('.bp2-section-content').forEach(el => {
+  const sIdx = parseInt(el.dataset.bp2Section);
+  if (sIdx >= 1 && sIdx <= gemEvents.length) {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', () => openGemModal(sIdx - 1));
+  }
+});
+
+// The first 20% of BP2 scroll range is a buffer (empty transition from BP1).
+// The radial HUD only appears after the user has truly "arrived" at BP2.
+const BP2_RAMP_FRACTION = 0.20;
 
 function updateBP2(frac) {
-  const visible = frac >= BP.GEM_START && frac <= BP.GEM_END;
-  bp2.classList.toggle('visible', visible);
+  const inRange = frac >= BP.GEM_START && frac <= BP.GEM_END;
+  const rawProgress = inRange ? (frac - BP.GEM_START) / (BP.GEM_END - BP.GEM_START) : 0;
 
-  if (visible) {
-    createGems();
-    if (!gemsAnimated && !reducedMotion) {
-      gemsAnimated = true;
-      anime({
-        targets: '.gem',
-        scale: [0, 1],
-        opacity: [0, 1],
-        delay: anime.stagger(100, { from: 'center' }),
-        duration: 600,
-        easing: 'easeOutElastic(1, .6)'
-      });
+  // HUD only becomes visible after the ramp-in buffer
+  const hudVisible = inRange && rawProgress >= BP2_RAMP_FRACTION;
+  bp2.classList.toggle('visible', hudVisible);
+
+  if (hudVisible) {
+    initBP2HUD();
+
+    // Entrance animation once
+    if (!bp2AnimatedIn) {
+      bp2AnimatedIn = true;
+      fireBP2EntranceAnimation();
+    }
+
+    // Remap progress: 0 at ramp end → 1 at BP2 end
+    const effectiveProgress = (rawProgress - BP2_RAMP_FRACTION) / (1 - BP2_RAMP_FRACTION);
+    const sectionProgress = effectiveProgress * BP2_TOTAL_SECTIONS;
+    const currentSection = Math.min(Math.floor(sectionProgress), BP2_TOTAL_SECTIONS - 1);
+    const sectionFrac = sectionProgress - currentSection;
+
+    // Update left text panels
+    document.querySelectorAll('.bp2-section-content').forEach((s, i) => {
+      s.classList.toggle('active', i === currentSection);
+    });
+
+    // Update inner canvas animations
+    document.querySelectorAll('.bp2-anim-layer').forEach((a, i) => {
+      a.classList.toggle('active', i === currentSection);
+    });
+
+    // Update progress bar
+    document.querySelectorAll('.bp2-progress-segment .bp2-fill').forEach((fill, i) => {
+      if (i < currentSection) {
+        fill.style.width = '100%';
+      } else if (i === currentSection) {
+        fill.style.width = (sectionFrac * 100) + '%';
+      } else {
+        fill.style.width = '0%';
+      }
+    });
+
+    // Rotate HUD rings based on scroll within BP2
+    const ringOuter = document.getElementById('bp2-ring-outer');
+    const ringGold = document.getElementById('bp2-ring-gold');
+    const ringTicks = document.getElementById('bp2-ring-ticks');
+    const ringInnerTicks = document.getElementById('bp2-ring-inner-ticks');
+    const ringAccent = document.getElementById('bp2-ring-accent');
+
+    if (ringOuter) {
+      const rot1 = effectiveProgress * 360;
+      const rot2 = effectiveProgress * -200;
+      const rot3 = effectiveProgress * 280;
+      const rot4 = effectiveProgress * -150;
+      const rot5 = effectiveProgress * 320;
+
+      ringOuter.style.transform = `rotate(${rot1}deg)`;
+      ringGold.style.transform = `rotate(${rot2}deg)`;
+      ringTicks.style.transform = `rotate(${rot3}deg)`;
+      ringInnerTicks.style.transform = `rotate(${rot4}deg)`;
+      ringAccent.style.transform = `rotate(${rot5}deg)`;
     }
   } else {
-    gemsAnimated = false;
+    // Reset when leaving so re-entering replays the entrance
+    if (bp2AnimatedIn) {
+      bp2AnimatedIn = false;
+    }
   }
 }
 
@@ -2358,8 +3109,8 @@ function updateSections(frac) {
   // BP0: Title screen
   updateBP0(frac);
 
-  // BP0.5: Clock + countdown
-  updateBP05(frac);
+  // BP0.5: Clock tower analog overlay
+  updateClockSection(frac);
 
   // BP1: NPC dialogue
   updateBP1(frac);
@@ -2373,10 +3124,10 @@ function updateSections(frac) {
   // BP4: Map pins
   updateBP4(frac);
 
-  // HUD
-  if (frac > BP.CLOCK_END) {
+  // HUD: logo fades in immediately when BP0 ends
+  if (frac > BP.TITLE_END) {
     hud.classList.add('visible');
-  } else if (frac <= BP.CLOCK_START) {
+  } else {
     hud.classList.remove('visible');
   }
 
@@ -2421,11 +3172,8 @@ function initSections() {
 
   // Resize handler for responsive adjustments
   window.addEventListener('resize', () => {
-    // Reset gem creation so they reposition
-    if (gemsCreated) {
-      gemsCreated = false;
-      gemsAnimated = false;
-    }
+    // Reset BP2 HUD on resize
+    bp2AnimatedIn = false;
     // Re-calc snake path
     snakePathLength = 0;
     bp3NodesCreated = false;
