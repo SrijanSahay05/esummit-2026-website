@@ -76,7 +76,7 @@ body {
 }
 
 #scroll-container {
-  height: 700vh;
+  height: 900vh;
   position: relative;
 }
 
@@ -1175,278 +1175,200 @@ body {
 }
 
 /* ========================================
-   9: BP3 Snake Timeline
+   9: Timeline — Winding Path with Event Pins
    ======================================== */
-#bp3-section {
+#timeline-section {
   position: fixed;
   inset: 0;
   z-index: 2;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.6s ease;
   overflow: hidden;
 }
 
-#bp3-section.visible {
+#timeline-section.visible {
   opacity: 1;
   pointer-events: auto;
 }
 
-.bp3-header {
+/* Subtle vignette overlay — no blur, video last frame shows through */
+.timeline-overlay {
   position: absolute;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  z-index: 3;
+  inset: 0;
+  background: radial-gradient(ellipse at center top, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.45) 100%);
+  pointer-events: none;
 }
 
-.bp3-title {
-  font-family: var(--font-pixel);
-  font-size: clamp(9px, 1.8vw, 14px);
-  color: var(--gold);
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
-  margin-bottom: 12px;
-}
-
-.bp3-filters {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.bp3-filter-btn {
-  font-family: var(--font-pixel);
-  font-size: 7px;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid var(--text-muted);
-  color: var(--text-muted);
-  padding: 5px 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.bp3-filter-btn:hover, .bp3-filter-btn.active {
-  border-color: var(--gold);
-  color: var(--gold);
-  background: rgba(255, 215, 0, 0.1);
-}
-
-/* SVG Path */
-#bp3-svg {
+/* SVG winding path */
+#timeline-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
 }
 
-.snake-path {
+.timeline-path-bg {
+  fill: none;
+  stroke: rgba(255, 215, 0, 0.12);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.timeline-path {
   fill: none;
   stroke: var(--gold);
-  stroke-width: 3;
-  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.4));
+  stroke-width: 5;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.3));
 }
 
-.path-dot {
-  fill: var(--accent-yellow);
-  filter: drop-shadow(0 0 6px var(--accent-yellow));
+.timeline-dot {
+  fill: var(--gold);
+  filter: drop-shadow(0 0 8px var(--gold));
 }
 
-/* Event nodes */
-.bp3-node {
+/* Event pins along the path */
+.tl-pin {
   position: absolute;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  cursor: pointer;
   transform: translate(-50%, -50%);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
-.bp3-node:hover {
-  transform: translate(-50%, -50%) scale(1.3);
+.tl-pin.revealed {
+  opacity: 1;
 }
 
-.bp3-node.tba {
-  filter: blur(2px) grayscale(0.8);
-  opacity: 0.5;
+.tl-pin:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.tl-pin.tba {
+  filter: grayscale(0.8);
+  opacity: 0.4 !important;
   cursor: default;
 }
 
-.bp3-node-label {
-  position: absolute;
-  top: 28px;
-  font-family: var(--font-pixel);
-  font-size: 6px;
-  color: var(--text-muted);
-  white-space: nowrap;
-  pointer-events: none;
+.tl-pin-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 0 8px rgba(0,0,0,0.8)) drop-shadow(0 0 16px rgba(0,0,0,0.5));
 }
 
-/* Side event card */
-.bp3-side-card {
+.tl-pin-name {
+  font-family: var(--font-pixel);
+  font-size: clamp(8px, 1.2vw, 11px);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 1px;
+  line-height: 1.6;
+  text-shadow: 0 0 10px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.9), 0 2px 6px rgba(0,0,0,0.8);
+  white-space: nowrap;
+}
+
+.tl-pin-date {
+  font-family: var(--font-pixel);
+  font-size: clamp(6px, 0.9vw, 8px);
+  color: var(--gold);
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.8);
+  margin-top: 2px;
+}
+
+/* Side info card when pin is clicked */
+.tl-card {
   position: absolute;
-  z-index: 4;
-  background: rgba(10, 10, 30, 0.95);
+  z-index: 5;
+  background: rgba(8, 6, 20, 0.96);
   border: 2px solid var(--gold);
-  border-radius: 4px;
-  padding: 16px 20px;
-  width: min(280px, 80vw);
+  padding: 20px 24px;
+  width: min(300px, 85vw);
   opacity: 0;
   transform: scale(0.9);
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: auto;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 215, 0, 0.2);
 }
 
-.bp3-side-card.open {
+.tl-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+  pointer-events: none;
+}
+
+.tl-card.open {
   opacity: 1;
   transform: scale(1);
 }
 
-.bp3-side-card-name {
+.tl-card-name {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--gold);
+  margin-bottom: 10px;
+  line-height: 2;
+  letter-spacing: 1px;
+}
+
+.tl-card-desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #ccc;
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+
+.tl-card-meta {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  line-height: 2;
+  margin-bottom: 14px;
+}
+
+.tl-card-close {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: none;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 6px 16px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.2s;
+}
+
+.tl-card-close:hover {
+  background: rgba(255, 215, 0, 0.15);
+}
+
+/* Left date indicator */
+.tl-date-indicator {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
   font-family: var(--font-pixel);
   font-size: 9px;
-  color: var(--gold);
-  margin-bottom: 8px;
-}
-
-.bp3-side-card-desc {
-  font-size: 12px;
   color: var(--text-muted);
-  line-height: 1.5;
-  margin-bottom: 12px;
-}
-
-.bp3-side-card-close {
-  font-family: var(--font-pixel);
-  font-size: 7px;
-  background: none;
-  border: 1px solid var(--text-muted);
-  color: var(--text-muted);
-  padding: 4px 10px;
-  cursor: pointer;
-}
-
-/* ========================================
-   10: Post-Scroll Map Pins
-   ======================================== */
-#bp4-section {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
+  letter-spacing: 1px;
+  line-height: 2;
   opacity: 0;
   transition: opacity 0.4s ease;
 }
 
-#bp4-section.visible {
+.tl-date-indicator.visible {
   opacity: 1;
-  pointer-events: auto;
-}
-
-.map-pin {
-  position: absolute;
-  transform: translate(-50%, -100%);
-  cursor: pointer;
-  z-index: 3;
-  text-align: center;
-  animation: pin-bob 1.5s ease-in-out infinite;
-  transition: transform 0.2s ease;
-}
-
-.map-pin:hover {
-  transform: translate(-50%, -100%) scale(1.15);
-}
-
-@keyframes pin-bob {
-  0%, 100% { margin-top: 0; }
-  50% { margin-top: -6px; }
-}
-
-.pin-marker {
-  width: 28px;
-  height: 36px;
-  background: var(--accent-red);
-  clip-path: polygon(50% 100%, 0% 35%, 0% 0%, 100% 0%, 100% 35%);
-  margin: 0 auto;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 6px;
-}
-
-.pin-marker-dot {
-  width: 10px;
-  height: 10px;
-  background: white;
-  border-radius: 50%;
-}
-
-.pin-label {
-  font-family: var(--font-pixel);
-  font-size: 7px;
-  color: var(--text-primary);
-  margin-top: 6px;
-  text-shadow: 0 0 6px black, 0 0 12px black;
-  white-space: nowrap;
-}
-
-/* Fly-to panel */
-.flyto-panel {
-  position: fixed;
-  inset: 0;
-  z-index: 5;
-  background: rgba(0, 0, 10, 0.95);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
-}
-
-.flyto-panel.open {
-  opacity: 1;
-  visibility: visible;
-}
-
-.flyto-panel-title {
-  font-family: var(--font-pixel);
-  font-size: clamp(14px, 3vw, 22px);
-  color: var(--gold);
-  margin-bottom: 24px;
-}
-
-.flyto-panel-content {
-  font-size: 14px;
-  color: var(--text-muted);
-  line-height: 1.8;
-  max-width: 500px;
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.flyto-panel-close {
-  font-family: var(--font-pixel);
-  font-size: 9px;
-  background: none;
-  border: 2px solid var(--gold);
-  color: var(--gold);
-  padding: 10px 24px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.flyto-panel-close:hover {
-  background: var(--gold);
-  color: var(--bg-primary);
 }
 
 /* ========================================
@@ -1589,17 +1511,16 @@ body {
   .bp2-hud-container { width: 85vw; height: 85vw; }
   .bp2-progress-bar { width: 200px; }
 
-  .bp3-side-card {
+  .tl-card {
     width: 90vw;
     left: 5vw !important;
     right: auto !important;
   }
+  .tl-pin-icon { font-size: 22px; }
+  .tl-date-indicator { display: none; }
 
   .event-card { padding: 20px 24px; }
   .event-card-meta { grid-template-columns: 1fr 1fr; }
-
-  .map-pin .pin-label { font-size: 6px; }
-  .flyto-panel { padding: 24px; }
 }
 
 @media (max-width: 480px) {
@@ -1627,7 +1548,8 @@ body {
   .bp2-event-inner-title { font-size: 7px; }
   .bp2-event-inner-subtitle { font-size: 6px; }
   .bp2-progress-bar { width: 160px; }
-  .bp3-title { font-size: 8px; }
+  .tl-pin-name { font-size: 7px; }
+  .tl-pin-icon { font-size: 20px; }
 }
 
 /* ========================================
@@ -1685,10 +1607,10 @@ body {
   <div class="hud-scroll-hint" id="scroll-hint">SCROLL TO EXPLORE ▼</div>
   <nav class="hud-nav" aria-label="Section navigation">
     <button class="hud-nav-btn" data-target="0.00">▶ START</button>
-    <button class="hud-nav-btn" data-target="0.08">⏱ TIMER</button>
-    <button class="hud-nav-btn" data-target="0.22">🗼 TOWER</button>
-    <button class="hud-nav-btn" data-target="0.38">💎 ROTUNDA</button>
-    <button class="hud-nav-btn" data-target="0.58">🗺 CAMPUS</button>
+    <button class="hud-nav-btn" data-target="0.06">⏱ TIMER</button>
+    <button class="hud-nav-btn" data-target="0.17">🗼 TOWER</button>
+    <button class="hud-nav-btn" data-target="0.48">💎 ROTUNDA</button>
+    <button class="hud-nav-btn" data-target="0.85">🗺 TIMELINE</button>
   </nav>
 </div>
 
@@ -1949,46 +1871,40 @@ body {
   </div>
 </div>
 
-<!-- ============ BP3: Snake Timeline ============ -->
-<div id="bp3-section">
-  <div class="bp3-header">
-    <div class="bp3-title">🗺 EXPLORE ALL QUESTS</div>
-    <div class="bp3-filters" id="bp3-filters">
-      <button class="bp3-filter-btn active" data-filter="ALL">ALL</button>
-      <button class="bp3-filter-btn" data-filter="COMP">COMP</button>
-      <button class="bp3-filter-btn" data-filter="WORKSHOP">WORKSHOP</button>
-      <button class="bp3-filter-btn" data-filter="TALK">TALK</button>
-    </div>
-  </div>
-  <svg id="bp3-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+<!-- ============ Timeline: Winding Path with Event Pins ============ -->
+<div id="timeline-section">
+  <div class="timeline-overlay"></div>
+
+  <!-- Winding SVG path (top→bottom, clock tower to campus bottom) -->
+  <svg id="timeline-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
     <defs>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="3" result="blur" />
+      <filter id="tl-glow">
+        <feGaussianBlur stdDeviation="4" result="blur" />
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
-    <path id="snake-path" class="snake-path" filter="url(#glow)"
-      d="M 50,300 C 150,100 250,100 350,300 S 550,500 650,300 S 850,100 950,300" />
-    <circle id="path-dot" class="path-dot" r="6" cx="50" cy="300" />
+    <!-- Background path (dim, always visible) — smooth Catmull-Rom through traced campus road points -->
+    <path id="tl-path-bg" class="timeline-path-bg"
+      d="M 499,306 C 500,309 509,317 507,323 C 505,329 484,336 485,344 C 486,352 512,358 511,369 C 510,380 483,398 480,412 C 478,426 488,443 496,454 C 504,465 520,468 530,477 C 540,486 555,494 555,506 C 555,518 540,533 532,548 C 524,563 510,577 509,594 C 508,611 518,631 525,648 C 532,666 551,681 550,699 C 549,717 531,734 520,755 C 509,776 490,798 482,823 C 474,848 472,885 472,906 C 472,928 480,944 482,952" />
+    <!-- Illuminated path (drawn progressively as user scrolls) -->
+    <path id="tl-path" class="timeline-path" filter="url(#tl-glow)"
+      d="M 499,306 C 500,309 509,317 507,323 C 505,329 484,336 485,344 C 486,352 512,358 511,369 C 510,380 483,398 480,412 C 478,426 488,443 496,454 C 504,465 520,468 530,477 C 540,486 555,494 555,506 C 555,518 540,533 532,548 C 524,563 510,577 509,594 C 508,611 518,631 525,648 C 532,666 551,681 550,699 C 549,717 531,734 520,755 C 509,776 490,798 482,823 C 474,848 472,885 472,906 C 472,928 480,944 482,952" />
+    <!-- Moving dot -->
+    <circle id="tl-dot" class="timeline-dot" r="7" cx="499" cy="306" />
   </svg>
-  <!-- Nodes injected by JS -->
-  <div id="bp3-side-card" class="bp3-side-card">
-    <div class="bp3-side-card-name" id="bp3-card-name"></div>
-    <div class="bp3-side-card-desc" id="bp3-card-desc"></div>
-    <button class="bp3-side-card-close" id="bp3-card-close">CLOSE</button>
-  </div>
-</div>
 
-<!-- ============ BP4: Map Pins ============ -->
-<div id="bp4-section">
+  <!-- Date indicator on left -->
+  <div class="tl-date-indicator" id="tl-date-indicator">◄ APRIL 2026</div>
+
   <!-- Pins injected by JS -->
-</div>
 
-<!-- ============ BP4: Fly-to Panel ============ -->
-<div class="flyto-panel" id="flyto-panel">
-  <div class="flyto-panel-title" id="flyto-title"></div>
-  <div class="flyto-panel-content" id="flyto-content"></div>
-  <button class="flyto-panel-close" id="flyto-close">CLOSE</button>
+  <!-- Side info card -->
+  <div id="tl-card" class="tl-card">
+    <div class="tl-card-name" id="tl-card-name"></div>
+    <div class="tl-card-desc" id="tl-card-desc"></div>
+    <div class="tl-card-meta" id="tl-card-meta"></div>
+    <button class="tl-card-close" id="tl-card-close">CLOSE</button>
+  </div>
 </div>
 
 <!-- ============ Scroll Container ============ -->
@@ -1998,18 +1914,23 @@ body {
 // ========================================
 // 1: Constants & Config
 // ========================================
+// Video is ~20.56s. Freeze at 12s for radial HUD.
+// Scroll 0→GEM_START scrubs video 0→12s
+// Scroll GEM_START→GEM_END = radial (video frozen at 12s)
+// Scroll GEM_END→1.0 scrubs video 12→20.56s
+const VIDEO_FREEZE_TIME = 12; // seconds — frame to hold during radial
+
 const BP = {
-  TITLE_END: 0.08,
-  CLOCK_START: 0.08,
-  CLOCK_END: 0.22,
-  NPC_START: 0.22,
-  NPC_END: 0.38,
-  GEM_START: 0.38,
-  GEM_END: 0.58,
-  SNAKE_START: 0.58,
-  SNAKE_END: 0.85,
-  PINS_START: 0.85,
-  PINS_END: 1.00
+  TITLE_END: 0.06,
+  CLOCK_START: 0.06,
+  CLOCK_END: 0.17,
+  NPC_START: 0.17,
+  NPC_END: 0.30,
+  GEM_START: 0.48,
+  GEM_END: 0.65,
+  // 0.65→0.85 = video scrub 12s→20.56s (no overlay)
+  TIMELINE_START: 0.85,
+  TIMELINE_END: 1.00
 };
 
 const EVENT_DATE = new Date('2026-04-10T09:00:00+05:30');
@@ -2063,8 +1984,25 @@ video.addEventListener('loadeddata', () => {
 
 function scrubVideo(frac) {
   if (!videoReady || !video.duration) return;
-  const targetTime = frac * video.duration;
-  // Only update if changed enough to matter (avoid constant seeking)
+
+  let targetTime;
+
+  if (frac <= BP.GEM_START) {
+    // Before radial: scroll 0→GEM_START maps to video 0→VIDEO_FREEZE_TIME
+    const t = frac / BP.GEM_START; // 0→1
+    targetTime = t * VIDEO_FREEZE_TIME;
+  } else if (frac <= BP.GEM_END) {
+    // During radial: freeze at VIDEO_FREEZE_TIME
+    targetTime = VIDEO_FREEZE_TIME;
+  } else if (frac <= BP.TIMELINE_START) {
+    // After radial, before timeline: scroll GEM_END→TIMELINE_START maps to video 12→20.56s
+    const t = (frac - BP.GEM_END) / (BP.TIMELINE_START - BP.GEM_END); // 0→1
+    targetTime = VIDEO_FREEZE_TIME + t * (video.duration - VIDEO_FREEZE_TIME);
+  } else {
+    // During timeline: freeze at end of video
+    targetTime = video.duration;
+  }
+
   if (Math.abs(video.currentTime - targetTime) > 0.03) {
     video.currentTime = targetTime;
   }
@@ -2236,7 +2174,7 @@ function handleRPGSelect(action) {
       window.open('#register', '_self');
       break;
     case 'sponsors':
-      window.scrollTo({ top: BP.PINS_START * scrollH, behavior: 'smooth' });
+      window.scrollTo({ top: BP.TIMELINE_START * scrollH, behavior: 'smooth' });
       break;
   }
 }
@@ -2318,23 +2256,24 @@ setInterval(() => {
 }, 1000);
 
 function updateClockSection(frac) {
-  const inSection = frac > BP.CLOCK_START && frac < 0.38;
+  const clockEnd = BP.NPC_END; // clock runs through NPC section
+  const inSection = frac > BP.CLOCK_START && frac < clockEnd;
 
   if (!inSection) {
     clockSvg.style.opacity = '0';
     clockPill.style.opacity = '0';
-    // Top banner persists from 0.35 onwards
-    clockTopBanner.style.opacity = frac >= 0.35 ? '1' : '0';
+    // Top banner persists after clock section
+    clockTopBanner.style.opacity = frac >= (clockEnd - 0.03) ? '1' : '0';
     clockTopBanner.textContent = `${clockAngles.totalDays} DAYS TO E-SUMMIT 2026`;
     return;
   }
 
-  // Local fraction within clock section (0.08 to 0.38 = full range)
-  const fullLocal = getLocalFraction(frac, BP.CLOCK_START, 0.38);
+  // Local fraction within clock section
+  const fullLocal = getLocalFraction(frac, BP.CLOCK_START, clockEnd);
 
-  // A→B interpolation: first 73% of section (0.08 → 0.30)
-  const abProgress = Math.min(fullLocal / 0.733, 1); // 0.733 = (0.30-0.08)/(0.38-0.08)
-  // B→C fade out: last 27% of section (0.30 → 0.38)
+  // A→B interpolation: first 73% of section
+  const abProgress = Math.min(fullLocal / 0.733, 1);
+  // B→C fade out: last 27% of section
   const bcProgress = Math.max((fullLocal - 0.733) / 0.267, 0);
 
   // Interpolate position and radius
@@ -2364,15 +2303,15 @@ function updateClockSection(frac) {
   clockHourHand.setAttribute('transform', `rotate(${clockAngles.hourAngle})`);
   clockMinuteHand.setAttribute('transform', `rotate(${clockAngles.minuteAngle})`);
 
-  // Pill counter: visible from 0.08 to 0.30, positioned below clock
-  const pillVisible = frac >= BP.CLOCK_START && frac <= 0.30;
+  // Pill counter: visible from CLOCK_START to CLOCK_END, positioned below clock
+  const pillVisible = frac >= BP.CLOCK_START && frac <= BP.CLOCK_END;
   const pillY = cyPx + radiusPx + vh * 0.05;
   clockPill.style.left = cx + '%';
   clockPill.style.top = pillY + 'px';
   clockPill.style.opacity = pillVisible ? handOpacity : '0';
   clockPill.textContent = `${clockAngles.totalDays} DAYS TO E-SUMMIT 2026`;
 
-  // Top banner: fades IN as hands fade OUT (0.30 → 0.38)
+  // Top banner: fades IN as hands fade OUT
   clockTopBanner.style.opacity = bcProgress;
   clockTopBanner.textContent = `${clockAngles.totalDays} DAYS TO E-SUMMIT 2026`;
 
@@ -2752,7 +2691,8 @@ document.querySelectorAll('.bp2-section-content').forEach(el => {
 
 // The first 20% of BP2 scroll range is a buffer (empty transition from BP1).
 // The radial HUD only appears after the user has truly "arrived" at BP2.
-const BP2_RAMP_FRACTION = 0.20;
+// No ramp needed — video scrubs 0.30→0.48 naturally before radial appears
+const BP2_RAMP_FRACTION = 0;
 
 function updateBP2(frac) {
   const inRange = frac >= BP.GEM_START && frac <= BP.GEM_END;
@@ -2827,93 +2767,104 @@ function updateBP2(frac) {
 }
 
 // ========================================
-// 11: BP3 — Snake Timeline
+// 11: Timeline — Winding Path with Event Pins
 // ========================================
-const bp3 = document.getElementById('bp3-section');
-const snakePath = document.getElementById('snake-path');
-const pathDot = document.getElementById('path-dot');
-const bp3SideCard = document.getElementById('bp3-side-card');
-const bp3CardName = document.getElementById('bp3-card-name');
-const bp3CardDesc = document.getElementById('bp3-card-desc');
-const bp3CardClose = document.getElementById('bp3-card-close');
-let snakePathLength = 0;
-let bp3NodesCreated = false;
-let activeFilter = 'ALL';
+const tlSection = document.getElementById('timeline-section');
+const tlPath = document.getElementById('tl-path');
+const tlDot = document.getElementById('tl-dot');
+const tlCard = document.getElementById('tl-card');
+const tlCardName = document.getElementById('tl-card-name');
+const tlCardDesc = document.getElementById('tl-card-desc');
+const tlCardMeta = document.getElementById('tl-card-meta');
+const tlCardClose = document.getElementById('tl-card-close');
+const tlDateIndicator = document.getElementById('tl-date-indicator');
+let tlPathLength = 0;
+let tlPinsCreated = false;
+let tlAnimatedIn = false;
 
-// TODO: Replace with actual event data
-const bp3Events = [
-  { name: 'Startup Pitch Arena', category: 'COMP', color: '#E74C3C', t: 0.05, desc: 'Pitch your idea to VCs. Win funding.', tba: false },
-  { name: 'AI/ML Workshop', category: 'WORKSHOP', color: '#3498DB', t: 0.15, desc: 'Hands-on deep learning workshop with industry tools.', tba: false },
-  { name: 'Founder Fireside Chat', category: 'TALK', color: '#F39C12', t: 0.25, desc: 'Intimate conversation with unicorn founders.', tba: false },
-  { name: 'Green Innovation', category: 'COMP', color: '#2ECC71', t: 0.35, desc: 'Build sustainable tech solutions.', tba: false },
-  { name: 'Product Design Sprint', category: 'WORKSHOP', color: '#9B59B6', t: 0.45, desc: 'Design thinking intensive.', tba: false },
-  { name: 'VC Panel: Future of AI', category: 'TALK', color: '#F39C12', t: 0.55, desc: 'Top VCs discuss AI investment landscape.', tba: false },
-  { name: 'Hack the Future', category: 'COMP', color: '#E74C3C', t: 0.65, desc: '36-hour hackathon. Build. Ship. Demo.', tba: false },
-  { name: 'Mystery Event', category: 'COMP', color: '#666', t: 0.75, desc: 'To be announced...', tba: true },
-  { name: 'Closing Ceremony', category: 'TALK', color: '#FFD700', t: 0.88, desc: 'Grand finale with surprise guest speaker.', tba: false },
-  { name: 'Blockchain Workshop', category: 'WORKSHOP', color: '#3498DB', t: 0.95, desc: 'Web3 development from zero to hero.', tba: true }
+// Event pins along the winding path (t = 0 at top, 1 at bottom)
+// Pins positioned top→bottom along the winding path
+// Path x range: ~475-547 (47.5%-54.7%), y range: 307-944 (30.7%-94.4%)
+// Pins offset slightly left/right of the path for readability
+const tlEvents = [
+  { name: 'OPENING CEREMONY', icon: '🎪', date: 'DAY 1', t: 0.04, x: 42, y: 32, desc: 'Grand inauguration with keynote speakers and the official E-Summit launch.', category: 'CEREMONY', color: '#FFD700', tba: false },
+  { name: 'STARTUP PITCH', icon: '🎤', date: 'DAY 1', t: 0.14, x: 55, y: 38, desc: 'Pitch your startup idea to VCs and industry leaders. Top teams win funding and mentorship.', category: 'COMP', color: '#E74C3C', tba: false },
+  { name: 'AI/ML WORKSHOP', icon: '🤖', date: 'DAY 1', t: 0.25, x: 41, y: 45, desc: 'Hands-on deep learning workshop with cutting-edge industry tools.', category: 'WORKSHOP', color: '#3498DB', tba: false },
+  { name: 'IDEATHON', icon: '💡', date: 'DAY 1', t: 0.37, x: 57, y: 50, desc: 'Rapid ideation challenge. Prototype a solution in 24 hours.', category: 'COMP', color: '#9B59B6', tba: false },
+  { name: 'DESIGN SPRINT', icon: '🎨', date: 'DAY 2', t: 0.48, x: 44, y: 56, desc: 'Learn design thinking from industry experts. Build a prototype from scratch.', category: 'WORKSHOP', color: '#2ECC71', tba: false },
+  { name: 'VC PANEL', icon: '🚀', date: 'DAY 2', t: 0.58, x: 57, y: 63, desc: 'Top VCs discuss the future of AI investment and startup landscape.', category: 'TALK', color: '#F39C12', tba: false },
+  { name: 'HACK THE FUTURE', icon: '🔥', date: 'DAY 2', t: 0.70, x: 44, y: 71, desc: 'The ultimate 36-hour hackathon. Build, ship, demo. Tracks: AI/ML, FinTech, HealthTech.', category: 'COMP', color: '#E74C3C', tba: false },
+  { name: 'MYSTERY EVENT', icon: '❓', date: 'DAY 3', t: 0.82, x: 56, y: 80, desc: 'To be announced. Stay tuned!', category: '???', color: '#666', tba: true },
+  { name: 'CLOSING CEREMONY', icon: '🏆', date: 'DAY 3', t: 0.95, x: 41, y: 92, desc: 'Grand finale with surprise guest speaker, awards, and networking.', category: 'CEREMONY', color: '#FFD700', tba: false }
 ];
 
-function createBP3Nodes() {
-  if (bp3NodesCreated) return;
-  bp3NodesCreated = true;
+function createTLPins() {
+  if (tlPinsCreated) return;
+  tlPinsCreated = true;
 
-  const svg = document.getElementById('bp3-svg');
-  const svgRect = svg.getBoundingClientRect();
+  tlEvents.forEach((evt, i) => {
+    const pin = document.createElement('div');
+    pin.className = 'tl-pin' + (evt.tba ? ' tba' : '');
+    pin.style.left = evt.x + '%';
+    pin.style.top = evt.y + '%';
+    pin.dataset.index = i;
+    pin.dataset.t = evt.t;
 
-  bp3Events.forEach((evt, i) => {
-    const point = snakePath.getPointAtLength(evt.t * snakePathLength);
-    // Convert SVG coords to percentage
-    const xPct = (point.x / 1000) * 100;
-    const yPct = (point.y / 600) * 100;
+    const icon = document.createElement('div');
+    icon.className = 'tl-pin-icon';
+    icon.textContent = evt.icon;
+    pin.appendChild(icon);
 
-    const node = document.createElement('div');
-    node.className = 'bp3-node' + (evt.tba ? ' tba' : '');
-    node.style.left = xPct + '%';
-    node.style.top = yPct + '%';
-    node.style.background = evt.color;
-    node.style.boxShadow = `0 0 10px ${evt.color}`;
-    node.dataset.index = i;
-    node.dataset.category = evt.category;
+    const name = document.createElement('div');
+    name.className = 'tl-pin-name';
+    name.textContent = evt.name;
+    pin.appendChild(name);
 
-    const label = document.createElement('div');
-    label.className = 'bp3-node-label';
-    label.textContent = evt.tba ? '???' : evt.name;
-    node.appendChild(label);
+    const date = document.createElement('div');
+    date.className = 'tl-pin-date';
+    date.textContent = evt.date;
+    pin.appendChild(date);
 
     if (!evt.tba) {
-      node.addEventListener('click', () => openBP3Card(i, node));
+      pin.addEventListener('click', () => openTLCard(i, pin));
     }
 
-    bp3.appendChild(node);
+    tlSection.appendChild(pin);
   });
 }
 
-function openBP3Card(idx, nodeEl) {
-  const evt = bp3Events[idx];
-  bp3CardName.textContent = evt.name;
-  bp3CardName.style.color = evt.color;
-  bp3CardDesc.textContent = evt.desc;
+function openTLCard(idx, pinEl) {
+  const evt = tlEvents[idx];
+  tlCardName.textContent = evt.icon + ' ' + evt.name;
+  tlCardName.style.color = evt.color;
+  tlCardDesc.textContent = evt.desc;
+  tlCardMeta.textContent = evt.category + ' • ' + evt.date;
 
-  // Position card near node
-  const rect = nodeEl.getBoundingClientRect();
+  // Position card near pin
+  const rect = pinEl.getBoundingClientRect();
   const isRight = rect.left > window.innerWidth / 2;
-  bp3SideCard.style.top = rect.top + 'px';
+  const isBottom = rect.top > window.innerHeight / 2;
 
-  if (isRight) {
-    bp3SideCard.style.right = (window.innerWidth - rect.left + 16) + 'px';
-    bp3SideCard.style.left = 'auto';
+  tlCard.style.top = isBottom ? (rect.top - 10) + 'px' : (rect.bottom + 10) + 'px';
+  if (isBottom) {
+    tlCard.style.transform = 'translateY(-100%) scale(1)';
   } else {
-    bp3SideCard.style.left = (rect.right + 16) + 'px';
-    bp3SideCard.style.right = 'auto';
+    tlCard.style.transform = 'scale(1)';
   }
 
-  bp3SideCard.classList.add('open');
+  if (isRight) {
+    tlCard.style.right = (window.innerWidth - rect.left + 16) + 'px';
+    tlCard.style.left = 'auto';
+  } else {
+    tlCard.style.left = (rect.right + 16) + 'px';
+    tlCard.style.right = 'auto';
+  }
+
+  tlCard.classList.add('open');
 
   if (!reducedMotion) {
     anime({
-      targets: bp3SideCard,
-      scale: [0.9, 1],
+      targets: tlCard,
       opacity: [0, 1],
       duration: 300,
       easing: 'easeOutCubic'
@@ -2921,181 +2872,59 @@ function openBP3Card(idx, nodeEl) {
   }
 }
 
-bp3CardClose.addEventListener('click', () => {
-  bp3SideCard.classList.remove('open');
+tlCardClose.addEventListener('click', () => {
+  tlCard.classList.remove('open');
 });
 
-// Filters
-document.getElementById('bp3-filters').addEventListener('click', (e) => {
-  if (!e.target.classList.contains('bp3-filter-btn')) return;
-  activeFilter = e.target.dataset.filter;
-  document.querySelectorAll('.bp3-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === activeFilter));
-
-  document.querySelectorAll('.bp3-node').forEach(node => {
-    const cat = node.dataset.category;
-    const show = activeFilter === 'ALL' || cat === activeFilter;
-    node.style.display = show ? '' : 'none';
-  });
-});
-
-function updateBP3(frac) {
-  const visible = frac >= BP.SNAKE_START && frac <= BP.SNAKE_END;
-  bp3.classList.toggle('visible', visible);
+function updateTimeline(frac) {
+  const visible = frac >= BP.TIMELINE_START;
+  tlSection.classList.toggle('visible', visible);
 
   if (!visible) {
-    bp3SideCard.classList.remove('open');
+    tlCard.classList.remove('open');
+    if (tlAnimatedIn) {
+      tlAnimatedIn = false;
+      document.querySelectorAll('.tl-pin').forEach(p => p.classList.remove('revealed'));
+    }
     return;
   }
 
-  if (!snakePathLength) {
-    snakePathLength = snakePath.getTotalLength();
-    snakePath.style.strokeDasharray = snakePathLength;
-    snakePath.style.strokeDashoffset = snakePathLength;
+  // Init path length
+  if (!tlPathLength) {
+    tlPathLength = tlPath.getTotalLength();
+    tlPath.style.strokeDasharray = tlPathLength;
+    tlPath.style.strokeDashoffset = tlPathLength;
   }
 
-  createBP3Nodes();
+  createTLPins();
 
-  const local = getLocalFraction(frac, BP.SNAKE_START, BP.SNAKE_END);
+  const local = getLocalFraction(frac, BP.TIMELINE_START, BP.TIMELINE_END);
 
   // Draw path progressively
-  const drawLen = local * snakePathLength;
-  snakePath.style.strokeDashoffset = snakePathLength - drawLen;
+  const drawLen = local * tlPathLength;
+  tlPath.style.strokeDashoffset = tlPathLength - drawLen;
 
   // Move dot along path
-  const point = snakePath.getPointAtLength(drawLen);
-  pathDot.setAttribute('cx', point.x);
-  pathDot.setAttribute('cy', point.y);
-}
+  const point = tlPath.getPointAtLength(drawLen);
+  tlDot.setAttribute('cx', point.x);
+  tlDot.setAttribute('cy', point.y);
 
-// ========================================
-// 12: BP4 — Map Pins
-// ========================================
-const bp4 = document.getElementById('bp4-section');
-const flytoPanel = document.getElementById('flyto-panel');
-const flytoTitle = document.getElementById('flyto-title');
-const flytoContent = document.getElementById('flyto-content');
-const flytoClose = document.getElementById('flyto-close');
-let pinsCreated = false;
-let pinsAnimated = false;
-
-// TODO: Replace with actual content
-const pinData = [
-  {
-    label: 'SPONSORS',
-    x: 25, y: 45,
-    color: '#F39C12',
-    title: '🏆 Our Sponsors',
-    content: 'E-Summit 2026 is backed by industry leaders investing in the next generation of founders. Sponsorship tiers: Title, Platinum, Gold, Silver. Interested in partnering? Contact us.'
-  },
-  {
-    label: 'TEAM',
-    x: 45, y: 65,
-    color: '#3498DB',
-    title: '👥 The Team',
-    content: 'PIEDS — Pilani Innovation & Entrepreneurship Development Society. A student-run organization enabling innovation since 2013. 100+ organizers making E-Summit possible.'
-  },
-  {
-    label: 'SCHEDULE',
-    x: 65, y: 40,
-    color: '#2ECC71',
-    title: '📅 Event Schedule',
-    content: 'Day 1: Opening Ceremony, Workshops, Pitch Qualifiers. Day 2: Hackathon, Competitions, Speaker Sessions. Day 3: Finals, Networking, Closing Ceremony. Full schedule coming soon.'
-  },
-  {
-    label: 'CONTACT',
-    x: 80, y: 70,
-    color: '#E74C3C',
-    title: '📧 Contact Us',
-    content: 'Email: esummit@pilani.bits-pilani.ac.in | Instagram: @esummit_bitspilani | Twitter: @esummit_bits | For sponsorship inquiries, partnerships, or general questions.'
-  }
-];
-
-function createPins() {
-  if (pinsCreated) return;
-  pinsCreated = true;
-
-  pinData.forEach((pin, i) => {
-    const el = document.createElement('div');
-    el.className = 'map-pin';
-    el.style.left = pin.x + '%';
-    el.style.top = pin.y + '%';
-    el.style.opacity = '0';
-    el.dataset.index = i;
-
-    const marker = document.createElement('div');
-    marker.className = 'pin-marker';
-    marker.style.background = pin.color;
-    const dot = document.createElement('div');
-    dot.className = 'pin-marker-dot';
-    marker.appendChild(dot);
-
-    const label = document.createElement('div');
-    label.className = 'pin-label';
-    label.textContent = pin.label;
-
-    el.appendChild(marker);
-    el.appendChild(label);
-
-    el.addEventListener('click', () => openFlyto(i));
-
-    bp4.appendChild(el);
-  });
-}
-
-function openFlyto(idx) {
-  const pin = pinData[idx];
-  flytoTitle.textContent = pin.title;
-  flytoContent.textContent = pin.content;
-  flytoPanel.classList.add('open');
-
-  if (!reducedMotion) {
-    anime({
-      targets: flytoPanel,
-      opacity: [0, 1],
-      duration: 400,
-      easing: 'easeOutCubic'
-    });
-  }
-}
-
-flytoClose.addEventListener('click', () => {
-  if (!reducedMotion) {
-    anime({
-      targets: flytoPanel,
-      opacity: [1, 0],
-      duration: 300,
-      easing: 'easeInCubic',
-      complete: () => flytoPanel.classList.remove('open')
-    });
-  } else {
-    flytoPanel.classList.remove('open');
-  }
-});
-
-function updateBP4(frac) {
-  const visible = frac >= BP.PINS_START;
-  bp4.classList.toggle('visible', visible);
-
-  if (visible) {
-    createPins();
-    if (!pinsAnimated) {
-      pinsAnimated = true;
-      if (!reducedMotion) {
-        anime({
-          targets: '.map-pin',
-          opacity: [0, 1],
-          translateY: ['-80px', '0px'],
-          delay: anime.stagger(150),
-          duration: 600,
-          easing: 'easeOutBounce'
-        });
-      } else {
-        document.querySelectorAll('.map-pin').forEach(p => p.style.opacity = '1');
-      }
+  // Reveal pins as the path reaches them
+  document.querySelectorAll('.tl-pin').forEach(pin => {
+    const pinT = parseFloat(pin.dataset.t);
+    if (local >= pinT) {
+      pin.classList.add('revealed');
+    } else {
+      pin.classList.remove('revealed');
     }
-  } else {
-    pinsAnimated = false;
-    document.querySelectorAll('.map-pin').forEach(p => p.style.opacity = '0');
+  });
+
+  // Date indicator
+  tlDateIndicator.classList.toggle('visible', local > 0.05);
+
+  // Mark as animated in
+  if (!tlAnimatedIn && local > 0.02) {
+    tlAnimatedIn = true;
   }
 }
 
@@ -3118,11 +2947,8 @@ function updateSections(frac) {
   // BP2: Gem menu
   updateBP2(frac);
 
-  // BP3: Snake timeline
-  updateBP3(frac);
-
-  // BP4: Map pins
-  updateBP4(frac);
+  // Timeline: Winding path with event pins
+  updateTimeline(frac);
 
   // HUD: logo fades in immediately when BP0 ends
   if (frac > BP.TITLE_END) {
@@ -3174,9 +3000,10 @@ function initSections() {
   window.addEventListener('resize', () => {
     // Reset BP2 HUD on resize
     bp2AnimatedIn = false;
-    // Re-calc snake path
-    snakePathLength = 0;
-    bp3NodesCreated = false;
+    // Re-calc timeline path
+    tlPathLength = 0;
+    tlPinsCreated = false;
+    tlAnimatedIn = false;
   });
 }
 
@@ -3189,6 +3016,167 @@ function setVH() {
 }
 setVH();
 window.addEventListener('resize', setVH);
+
+// ========================================
+// DEBUG: Scroll fraction overlay (remove before production)
+// ========================================
+(function addDebugOverlay() {
+  const dbg = document.createElement('div');
+  dbg.id = 'debug-scroll';
+  dbg.style.cssText = 'position:fixed;top:50px;left:16px;z-index:9999;font-family:monospace;font-size:13px;color:#0f0;background:rgba(0,0,0,0.85);padding:10px 14px;border-radius:6px;border:1px solid #0f0;pointer-events:none;line-height:1.8;white-space:pre;';
+  document.body.appendChild(dbg);
+
+  function getBPName(f) {
+    if (f <= 0.06) return 'BP0   Title';
+    if (f <= 0.17) return 'BP0.5 Clock';
+    if (f <= 0.30) return 'BP1   NPC';
+    if (f <= 0.48) return '---   Video scrub';
+    if (f <= 0.65) return 'BP2   Radial';
+    if (f <= 0.85) return '---   Video scrub';
+    return 'TL    Timeline';
+  }
+
+  // --- Mouse coordinate tracker ---
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function update() {
+    const f = getScrollFraction();
+    const v = document.getElementById('bg-video');
+    const vTime = v ? v.currentTime.toFixed(2) : '?';
+    const vDur = (v && v.duration) ? v.duration.toFixed(2) : '?';
+    // Convert mouse position to percentage of viewport
+    const xPct = ((mouseX / window.innerWidth) * 100).toFixed(1);
+    const yPct = ((mouseY / window.innerHeight) * 100).toFixed(1);
+    dbg.textContent =
+      'scroll: ' + f.toFixed(4) + '\n' +
+      'video:  ' + vTime + 's / ' + vDur + 's\n' +
+      'active: ' + getBPName(f) + '\n' +
+      'cursor: x=' + xPct + '% y=' + yPct + '%';
+    requestAnimationFrame(update);
+  }
+  update();
+
+  // --- PATH DRAWING MODE ---
+  // Press 'D' to toggle draw mode. Click to place points. Press 'C' to copy path. Press 'X' to clear.
+  let drawMode = false;
+  let drawPoints = [];
+  const drawCanvas = document.createElement('canvas');
+  drawCanvas.id = 'draw-canvas';
+  drawCanvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:9998;pointer-events:none;';
+  document.body.appendChild(drawCanvas);
+  const drawCtx = drawCanvas.getContext('2d');
+
+  const drawLabel = document.createElement('div');
+  drawLabel.style.cssText = 'position:fixed;top:50px;right:16px;z-index:9999;font-family:monospace;font-size:12px;color:#ff0;background:rgba(0,0,0,0.85);padding:8px 12px;border-radius:6px;border:1px solid #ff0;display:none;line-height:1.6;white-space:pre;pointer-events:none;';
+  document.body.appendChild(drawLabel);
+
+  function resizeDrawCanvas() {
+    drawCanvas.width = window.innerWidth;
+    drawCanvas.height = window.innerHeight;
+    redrawPath();
+  }
+  window.addEventListener('resize', resizeDrawCanvas);
+  resizeDrawCanvas();
+
+  function redrawPath() {
+    drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+    if (drawPoints.length === 0) return;
+
+    // Draw lines between points
+    drawCtx.strokeStyle = '#ff0';
+    drawCtx.lineWidth = 3;
+    drawCtx.lineJoin = 'round';
+    drawCtx.setLineDash([8, 4]);
+    drawCtx.beginPath();
+    drawPoints.forEach((p, i) => {
+      const px = (p.x / 100) * drawCanvas.width;
+      const py = (p.y / 100) * drawCanvas.height;
+      if (i === 0) drawCtx.moveTo(px, py);
+      else drawCtx.lineTo(px, py);
+    });
+    drawCtx.stroke();
+    drawCtx.setLineDash([]);
+
+    // Draw dots at each point
+    drawPoints.forEach((p, i) => {
+      const px = (p.x / 100) * drawCanvas.width;
+      const py = (p.y / 100) * drawCanvas.height;
+      drawCtx.fillStyle = i === 0 ? '#0f0' : (i === drawPoints.length - 1 ? '#f00' : '#ff0');
+      drawCtx.beginPath();
+      drawCtx.arc(px, py, 6, 0, Math.PI * 2);
+      drawCtx.fill();
+      // Label
+      drawCtx.fillStyle = '#fff';
+      drawCtx.font = '10px monospace';
+      drawCtx.fillText(i + ': ' + p.x.toFixed(1) + ',' + p.y.toFixed(1), px + 10, py - 6);
+    });
+  }
+
+  function generateSVGPath() {
+    if (drawPoints.length < 2) return 'Need at least 2 points';
+    // Convert % to SVG coords (viewBox 0 0 1000 1000)
+    const svgPts = drawPoints.map(p => ({ x: p.x * 10, y: p.y * 10 }));
+    // Build a smooth cubic bezier path through the points
+    let d = 'M ' + svgPts[0].x.toFixed(0) + ',' + svgPts[0].y.toFixed(0);
+    for (let i = 1; i < svgPts.length; i++) {
+      const prev = svgPts[i - 1];
+      const curr = svgPts[i];
+      // Simple smooth curve using S command
+      const cx = (prev.x + curr.x) / 2;
+      const cy = prev.y + (curr.y - prev.y) * 0.5;
+      if (i === 1) {
+        d += ' C ' + prev.x.toFixed(0) + ',' + ((prev.y + curr.y) / 2).toFixed(0);
+        d += ' ' + cx.toFixed(0) + ',' + cy.toFixed(0);
+        d += ' ' + curr.x.toFixed(0) + ',' + curr.y.toFixed(0);
+      } else {
+        d += ' S ' + cx.toFixed(0) + ',' + cy.toFixed(0);
+        d += ' ' + curr.x.toFixed(0) + ',' + curr.y.toFixed(0);
+      }
+    }
+    return d;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'd' || e.key === 'D') {
+      drawMode = !drawMode;
+      drawCanvas.style.pointerEvents = drawMode ? 'auto' : 'none';
+      drawCanvas.style.cursor = drawMode ? 'crosshair' : '';
+      drawLabel.style.display = drawMode ? 'block' : 'none';
+      drawLabel.textContent = 'DRAW MODE ON\nClick to add points\nC = copy SVG path\nZ = undo last\nX = clear all\nD = toggle off\n\nPoints: ' + drawPoints.length;
+    }
+    if (e.key === 'x' || e.key === 'X') {
+      drawPoints = [];
+      redrawPath();
+      drawLabel.textContent = 'DRAW MODE ON\nCleared!\nPoints: 0';
+    }
+    if (e.key === 'z' || e.key === 'Z') {
+      drawPoints.pop();
+      redrawPath();
+      drawLabel.textContent = 'DRAW MODE ON\nUndo! Points: ' + drawPoints.length;
+    }
+    if (e.key === 'c' || e.key === 'C') {
+      const path = generateSVGPath();
+      navigator.clipboard.writeText(path).then(() => {
+        drawLabel.textContent = 'COPIED TO CLIPBOARD!\n\n' + path + '\n\nPoints (' + drawPoints.length + '):\n' + drawPoints.map((p,i) => i + ': x=' + p.x.toFixed(1) + '% y=' + p.y.toFixed(1) + '%').join('\n');
+      }).catch(() => {
+        drawLabel.textContent = 'PATH (copy manually):\n\n' + path + '\n\nPoints (' + drawPoints.length + '):\n' + drawPoints.map((p,i) => i + ': x=' + p.x.toFixed(1) + '% y=' + p.y.toFixed(1) + '%').join('\n');
+      });
+    }
+  });
+
+  drawCanvas.addEventListener('click', (e) => {
+    if (!drawMode) return;
+    const xPct = (e.clientX / window.innerWidth) * 100;
+    const yPct = (e.clientY / window.innerHeight) * 100;
+    drawPoints.push({ x: xPct, y: yPct });
+    redrawPath();
+    drawLabel.textContent = 'DRAW MODE ON\nClick to add points\nC = copy SVG path\nZ = undo last\nX = clear all\nD = toggle off\n\nPoints: ' + drawPoints.length + '\nLast: ' + xPct.toFixed(1) + '%, ' + yPct.toFixed(1) + '%';
+  });
+})();
 </script>
 
 </body>
