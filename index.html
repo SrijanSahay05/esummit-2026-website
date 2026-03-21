@@ -1,0 +1,2447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Summit 2026 | BITS Pilani — Where Ideas Meet Execution</title>
+  <meta name="description" content="Apogee X E-Summit 2026 at BITS Pilani. Where ideas meet execution. Where Founders meet the Future. Workshops, Competitions, Networking & Experiences." />
+  <meta name="keywords" content="E-Summit BITS Pilani 2026, startup summit India, college entrepreneurship event, PIEDS" />
+  <meta property="og:title" content="E-Summit 2026 | BITS Pilani" />
+  <meta property="og:description" content="Where ideas meet execution. Where Founders meet the Future." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Anime.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+<style>
+/* ========================================
+   1: Reset & CSS Variables
+   ======================================== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-primary: #000000;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+  --text-primary: #FFFFFF;
+  --text-muted: #A0A0A0;
+  --accent-blue: #1A5BC4;
+  --accent-blue-light: #4A90D9;
+  --accent-orange: #E87A20;
+  --accent-yellow: #F5C842;
+  --accent-red: #C43030;
+  --pixel-purple: #6B3FA0;
+  --gold: #FFD700;
+  --emerald: #2ECC71;
+  --ruby: #E74C3C;
+  --sapphire: #3498DB;
+  --amber: #F39C12;
+  --amethyst: #9B59B6;
+
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+::selection {
+  background-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+
+/* ========================================
+   2: Base Layout
+   ======================================== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#scroll-container {
+  height: 700vh;
+  position: relative;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--accent-blue); }
+
+/* Focus */
+:focus-visible {
+  outline: 2px solid var(--accent-yellow);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   3: Loading Screen
+   ======================================== */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+#loading-screen .logo {
+  width: clamp(200px, 40vw, 400px);
+  image-rendering: pixelated;
+}
+
+.loading-bar-container {
+  width: clamp(200px, 50vw, 400px);
+  height: 20px;
+  border: 2px solid var(--accent-yellow);
+  padding: 2px;
+  position: relative;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-yellow);
+  transition: width 0.3s ease;
+  image-rendering: pixelated;
+  /* Pixel block pattern */
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--accent-yellow) 0px,
+    var(--accent-yellow) 14px,
+    var(--bg-primary) 14px,
+    var(--bg-primary) 16px
+  );
+}
+
+.loading-text {
+  font-family: var(--font-pixel);
+  font-size: clamp(8px, 1.5vw, 12px);
+  color: var(--accent-yellow);
+  animation: blink-text 1s steps(1) infinite;
+}
+
+@keyframes blink-text {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ========================================
+   4: HUD
+   ======================================== */
+#hud {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#hud.visible {
+  opacity: 1;
+}
+
+/* Top-right: logo + countdown */
+.hud-top-right {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.hud-logo {
+  height: 28px;
+  image-rendering: pixelated;
+}
+
+.hud-countdown {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--accent-yellow);
+  text-shadow: 0 0 8px rgba(245, 200, 66, 0.5);
+}
+
+/* Top-left: scroll indicator */
+.hud-scroll-hint {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--text-muted);
+  pointer-events: none;
+  animation: bob 2s ease-in-out infinite;
+  transition: opacity 0.5s ease;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* Bottom-right: nav buttons */
+.hud-nav {
+  position: absolute;
+  bottom: 20px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.hud-nav-btn {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--accent-blue);
+  color: var(--text-primary);
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  padding: 6px 10px;
+  cursor: pointer;
+  text-align: right;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.hud-nav-btn:hover, .hud-nav-btn.active {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue-light);
+  color: white;
+  box-shadow: 0 0 12px rgba(26, 91, 196, 0.4);
+}
+
+/* ========================================
+   5: BP0 Title Screen
+   ======================================== */
+#bp0-title {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  background: var(--bg-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease;
+}
+
+#bp0-title.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Orange ticker */
+.ticker-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: var(--accent-orange);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-text {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--bg-primary);
+  white-space: nowrap;
+  animation: ticker-scroll 20s linear infinite;
+}
+
+@keyframes ticker-scroll {
+  0% { transform: translateX(100vw); }
+  100% { transform: translateX(-200%); }
+}
+
+/* Main logo */
+.title-logo {
+  width: clamp(250px, 50vw, 550px);
+  image-rendering: pixelated;
+  animation: logo-pulse 2s ease-in-out infinite;
+}
+
+@keyframes logo-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+/* Press Start */
+.press-start {
+  font-family: var(--font-pixel);
+  font-size: clamp(10px, 2vw, 16px);
+  color: var(--text-primary);
+  margin-top: 40px;
+  animation: blink-text 1s steps(1) infinite;
+  cursor: pointer;
+}
+
+/* RPG Menu */
+.rpg-menu {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.rpg-menu-item {
+  font-family: var(--font-pixel);
+  font-size: clamp(8px, 1.5vw, 12px);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+  background: none;
+  border: none;
+}
+
+.rpg-menu-item:hover, .rpg-menu-item.selected {
+  color: var(--text-primary);
+}
+
+.rpg-arrow {
+  color: var(--accent-yellow);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  font-size: 1em;
+}
+
+.rpg-menu-item.selected .rpg-arrow,
+.rpg-menu-item:hover .rpg-arrow {
+  opacity: 1;
+}
+
+/* Tagline */
+.title-tagline {
+  font-family: var(--font-pixel);
+  font-size: clamp(7px, 1.2vw, 10px);
+  color: var(--text-muted);
+  margin-top: 24px;
+  text-align: center;
+  max-width: 500px;
+  line-height: 1.8;
+}
+
+/* Mascots */
+.mascot-row {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  gap: clamp(4px, 1vw, 12px);
+  align-items: flex-end;
+}
+
+.mascot {
+  width: clamp(28px, 5vw, 48px);
+  height: clamp(28px, 5vw, 48px);
+  border-radius: 4px;
+  animation: mascot-float 2s ease-in-out infinite;
+}
+
+@keyframes mascot-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Footer text */
+.title-footer {
+  position: absolute;
+  bottom: 12px;
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ========================================
+   6: BP0.5 Clock Face + Countdown
+   ======================================== */
+#bp05-section {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#bp05-section.visible {
+  opacity: 1;
+}
+
+.bp05-countdown {
+  position: absolute;
+  font-family: var(--font-pixel);
+  color: var(--accent-yellow);
+  text-shadow: 0 0 20px rgba(245, 200, 66, 0.6);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.bp05-countdown .days { font-size: clamp(20px, 5vw, 48px); }
+.bp05-countdown .sub { font-size: clamp(8px, 1.5vw, 14px); margin-top: 6px; }
+
+.bp05-logo {
+  position: absolute;
+  image-rendering: pixelated;
+}
+
+/* Pac-Man */
+.pacman-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pacman {
+  width: 30px;
+  height: 30px;
+  background: var(--accent-yellow);
+  border-radius: 50%;
+  position: absolute;
+  animation: pacman-chomp 0.3s steps(2) infinite;
+}
+
+@keyframes pacman-chomp {
+  0% { clip-path: polygon(100% 50%, 50% 0%, 0% 0%, 0% 100%, 50% 100%, 100% 50%); }
+  100% { clip-path: polygon(100% 50%, 50% 15%, 0% 0%, 0% 100%, 50% 85%, 100% 50%); }
+}
+
+.ghost {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  border-radius: 12px 12px 4px 4px;
+  font-family: var(--font-pixel);
+  font-size: 5px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.bp05-flavor {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-pixel);
+  font-size: clamp(7px, 1.2vw, 11px);
+  color: var(--accent-orange);
+  text-align: center;
+  text-shadow: 0 0 10px rgba(232, 122, 32, 0.5);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  white-space: nowrap;
+}
+
+/* ========================================
+   7: BP1 NPC Dialogue
+   ======================================== */
+#bp1-section {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+#bp1-section.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* NPC pixel character */
+.npc-character {
+  position: absolute;
+  bottom: 180px;
+  left: -60px;
+  width: 40px;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.npc-body {
+  width: 24px;
+  height: 30px;
+  background: var(--accent-blue);
+  border-radius: 4px 4px 0 0;
+  position: relative;
+}
+
+.npc-body::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 4px;
+  width: 16px;
+  height: 8px;
+  background: var(--text-primary);
+  border-radius: 2px;
+}
+
+.npc-head {
+  width: 28px;
+  height: 20px;
+  background: var(--accent-yellow);
+  border-radius: 6px 6px 2px 2px;
+  position: relative;
+}
+
+.npc-head::before, .npc-head::after {
+  content: '';
+  position: absolute;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  background: var(--bg-primary);
+  border-radius: 1px;
+}
+
+.npc-head::before { left: 7px; }
+.npc-head::after { right: 7px; }
+
+.npc-legs {
+  display: flex;
+  gap: 4px;
+}
+
+.npc-leg {
+  width: 8px;
+  height: 12px;
+  background: var(--accent-blue-light);
+  border-radius: 0 0 2px 2px;
+}
+
+/* Dialog box */
+.dialog-box {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(70vw, 600px);
+  background: rgba(0, 0, 0, 0.92);
+  border: 3px solid var(--gold);
+  border-radius: 4px;
+  padding: 20px 24px;
+  font-family: var(--font-body);
+  font-size: clamp(12px, 1.8vw, 15px);
+  line-height: 1.7;
+  color: var(--text-primary);
+  position: relative;
+}
+
+/* Pixel corner decorations */
+.dialog-box::before, .dialog-box::after {
+  content: '◆';
+  position: absolute;
+  color: var(--gold);
+  font-size: 10px;
+}
+
+.dialog-box::before { top: -7px; left: -7px; }
+.dialog-box::after { top: -7px; right: -7px; }
+
+.dialog-speaker {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.dialog-text {
+  min-height: 60px;
+}
+
+.dialog-next-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 16px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--accent-yellow);
+  background: none;
+  border: 1px solid var(--accent-yellow);
+  padding: 4px 12px;
+  cursor: pointer;
+  animation: blink-text 1.2s steps(1) infinite;
+  pointer-events: auto;
+}
+
+.dialog-next-btn:hover {
+  background: var(--accent-yellow);
+  color: var(--bg-primary);
+}
+
+/* ========================================
+   8: BP2 Gem Menu
+   ======================================== */
+#bp2-section {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#bp2-section.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bp2-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(10px, 2vw, 16px);
+  color: var(--gold);
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.gem-ring {
+  position: relative;
+  width: clamp(260px, 40vw, 380px);
+  height: clamp(260px, 40vw, 380px);
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gem {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  /* Centered at ring center, then rotated out */
+  left: 50%;
+  top: 50%;
+  margin-left: -30px;
+  margin-top: -30px;
+}
+
+.gem:hover {
+  transform: scale(1.15);
+  filter: brightness(1.3);
+}
+
+.gem-shape {
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 0 4px rgba(0,0,0,0.8);
+  animation: gem-pulse 2s ease-in-out infinite;
+  position: relative;
+}
+
+.gem-shape::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  background: inherit;
+  filter: brightness(1.3);
+  opacity: 0.4;
+}
+
+@keyframes gem-pulse {
+  0%, 100% { box-shadow: 0 0 15px currentColor; }
+  50% { box-shadow: 0 0 30px currentColor, 0 0 60px currentColor; }
+}
+
+/* Hub-spoke lines */
+.gem-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 1px;
+  transform-origin: 0 0;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  opacity: 0.3;
+  animation: line-pulse 2s ease-in-out infinite;
+}
+
+@keyframes line-pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.5; }
+}
+
+.gem-label {
+  position: absolute;
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Event Card Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.event-card {
+  background: rgba(10, 10, 30, 0.95);
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  padding: 28px 32px;
+  max-width: 450px;
+  width: 90vw;
+  position: relative;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.open .event-card {
+  transform: scale(1);
+}
+
+.event-card-category {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.event-card-name {
+  font-family: var(--font-pixel);
+  font-size: clamp(12px, 2vw, 16px);
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.event-card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  margin-bottom: 16px;
+}
+
+.event-card-meta-item {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.event-card-meta-item span {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.event-card-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.event-card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-register {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: var(--accent-orange);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-register:hover { background: #d06a10; }
+
+.btn-close {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: none;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-close:hover {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+/* ========================================
+   9: BP3 Snake Timeline
+   ======================================== */
+#bp3-section {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  overflow: hidden;
+}
+
+#bp3-section.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bp3-header {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 3;
+}
+
+.bp3-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(9px, 1.8vw, 14px);
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+  margin-bottom: 12px;
+}
+
+.bp3-filters {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.bp3-filter-btn {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bp3-filter-btn:hover, .bp3-filter-btn.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(255, 215, 0, 0.1);
+}
+
+/* SVG Path */
+#bp3-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.snake-path {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 3;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.4));
+}
+
+.path-dot {
+  fill: var(--accent-yellow);
+  filter: drop-shadow(0 0 6px var(--accent-yellow));
+}
+
+/* Event nodes */
+.bp3-node {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bp3-node:hover {
+  transform: translate(-50%, -50%) scale(1.3);
+}
+
+.bp3-node.tba {
+  filter: blur(2px) grayscale(0.8);
+  opacity: 0.5;
+  cursor: default;
+}
+
+.bp3-node-label {
+  position: absolute;
+  top: 28px;
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Side event card */
+.bp3-side-card {
+  position: absolute;
+  z-index: 4;
+  background: rgba(10, 10, 30, 0.95);
+  border: 2px solid var(--gold);
+  border-radius: 4px;
+  padding: 16px 20px;
+  width: min(280px, 80vw);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: auto;
+}
+
+.bp3-side-card.open {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.bp3-side-card-name {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.bp3-side-card-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.bp3-side-card-close {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  background: none;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+/* ========================================
+   10: Post-Scroll Map Pins
+   ======================================== */
+#bp4-section {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+#bp4-section.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.map-pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  cursor: pointer;
+  z-index: 3;
+  text-align: center;
+  animation: pin-bob 1.5s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.map-pin:hover {
+  transform: translate(-50%, -100%) scale(1.15);
+}
+
+@keyframes pin-bob {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -6px; }
+}
+
+.pin-marker {
+  width: 28px;
+  height: 36px;
+  background: var(--accent-red);
+  clip-path: polygon(50% 100%, 0% 35%, 0% 0%, 100% 0%, 100% 35%);
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.pin-marker-dot {
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+}
+
+.pin-label {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--text-primary);
+  margin-top: 6px;
+  text-shadow: 0 0 6px black, 0 0 12px black;
+  white-space: nowrap;
+}
+
+/* Fly-to panel */
+.flyto-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  background: rgba(0, 0, 10, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.flyto-panel.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.flyto-panel-title {
+  font-family: var(--font-pixel);
+  font-size: clamp(14px, 3vw, 22px);
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+.flyto-panel-content {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.8;
+  max-width: 500px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.flyto-panel-close {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  background: none;
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.flyto-panel-close:hover {
+  background: var(--gold);
+  color: var(--bg-primary);
+}
+
+/* ========================================
+   11: CRT Effects
+   ======================================== */
+#crt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.crt-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 1px,
+    rgba(0, 0, 0, 0.3) 1px,
+    rgba(0, 0, 0, 0.3) 2px
+  );
+  background-size: 100% 4px;
+  opacity: 0.5;
+}
+
+.crt-rgb-grid {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03) 0px,
+    rgba(0, 255, 0, 0.03) 1px,
+    rgba(0, 0, 255, 0.03) 2px,
+    transparent 3px
+  );
+  background-size: 3px 100%;
+  opacity: 0.6;
+}
+
+.crt-moving-line {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 48%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 52%,
+    transparent 100%
+  );
+  background-size: 100% 20%;
+  animation: crt-scan-move 6s linear infinite;
+}
+
+@keyframes crt-scan-move {
+  0% { background-position: 0% -20%; }
+  100% { background-position: 0% 120%; }
+}
+
+.crt-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0, 0, 0, 0.35) 80%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}
+
+.crt-flicker {
+  position: absolute;
+  inset: 0;
+  animation: crt-flicker-anim 0.15s infinite;
+  opacity: 0;
+}
+
+@keyframes crt-flicker-anim {
+  0% { opacity: 0; }
+  5% { opacity: 0.02; background: white; }
+  10% { opacity: 0; }
+  15% { opacity: 0.01; background: white; }
+  20% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+#crt-noise {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.04;
+  image-rendering: pixelated;
+}
+
+/* ========================================
+   12: Keyframes (additional)
+   ======================================== */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pin-drop {
+  0% { opacity: 0; transform: translate(-50%, -200%); }
+  60% { transform: translate(-50%, -90%); }
+  80% { transform: translate(-50%, -105%); }
+  100% { opacity: 1; transform: translate(-50%, -100%); }
+}
+
+/* ========================================
+   13: Responsive
+   ======================================== */
+@media (max-width: 768px) {
+  .hud-countdown { font-size: 7px; }
+  .hud-logo { height: 20px; }
+  .hud-nav-btn { font-size: 6px; padding: 5px 8px; }
+  .hud-scroll-hint { font-size: 7px; }
+
+  .dialog-box {
+    width: 95vw;
+    padding: 16px;
+    bottom: 16px;
+  }
+
+  .gem-ring {
+    width: 240px;
+    height: 240px;
+  }
+
+  .gem {
+    width: 48px;
+    height: 48px;
+    margin-left: -24px;
+    margin-top: -24px;
+  }
+
+  .gem-shape { font-size: 6px; }
+
+  .bp3-side-card {
+    width: 90vw;
+    left: 5vw !important;
+    right: auto !important;
+  }
+
+  .event-card { padding: 20px; }
+
+  .map-pin .pin-label { font-size: 6px; }
+
+  .flyto-panel { padding: 24px; }
+}
+
+@media (max-width: 480px) {
+  .title-logo { width: 220px; }
+  .rpg-menu-item { font-size: 8px; }
+  .gem-ring { width: 200px; height: 200px; }
+  .gem { width: 42px; height: 42px; margin-left: -21px; margin-top: -21px; }
+  .bp2-title { font-size: 9px; }
+  .bp3-title { font-size: 8px; }
+  .hud-nav { bottom: 12px; right: 8px; }
+  .hud-nav-btn { font-size: 5px; padding: 4px 6px; min-height: 44px; min-width: 44px; display: flex; align-items: center; justify-content: flex-end; }
+}
+
+/* ========================================
+   14: Reduced Motion
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html { scroll-behavior: auto; }
+
+  .crt-moving-line,
+  .crt-flicker,
+  #crt-noise { display: none; }
+
+  .ticker-text { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ Loading Screen ============ -->
+<div id="loading-screen">
+  <img src="public/images/logo/esummit-logo.png" alt="E-Summit 2026" class="logo" />
+  <div class="loading-bar-container">
+    <div class="loading-bar-fill" id="loading-bar"></div>
+  </div>
+  <div class="loading-text">LOADING WORLD...</div>
+</div>
+
+<!-- ============ Background Video ============ -->
+<video id="bg-video" muted playsinline preload="auto" style="position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;">
+  <source src="esummit_video_website.mp4" type="video/mp4" />
+</video>
+
+<!-- ============ CRT Overlay ============ -->
+<div id="crt-overlay" aria-hidden="true">
+  <div class="crt-scanlines"></div>
+  <div class="crt-rgb-grid"></div>
+  <div class="crt-moving-line"></div>
+  <div class="crt-vignette"></div>
+  <div class="crt-flicker"></div>
+  <canvas id="crt-noise"></canvas>
+</div>
+
+<!-- ============ HUD ============ -->
+<div id="hud">
+  <div class="hud-top-right">
+    <img src="public/images/logo/esummit-logo.png" alt="E-Summit 2026" class="hud-logo" />
+    <div class="hud-countdown" id="hud-countdown"></div>
+  </div>
+  <div class="hud-scroll-hint" id="scroll-hint">SCROLL TO EXPLORE ▼</div>
+  <nav class="hud-nav" aria-label="Section navigation">
+    <button class="hud-nav-btn" data-target="0.00">▶ START</button>
+    <button class="hud-nav-btn" data-target="0.08">⏱ TIMER</button>
+    <button class="hud-nav-btn" data-target="0.22">🗼 TOWER</button>
+    <button class="hud-nav-btn" data-target="0.38">💎 ROTUNDA</button>
+    <button class="hud-nav-btn" data-target="0.58">🗺 CAMPUS</button>
+  </nav>
+</div>
+
+<!-- ============ BP0: Title Screen ============ -->
+<div id="bp0-title">
+  <div class="ticker-bar">
+    <div class="ticker-text">
+      ★ REGISTRATIONS OPEN NOW ★ APOGEE X E-SUMMIT 2026 ★ BITS PILANI ★ APRIL 2026 ★ REGISTRATIONS OPEN NOW ★ APOGEE X E-SUMMIT 2026 ★ BITS PILANI ★ APRIL 2026 ★
+    </div>
+  </div>
+
+  <img src="public/images/logo/esummit-logo.png" alt="E-Summit 2026 Logo" class="title-logo" />
+
+  <div class="title-tagline">Where ideas meet execution.<br/>Where Founders meet the Future.</div>
+
+  <div class="press-start" id="press-start">▶ PRESS START</div>
+
+  <nav class="rpg-menu" id="rpg-menu">
+    <button class="rpg-menu-item selected" data-action="events">
+      <span class="rpg-arrow">►</span> EVENT DETAILS
+    </button>
+    <button class="rpg-menu-item" data-action="register">
+      <span class="rpg-arrow">►</span> REGISTRATION
+    </button>
+    <button class="rpg-menu-item" data-action="sponsors">
+      <span class="rpg-arrow">►</span> SPONSORS
+    </button>
+  </nav>
+
+  <div class="mascot-row">
+    <div class="mascot" style="background:#2563eb; clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 100%,0% 100%,0% 30%); animation-delay:0ms;"></div>
+    <div class="mascot" style="background:#16a34a; clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 100%,0% 100%,0% 30%); animation-delay:200ms;"></div>
+    <div class="mascot" style="background:#d97706; clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 100%,0% 100%,0% 30%); animation-delay:400ms;"></div>
+    <div class="mascot" style="background:#7c3aed; clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 100%,0% 100%,0% 30%); animation-delay:600ms;"></div>
+    <div class="mascot" style="background:#ec4899; clip-path:polygon(30% 0%,70% 0%,100% 30%,100% 100%,0% 100%,0% 30%); animation-delay:800ms;"></div>
+  </div>
+
+  <div class="title-footer">© APRIL 2026 PIEDS™ | BITS Pilani, Pilani Campus</div>
+</div>
+
+<!-- ============ BP0.5: Clock Face + Countdown ============ -->
+<div id="bp05-section">
+  <div class="bp05-countdown" id="bp05-countdown">
+    <div class="days" id="bp05-days"></div>
+    <div class="sub" id="bp05-sub"></div>
+  </div>
+  <img src="public/images/logo/esummit-logo.png" alt="" class="bp05-logo" id="bp05-logo" style="width:200px;" />
+  <div class="pacman-container" id="pacman-container">
+    <div class="pacman" id="pacman"></div>
+    <div class="ghost" style="background:#E74C3C;">DEAD<br/>LINE</div>
+    <div class="ghost" style="background:#6B3FA0;">DOUBT</div>
+    <div class="ghost" style="background:#3498DB;">COMP<br/>ETITN</div>
+  </div>
+  <div class="bp05-flavor" id="bp05-flavor">THE CLOCK IS TICKING, ENTREPRENEUR</div>
+</div>
+
+<!-- ============ BP1: NPC Dialogue ============ -->
+<div id="bp1-section">
+  <div class="npc-character" id="npc">
+    <div class="npc-head"></div>
+    <div class="npc-body"></div>
+    <div class="npc-legs">
+      <div class="npc-leg"></div>
+      <div class="npc-leg"></div>
+    </div>
+  </div>
+  <div class="dialog-box" id="dialog-box">
+    <div class="dialog-speaker">PIEDS MENTOR</div>
+    <div class="dialog-text" id="dialog-text"></div>
+    <button class="dialog-next-btn" id="dialog-next">NEXT ▶</button>
+  </div>
+</div>
+
+<!-- ============ BP2: Gem Menu ============ -->
+<div id="bp2-section">
+  <div class="bp2-title">⚔ CHOOSE YOUR QUEST ⚔</div>
+  <div class="gem-ring" id="gem-ring">
+    <!-- Lines + gems injected by JS -->
+  </div>
+</div>
+
+<!-- ============ BP2: Event Card Modal ============ -->
+<div class="modal-overlay" id="gem-modal">
+  <div class="event-card" id="event-card">
+    <div class="event-card-category" id="ec-category"></div>
+    <div class="event-card-name" id="ec-name"></div>
+    <div class="event-card-meta" id="ec-meta"></div>
+    <div class="event-card-desc" id="ec-desc"></div>
+    <div class="event-card-actions">
+      <button class="btn-register" onclick="window.open('#register','_self')">REGISTER NOW</button>
+      <button class="btn-close" id="gem-modal-close">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BP3: Snake Timeline ============ -->
+<div id="bp3-section">
+  <div class="bp3-header">
+    <div class="bp3-title">🗺 EXPLORE ALL QUESTS</div>
+    <div class="bp3-filters" id="bp3-filters">
+      <button class="bp3-filter-btn active" data-filter="ALL">ALL</button>
+      <button class="bp3-filter-btn" data-filter="COMP">COMP</button>
+      <button class="bp3-filter-btn" data-filter="WORKSHOP">WORKSHOP</button>
+      <button class="bp3-filter-btn" data-filter="TALK">TALK</button>
+    </div>
+  </div>
+  <svg id="bp3-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <path id="snake-path" class="snake-path" filter="url(#glow)"
+      d="M 50,300 C 150,100 250,100 350,300 S 550,500 650,300 S 850,100 950,300" />
+    <circle id="path-dot" class="path-dot" r="6" cx="50" cy="300" />
+  </svg>
+  <!-- Nodes injected by JS -->
+  <div id="bp3-side-card" class="bp3-side-card">
+    <div class="bp3-side-card-name" id="bp3-card-name"></div>
+    <div class="bp3-side-card-desc" id="bp3-card-desc"></div>
+    <button class="bp3-side-card-close" id="bp3-card-close">CLOSE</button>
+  </div>
+</div>
+
+<!-- ============ BP4: Map Pins ============ -->
+<div id="bp4-section">
+  <!-- Pins injected by JS -->
+</div>
+
+<!-- ============ BP4: Fly-to Panel ============ -->
+<div class="flyto-panel" id="flyto-panel">
+  <div class="flyto-panel-title" id="flyto-title"></div>
+  <div class="flyto-panel-content" id="flyto-content"></div>
+  <button class="flyto-panel-close" id="flyto-close">CLOSE</button>
+</div>
+
+<!-- ============ Scroll Container ============ -->
+<div id="scroll-container" aria-hidden="true"></div>
+
+<script>
+// ========================================
+// 1: Constants & Config
+// ========================================
+const BP = {
+  TITLE_END: 0.08,
+  CLOCK_START: 0.08,
+  CLOCK_END: 0.22,
+  NPC_START: 0.22,
+  NPC_END: 0.38,
+  GEM_START: 0.38,
+  GEM_END: 0.58,
+  SNAKE_START: 0.58,
+  SNAKE_END: 0.85,
+  PINS_START: 0.85,
+  PINS_END: 1.00
+};
+
+const EVENT_DATE = new Date('2026-04-10T09:00:00+05:30');
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ========================================
+// 2: Utilities
+// ========================================
+function lerp(a, b, t) {
+  return a + (b - a) * Math.max(0, Math.min(1, t));
+}
+
+function getScrollFraction() {
+  const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+  if (scrollH <= 0) return 0;
+  return Math.max(0, Math.min(1, window.scrollY / scrollH));
+}
+
+function getLocalFraction(frac, start, end) {
+  if (frac < start) return 0;
+  if (frac > end) return 1;
+  return (frac - start) / (end - start);
+}
+
+function formatCountdown(target) {
+  const now = new Date();
+  const diff = target - now;
+  if (diff <= 0) return { days: 0, hours: 0, mins: 0, text: '0d 0h 0m' };
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  return { days, hours, mins, text: `${days}d ${hours}h ${mins}m` };
+}
+
+// ========================================
+// 3: Video Scrub Engine
+// ========================================
+const video = document.getElementById('bg-video');
+let videoReady = false;
+let lastScrollFrac = -1;
+
+video.addEventListener('canplaythrough', () => {
+  videoReady = true;
+}, { once: true });
+
+// Also handle loadeddata as fallback
+video.addEventListener('loadeddata', () => {
+  if (video.readyState >= 3) videoReady = true;
+}, { once: true });
+
+function scrubVideo(frac) {
+  if (!videoReady || !video.duration) return;
+  const targetTime = frac * video.duration;
+  // Only update if changed enough to matter (avoid constant seeking)
+  if (Math.abs(video.currentTime - targetTime) > 0.03) {
+    video.currentTime = targetTime;
+  }
+}
+
+// ========================================
+// 4: Loading Screen
+// ========================================
+const loadingScreen = document.getElementById('loading-screen');
+const loadingBar = document.getElementById('loading-bar');
+let loadProgress = 0;
+let loadingDone = false;
+const loadStartTime = Date.now();
+
+function simulateLoading() {
+  if (loadingDone) return;
+  if (loadProgress < 90) {
+    loadProgress += (90 - loadProgress) * 0.05;
+    loadingBar.style.width = loadProgress + '%';
+  }
+  if (videoReady && loadProgress >= 89) {
+    finishLoading();
+    return;
+  }
+  requestAnimationFrame(simulateLoading);
+}
+
+function finishLoading() {
+  if (loadingDone) return;
+  loadingDone = true;
+  loadingBar.style.width = '100%';
+  const elapsed = Date.now() - loadStartTime;
+  const remaining = Math.max(0, 1500 - elapsed);
+  setTimeout(() => {
+    loadingScreen.classList.add('hidden');
+    initSections();
+  }, remaining);
+}
+
+// Start loading simulation
+requestAnimationFrame(simulateLoading);
+
+// Fallback: force finish after 8 seconds
+setTimeout(() => {
+  if (!loadingDone) {
+    videoReady = true;
+    finishLoading();
+  }
+}, 8000);
+
+// ========================================
+// 5: CRT Noise Canvas
+// ========================================
+function initCRTNoise() {
+  if (reducedMotion) return;
+  const canvas = document.getElementById('crt-noise');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = 128;
+  canvas.height = 128;
+
+  let lastTime = 0;
+  const FPS = 8;
+  const interval = 1000 / FPS;
+
+  function drawNoise(time) {
+    requestAnimationFrame(drawNoise);
+    if (time - lastTime < interval) return;
+    lastTime = time;
+    const imageData = ctx.createImageData(128, 128);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.random() * 255;
+      data[i] = v;
+      data[i + 1] = v;
+      data[i + 2] = v;
+      data[i + 3] = 12;
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }
+  requestAnimationFrame(drawNoise);
+}
+
+// ========================================
+// 6: HUD — Countdown, Nav, Scroll Indicator
+// ========================================
+const hud = document.getElementById('hud');
+const hudCountdown = document.getElementById('hud-countdown');
+const scrollHint = document.getElementById('scroll-hint');
+const navBtns = document.querySelectorAll('.hud-nav-btn');
+let scrollHintHidden = false;
+
+function updateHUDCountdown() {
+  const cd = formatCountdown(EVENT_DATE);
+  hudCountdown.textContent = cd.text;
+}
+
+// Nav button click → scroll
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = parseFloat(btn.dataset.target);
+    const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+    window.scrollTo({ top: target * scrollH, behavior: 'smooth' });
+  });
+});
+
+function updateHUDActiveBtn(frac) {
+  const targets = Array.from(navBtns).map(b => parseFloat(b.dataset.target));
+  let activeIdx = 0;
+  for (let i = targets.length - 1; i >= 0; i--) {
+    if (frac >= targets[i] - 0.02) { activeIdx = i; break; }
+  }
+  navBtns.forEach((b, i) => b.classList.toggle('active', i === activeIdx));
+}
+
+// Countdown updater
+setInterval(updateHUDCountdown, 60000);
+updateHUDCountdown();
+
+// ========================================
+// 7: BP0 — Title Screen
+// ========================================
+const bp0 = document.getElementById('bp0-title');
+const rpgMenu = document.getElementById('rpg-menu');
+const rpgItems = rpgMenu.querySelectorAll('.rpg-menu-item');
+let rpgIndex = 0;
+
+function selectRPGItem(idx) {
+  rpgItems.forEach((item, i) => {
+    item.classList.toggle('selected', i === idx);
+  });
+  rpgIndex = idx;
+}
+
+// Keyboard nav for RPG menu
+document.addEventListener('keydown', (e) => {
+  if (bp0.classList.contains('hidden')) return;
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    selectRPGItem((rpgIndex + 1) % rpgItems.length);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    selectRPGItem((rpgIndex - 1 + rpgItems.length) % rpgItems.length);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    handleRPGSelect(rpgItems[rpgIndex].dataset.action);
+  }
+});
+
+rpgItems.forEach((item, i) => {
+  item.addEventListener('click', () => {
+    selectRPGItem(i);
+    handleRPGSelect(item.dataset.action);
+  });
+});
+
+document.getElementById('press-start').addEventListener('click', () => {
+  const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+  window.scrollTo({ top: BP.TITLE_END * scrollH, behavior: 'smooth' });
+});
+
+function handleRPGSelect(action) {
+  const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+  switch (action) {
+    case 'events':
+      window.scrollTo({ top: BP.GEM_START * scrollH, behavior: 'smooth' });
+      break;
+    case 'register':
+      window.open('#register', '_self');
+      break;
+    case 'sponsors':
+      window.scrollTo({ top: BP.PINS_START * scrollH, behavior: 'smooth' });
+      break;
+  }
+}
+
+function updateBP0(frac) {
+  if (frac > BP.TITLE_END) {
+    bp0.classList.add('hidden');
+  } else {
+    bp0.classList.remove('hidden');
+  }
+}
+
+// ========================================
+// 8: BP0.5 — Clock Face + Countdown
+// ========================================
+const bp05 = document.getElementById('bp05-section');
+const bp05Countdown = document.getElementById('bp05-countdown');
+const bp05Days = document.getElementById('bp05-days');
+const bp05Sub = document.getElementById('bp05-sub');
+const bp05Logo = document.getElementById('bp05-logo');
+const bp05Flavor = document.getElementById('bp05-flavor');
+const pacmanContainer = document.getElementById('pacman-container');
+const pacman = document.getElementById('pacman');
+const ghosts = pacmanContainer.querySelectorAll('.ghost');
+
+function updateBP05(frac) {
+  const local = getLocalFraction(frac, BP.CLOCK_START, BP.CLOCK_END);
+  const visible = frac >= BP.CLOCK_START && frac <= BP.CLOCK_END;
+
+  bp05.classList.toggle('visible', visible);
+  if (!visible) return;
+
+  const cd = formatCountdown(EVENT_DATE);
+
+  // Countdown position: center → top-right (HUD)
+  const cx = lerp(50, 85, local);
+  const cy = lerp(42, 5, local);
+  const scale = lerp(1, 0.4, local);
+
+  bp05Countdown.style.left = cx + '%';
+  bp05Countdown.style.top = cy + '%';
+  bp05Countdown.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  bp05Days.textContent = `${cd.days}d ${cd.hours}h ${cd.mins}m`;
+  bp05Sub.textContent = 'UNTIL E-SUMMIT 2026';
+
+  // Logo: center → top-right
+  const lx = lerp(50, 82, local);
+  const ly = lerp(58, 3, local);
+  const ls = lerp(1, 0.15, local);
+  bp05Logo.style.left = lx + '%';
+  bp05Logo.style.top = ly + '%';
+  bp05Logo.style.transform = `translate(-50%, -50%) scale(${ls})`;
+  bp05Logo.style.opacity = lerp(1, 0, Math.max(0, (local - 0.7) / 0.3));
+
+  // Pac-Man orbit
+  const orbitRadius = lerp(120, 40, local);
+  const angle = local * Math.PI * 4; // 2 full rotations
+  pacman.style.left = (Math.cos(angle) * orbitRadius - 15) + 'px';
+  pacman.style.top = (Math.sin(angle) * orbitRadius - 15) + 'px';
+  pacman.style.transform = `rotate(${angle}rad)`;
+
+  ghosts.forEach((ghost, i) => {
+    const gAngle = angle - (i + 1) * 0.5;
+    const gr = orbitRadius + 10;
+    ghost.style.left = (Math.cos(gAngle) * gr - 12) + 'px';
+    ghost.style.top = (Math.sin(gAngle) * gr - 12) + 'px';
+  });
+
+  // Scale down pacman container
+  pacmanContainer.style.transform = `translate(-50%, -50%) scale(${lerp(1, 0.3, local)})`;
+  pacmanContainer.style.opacity = lerp(1, 0, Math.max(0, (local - 0.6) / 0.4));
+
+  // Flavor text
+  const flavorIn = local >= 0.15 && local <= 0.85;
+  bp05Flavor.style.opacity = flavorIn ? 1 : 0;
+
+  // HUD transition
+  if (local > 0.8) {
+    hud.classList.add('visible');
+  }
+}
+
+// ========================================
+// 9: BP1 — NPC Dialogue
+// ========================================
+const bp1 = document.getElementById('bp1-section');
+const npc = document.getElementById('npc');
+const dialogText = document.getElementById('dialog-text');
+const dialogNext = document.getElementById('dialog-next');
+const dialogBox = document.getElementById('dialog-box');
+
+// TODO: Replace dialog content with actual E-Summit copy
+const dialogSlides = [
+  "Welcome, young entrepreneur! You've entered the realm of E-Summit 2026 — BITS Pilani's greatest innovation battleground.",
+  "Here, $80B+ in startup valuation was forged. 3800+ founders emerged. 13 unicorns were born. Are you ready to write your chapter?",
+  "Workshops to sharpen your blade, competitions to test your mettle, networking to forge alliances. SCROLL TO CONTINUE ▼"
+];
+
+let currentSlide = 0;
+let isTyping = false;
+let typeTimer = null;
+let npcEntered = false;
+
+function typeText(text, element, callback) {
+  isTyping = true;
+  element.textContent = '';
+  let i = 0;
+  if (reducedMotion) {
+    element.textContent = text;
+    isTyping = false;
+    if (callback) callback();
+    return;
+  }
+  typeTimer = setInterval(() => {
+    element.textContent += text[i];
+    i++;
+    if (i >= text.length) {
+      clearInterval(typeTimer);
+      isTyping = false;
+      if (callback) callback();
+    }
+  }, 40);
+}
+
+function showSlide(idx) {
+  if (idx >= dialogSlides.length) return;
+  currentSlide = idx;
+  const isLast = idx === dialogSlides.length - 1;
+  dialogNext.textContent = isLast ? 'SCROLL ▼' : 'NEXT ▶';
+  typeText(dialogSlides[idx], dialogText);
+}
+
+dialogNext.addEventListener('click', () => {
+  if (isTyping) {
+    clearInterval(typeTimer);
+    dialogText.textContent = dialogSlides[currentSlide];
+    isTyping = false;
+    return;
+  }
+  if (currentSlide < dialogSlides.length - 1) {
+    showSlide(currentSlide + 1);
+  }
+});
+
+function updateBP1(frac) {
+  const visible = frac >= BP.NPC_START && frac <= BP.NPC_END;
+  bp1.classList.toggle('visible', visible);
+
+  if (visible && !npcEntered) {
+    npcEntered = true;
+    if (!reducedMotion) {
+      anime({
+        targets: npc,
+        left: ['-60px', '10%'],
+        duration: 800,
+        easing: 'easeOutCubic',
+        complete: () => {
+          showSlide(0);
+        }
+      });
+    } else {
+      npc.style.left = '10%';
+      showSlide(0);
+    }
+  }
+
+  if (!visible) {
+    npcEntered = false;
+    currentSlide = 0;
+    if (typeTimer) clearInterval(typeTimer);
+    npc.style.left = '-60px';
+  }
+
+  // Idle bounce for NPC
+  if (visible && npcEntered) {
+    const local = getLocalFraction(frac, BP.NPC_START, BP.NPC_END);
+    npc.style.bottom = (180 + Math.sin(Date.now() / 500) * 3) + 'px';
+  }
+}
+
+// ========================================
+// 10: BP2 — Gem Menu
+// ========================================
+const bp2 = document.getElementById('bp2-section');
+const gemRing = document.getElementById('gem-ring');
+const gemModal = document.getElementById('gem-modal');
+const gemModalClose = document.getElementById('gem-modal-close');
+let gemsCreated = false;
+let selectedGemIndex = -1;
+
+// TODO: Replace with actual event data
+const gemEvents = [
+  {
+    name: 'Startup Pitch Arena',
+    category: 'COMPETITION',
+    color: '#E74C3C',
+    gemColor: 'ruby',
+    prize: '₹5,00,000',
+    difficulty: '★★★★☆',
+    duration: '2 Days',
+    description: 'Pitch your startup idea to a panel of VCs and industry leaders. Top 3 teams win funding and mentorship.'
+  },
+  {
+    name: 'Product Design Sprint',
+    category: 'WORKSHOP',
+    color: '#3498DB',
+    gemColor: 'sapphire',
+    prize: 'Certificate + Swag',
+    difficulty: '★★★☆☆',
+    duration: '6 Hours',
+    description: 'Learn design thinking from industry experts. Build a prototype from scratch in this intensive workshop.'
+  },
+  {
+    name: 'Green Innovation Challenge',
+    category: 'COMPETITION',
+    color: '#2ECC71',
+    gemColor: 'emerald',
+    prize: '₹3,00,000',
+    difficulty: '★★★★★',
+    duration: '3 Days',
+    description: 'Solve real-world sustainability challenges with tech. Mentored by climate-tech founders.'
+  },
+  {
+    name: 'VC Masterclass',
+    category: 'TALK',
+    color: '#F39C12',
+    gemColor: 'amber',
+    prize: 'Exclusive Access',
+    difficulty: '★★☆☆☆',
+    duration: '3 Hours',
+    description: 'Learn fundraising secrets from partners at top VC firms. Includes live deal teardowns and Q&A.'
+  },
+  {
+    name: 'Hack the Future',
+    category: 'COMPETITION',
+    color: '#9B59B6',
+    gemColor: 'amethyst',
+    prize: '₹4,00,000',
+    difficulty: '★★★★★',
+    duration: '36 Hours',
+    description: 'The ultimate hackathon. Build, ship, and demo. Open tracks: AI/ML, FinTech, HealthTech, EdTech.'
+  }
+];
+
+function createGems() {
+  if (gemsCreated) return;
+  gemsCreated = true;
+  gemRing.innerHTML = '';
+
+  const ringSize = gemRing.offsetWidth || 300;
+  const radius = ringSize / 2 - 40;
+
+  gemEvents.forEach((evt, i) => {
+    const angle = (i / gemEvents.length) * Math.PI * 2 - Math.PI / 2;
+    const x = Math.cos(angle) * radius;
+    const y = Math.sin(angle) * radius;
+
+    // Hub-spoke line
+    const line = document.createElement('div');
+    line.className = 'gem-line';
+    const lineLen = Math.sqrt(x * x + y * y);
+    const lineAngle = Math.atan2(y, x) * 180 / Math.PI;
+    line.style.width = lineLen + 'px';
+    line.style.transform = `rotate(${lineAngle}deg)`;
+    gemRing.appendChild(line);
+
+    // Gem
+    const gem = document.createElement('div');
+    gem.className = 'gem';
+    gem.style.transform = `translate(${x}px, ${y}px)`;
+    gem.dataset.index = i;
+
+    const shape = document.createElement('div');
+    shape.className = 'gem-shape';
+    shape.style.background = evt.color;
+    shape.style.color = evt.color;
+    shape.innerHTML = `<span style="color:white;position:relative;z-index:1;font-size:6px;">${evt.gemColor.toUpperCase()}</span>`;
+    gem.appendChild(shape);
+
+    gem.addEventListener('click', () => openGemModal(i));
+    gemRing.appendChild(gem);
+  });
+}
+
+function openGemModal(idx) {
+  selectedGemIndex = idx;
+  const evt = gemEvents[idx];
+  document.getElementById('ec-category').textContent = evt.category;
+  document.getElementById('ec-category').style.color = evt.color;
+  document.getElementById('ec-name').textContent = evt.name;
+  document.getElementById('ec-meta').innerHTML = `
+    <div class="event-card-meta-item">Prize: <span>${evt.prize}</span></div>
+    <div class="event-card-meta-item">Difficulty: <span>${evt.difficulty}</span></div>
+    <div class="event-card-meta-item">Duration: <span>${evt.duration}</span></div>
+    <div class="event-card-meta-item">Category: <span>${evt.category}</span></div>
+  `;
+  document.getElementById('ec-desc').textContent = evt.description;
+
+  gemModal.classList.add('open');
+
+  if (!reducedMotion) {
+    anime({
+      targets: '#event-card',
+      scale: [0.8, 1],
+      opacity: [0, 1],
+      duration: 400,
+      easing: 'easeOutBack'
+    });
+  }
+}
+
+gemModalClose.addEventListener('click', () => {
+  if (!reducedMotion) {
+    anime({
+      targets: '#event-card',
+      scale: [1, 0.8],
+      opacity: [1, 0],
+      duration: 300,
+      easing: 'easeInBack',
+      complete: () => gemModal.classList.remove('open')
+    });
+  } else {
+    gemModal.classList.remove('open');
+  }
+});
+
+gemModal.addEventListener('click', (e) => {
+  if (e.target === gemModal) gemModalClose.click();
+});
+
+let gemsAnimated = false;
+
+function updateBP2(frac) {
+  const visible = frac >= BP.GEM_START && frac <= BP.GEM_END;
+  bp2.classList.toggle('visible', visible);
+
+  if (visible) {
+    createGems();
+    if (!gemsAnimated && !reducedMotion) {
+      gemsAnimated = true;
+      anime({
+        targets: '.gem',
+        scale: [0, 1],
+        opacity: [0, 1],
+        delay: anime.stagger(100, { from: 'center' }),
+        duration: 600,
+        easing: 'easeOutElastic(1, .6)'
+      });
+    }
+  } else {
+    gemsAnimated = false;
+  }
+}
+
+// ========================================
+// 11: BP3 — Snake Timeline
+// ========================================
+const bp3 = document.getElementById('bp3-section');
+const snakePath = document.getElementById('snake-path');
+const pathDot = document.getElementById('path-dot');
+const bp3SideCard = document.getElementById('bp3-side-card');
+const bp3CardName = document.getElementById('bp3-card-name');
+const bp3CardDesc = document.getElementById('bp3-card-desc');
+const bp3CardClose = document.getElementById('bp3-card-close');
+let snakePathLength = 0;
+let bp3NodesCreated = false;
+let activeFilter = 'ALL';
+
+// TODO: Replace with actual event data
+const bp3Events = [
+  { name: 'Startup Pitch Arena', category: 'COMP', color: '#E74C3C', t: 0.05, desc: 'Pitch your idea to VCs. Win funding.', tba: false },
+  { name: 'AI/ML Workshop', category: 'WORKSHOP', color: '#3498DB', t: 0.15, desc: 'Hands-on deep learning workshop with industry tools.', tba: false },
+  { name: 'Founder Fireside Chat', category: 'TALK', color: '#F39C12', t: 0.25, desc: 'Intimate conversation with unicorn founders.', tba: false },
+  { name: 'Green Innovation', category: 'COMP', color: '#2ECC71', t: 0.35, desc: 'Build sustainable tech solutions.', tba: false },
+  { name: 'Product Design Sprint', category: 'WORKSHOP', color: '#9B59B6', t: 0.45, desc: 'Design thinking intensive.', tba: false },
+  { name: 'VC Panel: Future of AI', category: 'TALK', color: '#F39C12', t: 0.55, desc: 'Top VCs discuss AI investment landscape.', tba: false },
+  { name: 'Hack the Future', category: 'COMP', color: '#E74C3C', t: 0.65, desc: '36-hour hackathon. Build. Ship. Demo.', tba: false },
+  { name: 'Mystery Event', category: 'COMP', color: '#666', t: 0.75, desc: 'To be announced...', tba: true },
+  { name: 'Closing Ceremony', category: 'TALK', color: '#FFD700', t: 0.88, desc: 'Grand finale with surprise guest speaker.', tba: false },
+  { name: 'Blockchain Workshop', category: 'WORKSHOP', color: '#3498DB', t: 0.95, desc: 'Web3 development from zero to hero.', tba: true }
+];
+
+function createBP3Nodes() {
+  if (bp3NodesCreated) return;
+  bp3NodesCreated = true;
+
+  const svg = document.getElementById('bp3-svg');
+  const svgRect = svg.getBoundingClientRect();
+
+  bp3Events.forEach((evt, i) => {
+    const point = snakePath.getPointAtLength(evt.t * snakePathLength);
+    // Convert SVG coords to percentage
+    const xPct = (point.x / 1000) * 100;
+    const yPct = (point.y / 600) * 100;
+
+    const node = document.createElement('div');
+    node.className = 'bp3-node' + (evt.tba ? ' tba' : '');
+    node.style.left = xPct + '%';
+    node.style.top = yPct + '%';
+    node.style.background = evt.color;
+    node.style.boxShadow = `0 0 10px ${evt.color}`;
+    node.dataset.index = i;
+    node.dataset.category = evt.category;
+
+    const label = document.createElement('div');
+    label.className = 'bp3-node-label';
+    label.textContent = evt.tba ? '???' : evt.name;
+    node.appendChild(label);
+
+    if (!evt.tba) {
+      node.addEventListener('click', () => openBP3Card(i, node));
+    }
+
+    bp3.appendChild(node);
+  });
+}
+
+function openBP3Card(idx, nodeEl) {
+  const evt = bp3Events[idx];
+  bp3CardName.textContent = evt.name;
+  bp3CardName.style.color = evt.color;
+  bp3CardDesc.textContent = evt.desc;
+
+  // Position card near node
+  const rect = nodeEl.getBoundingClientRect();
+  const isRight = rect.left > window.innerWidth / 2;
+  bp3SideCard.style.top = rect.top + 'px';
+
+  if (isRight) {
+    bp3SideCard.style.right = (window.innerWidth - rect.left + 16) + 'px';
+    bp3SideCard.style.left = 'auto';
+  } else {
+    bp3SideCard.style.left = (rect.right + 16) + 'px';
+    bp3SideCard.style.right = 'auto';
+  }
+
+  bp3SideCard.classList.add('open');
+
+  if (!reducedMotion) {
+    anime({
+      targets: bp3SideCard,
+      scale: [0.9, 1],
+      opacity: [0, 1],
+      duration: 300,
+      easing: 'easeOutCubic'
+    });
+  }
+}
+
+bp3CardClose.addEventListener('click', () => {
+  bp3SideCard.classList.remove('open');
+});
+
+// Filters
+document.getElementById('bp3-filters').addEventListener('click', (e) => {
+  if (!e.target.classList.contains('bp3-filter-btn')) return;
+  activeFilter = e.target.dataset.filter;
+  document.querySelectorAll('.bp3-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === activeFilter));
+
+  document.querySelectorAll('.bp3-node').forEach(node => {
+    const cat = node.dataset.category;
+    const show = activeFilter === 'ALL' || cat === activeFilter;
+    node.style.display = show ? '' : 'none';
+  });
+});
+
+function updateBP3(frac) {
+  const visible = frac >= BP.SNAKE_START && frac <= BP.SNAKE_END;
+  bp3.classList.toggle('visible', visible);
+
+  if (!visible) {
+    bp3SideCard.classList.remove('open');
+    return;
+  }
+
+  if (!snakePathLength) {
+    snakePathLength = snakePath.getTotalLength();
+    snakePath.style.strokeDasharray = snakePathLength;
+    snakePath.style.strokeDashoffset = snakePathLength;
+  }
+
+  createBP3Nodes();
+
+  const local = getLocalFraction(frac, BP.SNAKE_START, BP.SNAKE_END);
+
+  // Draw path progressively
+  const drawLen = local * snakePathLength;
+  snakePath.style.strokeDashoffset = snakePathLength - drawLen;
+
+  // Move dot along path
+  const point = snakePath.getPointAtLength(drawLen);
+  pathDot.setAttribute('cx', point.x);
+  pathDot.setAttribute('cy', point.y);
+}
+
+// ========================================
+// 12: BP4 — Map Pins
+// ========================================
+const bp4 = document.getElementById('bp4-section');
+const flytoPanel = document.getElementById('flyto-panel');
+const flytoTitle = document.getElementById('flyto-title');
+const flytoContent = document.getElementById('flyto-content');
+const flytoClose = document.getElementById('flyto-close');
+let pinsCreated = false;
+let pinsAnimated = false;
+
+// TODO: Replace with actual content
+const pinData = [
+  {
+    label: 'SPONSORS',
+    x: 25, y: 45,
+    color: '#F39C12',
+    title: '🏆 Our Sponsors',
+    content: 'E-Summit 2026 is backed by industry leaders investing in the next generation of founders. Sponsorship tiers: Title, Platinum, Gold, Silver. Interested in partnering? Contact us.'
+  },
+  {
+    label: 'TEAM',
+    x: 45, y: 65,
+    color: '#3498DB',
+    title: '👥 The Team',
+    content: 'PIEDS — Pilani Innovation & Entrepreneurship Development Society. A student-run organization enabling innovation since 2013. 100+ organizers making E-Summit possible.'
+  },
+  {
+    label: 'SCHEDULE',
+    x: 65, y: 40,
+    color: '#2ECC71',
+    title: '📅 Event Schedule',
+    content: 'Day 1: Opening Ceremony, Workshops, Pitch Qualifiers. Day 2: Hackathon, Competitions, Speaker Sessions. Day 3: Finals, Networking, Closing Ceremony. Full schedule coming soon.'
+  },
+  {
+    label: 'CONTACT',
+    x: 80, y: 70,
+    color: '#E74C3C',
+    title: '📧 Contact Us',
+    content: 'Email: esummit@pilani.bits-pilani.ac.in | Instagram: @esummit_bitspilani | Twitter: @esummit_bits | For sponsorship inquiries, partnerships, or general questions.'
+  }
+];
+
+function createPins() {
+  if (pinsCreated) return;
+  pinsCreated = true;
+
+  pinData.forEach((pin, i) => {
+    const el = document.createElement('div');
+    el.className = 'map-pin';
+    el.style.left = pin.x + '%';
+    el.style.top = pin.y + '%';
+    el.style.opacity = '0';
+    el.dataset.index = i;
+
+    const marker = document.createElement('div');
+    marker.className = 'pin-marker';
+    marker.style.background = pin.color;
+    const dot = document.createElement('div');
+    dot.className = 'pin-marker-dot';
+    marker.appendChild(dot);
+
+    const label = document.createElement('div');
+    label.className = 'pin-label';
+    label.textContent = pin.label;
+
+    el.appendChild(marker);
+    el.appendChild(label);
+
+    el.addEventListener('click', () => openFlyto(i));
+
+    bp4.appendChild(el);
+  });
+}
+
+function openFlyto(idx) {
+  const pin = pinData[idx];
+  flytoTitle.textContent = pin.title;
+  flytoContent.textContent = pin.content;
+  flytoPanel.classList.add('open');
+
+  if (!reducedMotion) {
+    anime({
+      targets: flytoPanel,
+      opacity: [0, 1],
+      duration: 400,
+      easing: 'easeOutCubic'
+    });
+  }
+}
+
+flytoClose.addEventListener('click', () => {
+  if (!reducedMotion) {
+    anime({
+      targets: flytoPanel,
+      opacity: [1, 0],
+      duration: 300,
+      easing: 'easeInCubic',
+      complete: () => flytoPanel.classList.remove('open')
+    });
+  } else {
+    flytoPanel.classList.remove('open');
+  }
+});
+
+function updateBP4(frac) {
+  const visible = frac >= BP.PINS_START;
+  bp4.classList.toggle('visible', visible);
+
+  if (visible) {
+    createPins();
+    if (!pinsAnimated) {
+      pinsAnimated = true;
+      if (!reducedMotion) {
+        anime({
+          targets: '.map-pin',
+          opacity: [0, 1],
+          translateY: ['-80px', '0px'],
+          delay: anime.stagger(150),
+          duration: 600,
+          easing: 'easeOutBounce'
+        });
+      } else {
+        document.querySelectorAll('.map-pin').forEach(p => p.style.opacity = '1');
+      }
+    }
+  } else {
+    pinsAnimated = false;
+    document.querySelectorAll('.map-pin').forEach(p => p.style.opacity = '0');
+  }
+}
+
+// ========================================
+// 13: Section Router
+// ========================================
+function updateSections(frac) {
+  // Video scrub
+  scrubVideo(frac);
+
+  // BP0: Title screen
+  updateBP0(frac);
+
+  // BP0.5: Clock + countdown
+  updateBP05(frac);
+
+  // BP1: NPC dialogue
+  updateBP1(frac);
+
+  // BP2: Gem menu
+  updateBP2(frac);
+
+  // BP3: Snake timeline
+  updateBP3(frac);
+
+  // BP4: Map pins
+  updateBP4(frac);
+
+  // HUD
+  if (frac > BP.CLOCK_END) {
+    hud.classList.add('visible');
+  } else if (frac <= BP.CLOCK_START) {
+    hud.classList.remove('visible');
+  }
+
+  // Scroll hint
+  if (frac > 0.02 && !scrollHintHidden) {
+    scrollHintHidden = true;
+    scrollHint.style.opacity = '0';
+  } else if (frac <= 0.02 && scrollHintHidden) {
+    scrollHintHidden = false;
+    scrollHint.style.opacity = '1';
+  }
+
+  // Active nav button
+  updateHUDActiveBtn(frac);
+}
+
+// ========================================
+// 14: Init & Event Binding
+// ========================================
+function initSections() {
+  initCRTNoise();
+
+  // Initial state
+  const frac = getScrollFraction();
+  updateSections(frac);
+
+  // Scroll listener
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(() => {
+        const f = getScrollFraction();
+        if (f !== lastScrollFrac) {
+          lastScrollFrac = f;
+          updateSections(f);
+        }
+        ticking = false;
+      });
+    }
+  }, { passive: true });
+
+  // Resize handler for responsive adjustments
+  window.addEventListener('resize', () => {
+    // Reset gem creation so they reposition
+    if (gemsCreated) {
+      gemsCreated = false;
+      gemsAnimated = false;
+    }
+    // Re-calc snake path
+    snakePathLength = 0;
+    bp3NodesCreated = false;
+  });
+}
+
+// Prevent video from auto-playing
+video.pause();
+
+// iOS Safari: use window.innerHeight for vh units
+function setVH() {
+  document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+}
+setVH();
+window.addEventListener('resize', setVH);
+</script>
+
+</body>
+</html>
