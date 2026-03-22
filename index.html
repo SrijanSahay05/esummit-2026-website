@@ -1591,6 +1591,279 @@ body {
 }
 
 /* ========================================
+   11b: Info Location Pins (post-timeline)
+   ======================================== */
+#info-pins-section {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+#info-pins-section.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.info-pin {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  animation: info-pin-bob 3s ease-in-out infinite;
+  z-index: 2;
+}
+
+.info-pin:nth-child(2) { animation-delay: -0.7s; }
+.info-pin:nth-child(3) { animation-delay: -1.4s; }
+.info-pin:nth-child(4) { animation-delay: -2.1s; }
+
+@keyframes info-pin-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.info-pin:hover {
+  transform: translateY(-8px) scale(1.08);
+  filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.8));
+}
+
+.info-pin-marker {
+  width: 48px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-pin-marker svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
+}
+
+.info-pin-emoji {
+  position: absolute;
+  font-size: 20px;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.info-pin-label {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--gold);
+  text-align: center;
+  margin-top: 6px;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6), 1px 1px 0 #000, -1px -1px 0 #000;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 3px 8px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* Info Card (desktop) */
+.info-card-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.info-card-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.info-card {
+  background: rgba(10, 8, 20, 0.95);
+  border: 2px solid var(--gold);
+  padding: 32px 36px 28px;
+  max-width: 520px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.2), 0 0 80px rgba(255, 215, 0, 0.08), inset 0 0 20px rgba(255, 215, 0, 0.03);
+}
+
+.info-card-icon {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.info-card-title {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 16px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  letter-spacing: 2px;
+}
+
+.info-card-body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.8;
+}
+
+.info-card-body h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  color: var(--gold);
+  margin: 16px 0 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.info-card-body p {
+  margin-bottom: 10px;
+}
+
+.info-card-body a {
+  color: var(--accent-blue-light);
+  text-decoration: underline;
+}
+
+.info-card-body ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card-body li {
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+}
+
+.info-card-body li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+}
+
+.info-card-close {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--gold);
+  background: transparent;
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  padding: 10px 24px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto 0;
+  transition: background 0.2s, box-shadow 0.2s;
+  letter-spacing: 1px;
+}
+
+.info-card-close:hover {
+  background: rgba(255, 215, 0, 0.15);
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.3);
+}
+
+/* Mobile Info Menu (top-left hamburger) */
+.info-menu {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 11;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  pointer-events: auto;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.info-menu.visible {
+  opacity: 1;
+}
+
+.info-menu-toggle {
+  width: 44px;
+  height: 44px;
+  background: rgba(10, 8, 20, 0.92);
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  color: var(--gold);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.3s;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.2), 0 0 30px rgba(255, 215, 0, 0.08);
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+
+.info-menu-toggle:hover {
+  background: rgba(255, 215, 0, 0.18);
+  box-shadow: 0 0 22px rgba(255, 215, 0, 0.4);
+}
+
+.info-menu-toggle.open {
+  transform: rotate(90deg);
+}
+
+.info-menu-item {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+  color: var(--gold);
+  background: rgba(10, 8, 20, 0.92);
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  padding: 10px 16px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-align: left;
+  white-space: nowrap;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-width: 0;
+  margin: 0;
+  transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.3s ease, border-width 0.3s ease, margin 0.3s ease;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  touch-action: manipulation;
+}
+
+.info-menu.open .info-menu-item {
+  max-height: 50px;
+  opacity: 1;
+  padding: 10px 16px;
+  border-width: 2px;
+  margin-top: 6px;
+}
+
+.info-menu-item:hover, .info-menu-item:active {
+  background: rgba(255, 215, 0, 0.15);
+}
+
+/* ========================================
    12: Keyframes (additional)
    ======================================== */
 @keyframes fade-in {
@@ -1614,6 +1887,10 @@ body {
    13: Responsive
    ======================================== */
 @media (max-width: 768px) {
+  /* Info pins: hide desktop pins, show mobile menu */
+  .info-pin { display: none !important; }
+  .info-menu { display: flex; }
+
   .hud-countdown { font-size: 10px; padding: 6px 10px; }
   .hud-logo { height: 52px; }
   .hud-scroll-hint { font-size: 8px; }
@@ -2448,6 +2725,72 @@ body {
     <div class="tl-card-meta" id="tl-card-meta"></div>
     <button class="tl-card-close" id="tl-card-close">CLOSE</button>
   </div>
+</div>
+
+<!-- ============ Info Location Pins (post-timeline) ============ -->
+<div id="info-pins-section">
+  <!-- Pin 1: Sponsors — top-left area -->
+  <div class="info-pin" data-info="sponsors" style="top:22%;left:18%;">
+    <div class="info-pin-marker">
+      <svg viewBox="0 0 48 60" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 0C10.7 0 0 10.7 0 24c0 18 24 36 24 36s24-18 24-36C48 10.7 37.3 0 24 0z" fill="#E74C3C" stroke="#FFD700" stroke-width="2"/>
+      </svg>
+      <span class="info-pin-emoji">💰</span>
+    </div>
+    <div class="info-pin-label">SPONSORS</div>
+  </div>
+
+  <!-- Pin 2: Team — top-right area -->
+  <div class="info-pin" data-info="team" style="top:30%;right:15%;">
+    <div class="info-pin-marker">
+      <svg viewBox="0 0 48 60" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 0C10.7 0 0 10.7 0 24c0 18 24 36 24 36s24-18 24-36C48 10.7 37.3 0 24 0z" fill="#3498DB" stroke="#FFD700" stroke-width="2"/>
+      </svg>
+      <span class="info-pin-emoji">👥</span>
+    </div>
+    <div class="info-pin-label">THE TEAM</div>
+  </div>
+
+  <!-- Pin 3: Contact — bottom-left area -->
+  <div class="info-pin" data-info="contact" style="bottom:28%;left:22%;">
+    <div class="info-pin-marker">
+      <svg viewBox="0 0 48 60" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 0C10.7 0 0 10.7 0 24c0 18 24 36 24 36s24-18 24-36C48 10.7 37.3 0 24 0z" fill="#2ECC71" stroke="#FFD700" stroke-width="2"/>
+      </svg>
+      <span class="info-pin-emoji">📬</span>
+    </div>
+    <div class="info-pin-label">CONTACT US</div>
+  </div>
+
+  <!-- Pin 4: FAQ — bottom-right area -->
+  <div class="info-pin" data-info="faq" style="bottom:22%;right:20%;">
+    <div class="info-pin-marker">
+      <svg viewBox="0 0 48 60" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 0C10.7 0 0 10.7 0 24c0 18 24 36 24 36s24-18 24-36C48 10.7 37.3 0 24 0z" fill="#9B59B6" stroke="#FFD700" stroke-width="2"/>
+      </svg>
+      <span class="info-pin-emoji">❓</span>
+    </div>
+    <div class="info-pin-label">FAQ</div>
+  </div>
+</div>
+
+<!-- Info Card Overlay (shared desktop + mobile) -->
+<div class="info-card-overlay" id="info-card-overlay">
+  <div class="info-card">
+    <div class="info-card-icon" id="info-card-icon"></div>
+    <div class="info-card-title" id="info-card-title"></div>
+    <div class="info-card-body" id="info-card-body"></div>
+    <button class="info-card-close" id="info-card-close">✕ CLOSE</button>
+  </div>
+</div>
+
+<!-- Mobile Info Menu (top-left) -->
+<div class="info-menu" id="info-menu">
+  <button class="info-menu-toggle" id="info-menu-toggle" aria-label="Toggle info menu">📍</button>
+  <button class="info-menu-item" data-info="sponsors">💰 SPONSORS</button>
+  <button class="info-menu-item" data-info="team">👥 THE TEAM</button>
+  <button class="info-menu-item" data-info="contact">📬 CONTACT US</button>
+  <button class="info-menu-item" data-info="faq">❓ FAQ</button>
 </div>
 
 <!-- ============ Scroll Container ============ -->
@@ -3732,8 +4075,166 @@ function updateSections(frac) {
     scrollHint.style.opacity = '1';
   }
 
+  // Info pins (post-timeline)
+  updateInfoPins(frac);
+
   // Active nav button
   updateHUDActiveBtn(frac);
+}
+
+// ========================================
+// 13b: Info Location Pins
+// ========================================
+const infoPinsSection = document.getElementById('info-pins-section');
+const infoCardOverlay = document.getElementById('info-card-overlay');
+const infoCardIcon = document.getElementById('info-card-icon');
+const infoCardTitle = document.getElementById('info-card-title');
+const infoCardBody = document.getElementById('info-card-body');
+const infoCardClose = document.getElementById('info-card-close');
+const infoMenu = document.getElementById('info-menu');
+const infoMenuToggle = document.getElementById('info-menu-toggle');
+
+const infoData = {
+  sponsors: {
+    icon: '💰',
+    title: 'SPONSORS & PARTNERS',
+    body: `<h3>Title Sponsor</h3><p>To be announced — Stay tuned!</p>
+<h3>Why Sponsor E-Summit?</h3>
+<ul>
+<li>Access to 3800+ founders & the BITS alumni network</li>
+<li>Brand visibility across 3 days of flagship events</li>
+<li>Direct engagement with India's top student entrepreneurs</li>
+<li>$80B+ combined startup valuation from BITS ecosystem</li>
+</ul>
+<h3>Sponsorship Tiers</h3>
+<ul>
+<li>🏆 Title Sponsor</li>
+<li>🥇 Gold Partner</li>
+<li>🥈 Silver Partner</li>
+<li>🎯 Event-Specific Sponsor</li>
+</ul>
+<p>Interested? Reach out at <strong>esummit@pilani.bits-pilani.ac.in</strong></p>`
+  },
+  team: {
+    icon: '👥',
+    title: 'THE TEAM',
+    body: `<h3>PIEDS — The Force Behind E-Summit</h3>
+<p>Pilani Innovation & Entrepreneurship Development Society — enabling innovation since 2013.</p>
+<h3>Core Team</h3>
+<ul>
+<li>President — PIEDS</li>
+<li>General Secretary — PIEDS</li>
+<li>Head of Events</li>
+<li>Head of Sponsorship</li>
+<li>Head of Marketing</li>
+<li>Head of Design</li>
+<li>Head of Web Development</li>
+<li>Head of Content</li>
+</ul>
+<h3>Built at BITS Pilani</h3>
+<p>E-Summit is entirely student-organized — from ideation to execution. 100+ students make it happen every year.</p>`
+  },
+  contact: {
+    icon: '📬',
+    title: 'CONTACT US',
+    body: `<h3>Get in Touch</h3>
+<ul>
+<li>📧 Email: <strong>esummit@pilani.bits-pilani.ac.in</strong></li>
+<li>📱 Phone: +91 XXXXX XXXXX</li>
+<li>📍 BITS Pilani, Vidya Vihar, Pilani, Rajasthan 333031</li>
+</ul>
+<h3>Follow Us</h3>
+<ul>
+<li>Instagram: @esummit_bitspilani</li>
+<li>LinkedIn: E-Summit BITS Pilani</li>
+<li>Twitter/X: @esummitbits</li>
+</ul>
+<h3>For Sponsorships</h3>
+<p>Email: <strong>sponsors.esummit@pilani.bits-pilani.ac.in</strong></p>
+<h3>For Queries</h3>
+<p>Drop us a message and we'll get back within 24 hours.</p>`
+  },
+  faq: {
+    icon: '❓',
+    title: 'FAQ',
+    body: `<h3>What is E-Summit?</h3>
+<p>E-Summit is the largest entrepreneurship festival in Rajasthan, organized by PIEDS at BITS Pilani. It features 20+ events across 3 days — competitions, workshops, speaker sessions, and networking.</p>
+<h3>When & where is it?</h3>
+<p>April 2026 at BITS Pilani Campus, Vidya Vihar, Rajasthan.</p>
+<h3>Who can participate?</h3>
+<p>College students from any institution across India. Some events are open to professionals and early-stage founders too.</p>
+<h3>Is there a registration fee?</h3>
+<p>Details about registration and pricing will be announced soon. Follow our socials for updates!</p>
+<h3>Can I attend individual events?</h3>
+<p>Yes! You can register for specific events or get an all-access pass for the full experience.</p>
+<h3>How do I reach BITS Pilani?</h3>
+<p>Nearest airport: Jaipur (JLR) — ~3.5 hrs by road. Nearest railway station: Loharu — ~1 hr by road. Bus and taxi services available from Jaipur and Delhi.</p>`
+  }
+};
+
+function openInfoCard(key) {
+  const data = infoData[key];
+  if (!data) return;
+  infoCardIcon.textContent = data.icon;
+  infoCardTitle.textContent = data.title;
+  infoCardBody.innerHTML = data.body;
+  infoCardOverlay.classList.add('open');
+}
+
+function closeInfoCard() {
+  infoCardOverlay.classList.remove('open');
+}
+
+// Desktop: pin clicks
+document.querySelectorAll('.info-pin').forEach(pin => {
+  pin.addEventListener('click', () => {
+    openInfoCard(pin.dataset.info);
+  });
+});
+
+// Card close
+infoCardClose.addEventListener('click', closeInfoCard);
+infoCardOverlay.addEventListener('click', (e) => {
+  if (e.target === infoCardOverlay) closeInfoCard();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && infoCardOverlay.classList.contains('open')) closeInfoCard();
+});
+
+// Mobile: info menu toggle
+infoMenuToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  infoMenu.classList.toggle('open');
+  infoMenuToggle.classList.toggle('open');
+  infoMenuToggle.textContent = infoMenu.classList.contains('open') ? '✕' : '📍';
+});
+
+// Mobile: info menu item clicks
+document.querySelectorAll('.info-menu-item').forEach(item => {
+  item.addEventListener('click', () => {
+    openInfoCard(item.dataset.info);
+    infoMenu.classList.remove('open');
+    infoMenuToggle.classList.remove('open');
+    infoMenuToggle.textContent = '📍';
+  });
+});
+
+// Close mobile info menu on outside click
+document.addEventListener('click', (e) => {
+  if (infoMenu.classList.contains('open') && !infoMenu.contains(e.target)) {
+    infoMenu.classList.remove('open');
+    infoMenuToggle.classList.remove('open');
+    infoMenuToggle.textContent = '📍';
+  }
+});
+
+// Show/hide info pins based on scroll
+function updateInfoPins(frac) {
+  const showPins = frac >= 0.95;
+  infoPinsSection.classList.toggle('visible', showPins);
+  // Mobile: show info menu during timeline
+  const showMenu = frac >= BP.TIMELINE_START;
+  infoMenu.classList.toggle('visible', showMenu);
 }
 
 // ========================================
