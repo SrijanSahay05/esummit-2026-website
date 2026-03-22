@@ -14,7 +14,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700&family=Orbitron:wght@700;900&family=Bungee&family=Black+Ops+One&display=swap" rel="stylesheet" />
 
   <!-- GSAP + ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -182,21 +182,24 @@ body {
 }
 
 .hud-logo {
-  height: 52px;
+  height: 80px;
   image-rendering: pixelated;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
 }
 
 .hud-countdown {
-  font-family: var(--font-pixel);
-  font-size: 13px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
   color: var(--gold);
   text-align: right;
   line-height: 1.8;
   letter-spacing: 1px;
-  text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
-  background: rgba(10, 8, 20, 0.6);
-  padding: 8px 12px;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.3);
+  background: rgba(10, 8, 20, 0.75);
+  padding: 10px 14px;
   border-left: 2px solid var(--gold);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.15), inset 0 0 8px rgba(255, 215, 0, 0.05);
 }
 
 /* Top-left: scroll indicator */
@@ -204,12 +207,15 @@ body {
   position: absolute;
   top: 16px;
   left: 16px;
-  font-family: var(--font-pixel);
-  font-size: 9px;
-  color: var(--text-muted);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gold);
   pointer-events: none;
   animation: bob 2s ease-in-out infinite;
   transition: opacity 0.5s ease;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  opacity: 0.8;
 }
 
 @keyframes bob {
@@ -230,31 +236,62 @@ body {
 }
 
 .hud-nav-btn {
-  font-family: var(--font-pixel);
-  font-size: 10px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
   color: var(--gold);
-  background: rgba(10, 8, 20, 0.85);
-  border: 2px solid rgba(255, 215, 0, 0.5);
-  padding: 10px 16px;
+  background: rgba(10, 8, 20, 0.92);
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  padding: 14px 22px;
   cursor: pointer;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   border-radius: 0;
-  min-width: 160px;
+  min-width: 180px;
   text-align: left;
   white-space: nowrap;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6), 0 0 25px rgba(255, 215, 0, 0.25);
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.2), 0 0 30px rgba(255, 215, 0, 0.08), inset 0 0 8px rgba(255, 215, 0, 0.06);
 }
 
 .hud-nav-btn:hover {
   border-color: var(--gold);
-  background: rgba(255, 215, 0, 0.12);
+  background: rgba(255, 215, 0, 0.18);
+  box-shadow: 0 0 22px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.15), inset 0 0 12px rgba(255, 215, 0, 0.1);
 }
 
 .hud-nav-btn.active {
   border-color: var(--gold);
   color: var(--gold);
-  background: rgba(255, 215, 0, 0.08);
-  box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+  background: rgba(255, 215, 0, 0.12);
+  box-shadow: 0 0 24px rgba(255, 215, 0, 0.45), 0 0 45px rgba(255, 215, 0, 0.15), inset 0 0 14px rgba(255, 215, 0, 0.12);
+}
+
+/* Mobile nav toggle button */
+.hud-nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgba(10, 8, 20, 0.92);
+  border: 2px solid rgba(255, 215, 0, 0.6);
+  color: var(--gold);
+  font-size: 20px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.3s;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.2), 0 0 30px rgba(255, 215, 0, 0.08);
+  align-self: flex-end;
+  flex-shrink: 0;
+}
+.hud-nav-toggle:hover {
+  background: rgba(255, 215, 0, 0.18);
+  box-shadow: 0 0 22px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.15);
+}
+.hud-nav-toggle.open {
+  transform: rotate(90deg);
 }
 
 /* ========================================
@@ -439,7 +476,7 @@ body {
 #bp1-section {
   position: fixed;
   inset: 0;
-  z-index: 2;
+  z-index: 12;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.4s ease;
@@ -455,8 +492,8 @@ body {
   position: fixed;
   z-index: 3;
   opacity: 0;
-  width: clamp(220px, 28vw, 380px);
-  top: 2vh;
+  width: clamp(150px, 18vw, 260px);
+  bottom: 38vh;
   left: 50%;
   transform: translateX(-50%);
   filter: drop-shadow(0 0 30px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 60px rgba(0, 0, 0, 0.5));
@@ -473,7 +510,7 @@ body {
   width: clamp(120px, 12vw, 180px);
   top: auto;
   bottom: 0;
-  left: 2vw;
+  left: 6vw;
   right: auto;
   transform: translateX(0);
   filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.7));
@@ -481,8 +518,8 @@ body {
 
 /* Idle floating animation */
 @keyframes idle-float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
+  0%, 100% { transform: translateX(-50%) translateY(0px); }
+  50% { transform: translateX(-50%) translateY(-6px); }
 }
 .npc-wrapper.idle {
   animation: idle-float 3s ease-in-out infinite;
@@ -541,17 +578,20 @@ body {
   left: 0;
   width: 100vw;
   height: 38vh;
-  min-height: 240px;
-  z-index: 5;
-  background: rgba(8, 6, 20, 0.96);
+  min-height: 260px;
+  z-index: 11;
+  background:
+    linear-gradient(180deg, rgba(20, 15, 50, 0.98) 0%, rgba(8, 6, 20, 0.99) 100%);
   border-top: 4px solid var(--gold);
   border-left: none;
   border-right: none;
   border-bottom: none;
   border-radius: 0;
   box-shadow:
-    0 -8px 0 0 rgba(255, 215, 0, 0.15),
-    inset 0 2px 0 0 rgba(255, 215, 0, 0.3);
+    0 -4px 20px rgba(255, 215, 0, 0.2),
+    0 -8px 0 0 rgba(255, 215, 0, 0.12),
+    inset 0 2px 0 0 rgba(255, 215, 0, 0.3),
+    inset 0 0 40px rgba(255, 215, 0, 0.03);
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -584,10 +624,11 @@ body {
 /* Corner decorations */
 .dialog-corner {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   background: var(--gold);
   z-index: 1;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.2);
 }
 
 .dialog-corner--top-left { top: -4px; left: 0; }
@@ -608,10 +649,54 @@ body {
   position: absolute;
   top: 16px;
   right: 28px;
-  font-family: var(--font-pixel);
-  font-size: 9px;
-  color: rgba(255, 215, 0, 0.5);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 215, 0, 0.6);
   letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
+}
+
+.dialog-content-row {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  align-items: stretch;
+  min-height: 0;
+  margin-top: 24px;
+}
+
+.dialog-content-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.dialog-icon {
+  font-size: clamp(48px, 8vw, 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: clamp(80px, 12vw, 120px);
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
+  opacity: 0.9;
+}
+
+.dialog-heading {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(16px, 3vw, 28px);
+  color: #FFD93D;
+  text-shadow:
+    2px 2px 0 #C47A00,
+    4px 4px 0 #8B5A00,
+    1px 1px 0 #E8A200,
+   -1px -1px 0 #FFF5A0;
+  letter-spacing: 2px;
+  line-height: 1.3;
+  margin-bottom: 14px;
+  flex-shrink: 0;
 }
 
 .dialog-text {
@@ -620,31 +705,46 @@ body {
   color: #f0f0f0;
   line-height: 2.2;
   letter-spacing: 1px;
-  max-width: 85%;
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .dialog-btn-row {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+  justify-content: center;
+  gap: 16px;
   align-items: center;
+  flex-shrink: 0;
+  padding-top: 10px;
 }
 
 .dialog-nav-btn {
-  font-family: var(--font-pixel);
-  font-size: 11px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
   color: var(--gold);
-  background: transparent;
+  background: rgba(255, 215, 0, 0.06);
   border: 2px solid var(--gold);
-  padding: 10px 20px;
+  padding: 12px 24px;
   cursor: pointer;
   letter-spacing: 2px;
   border-radius: 0;
   pointer-events: auto;
-  transition: background 0.15s, opacity 0.2s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(255, 215, 0, 0.2);
+  min-height: 44px;
+  min-width: 44px;
+  transition: background 0.15s, opacity 0.2s, box-shadow 0.15s;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.15), inset 0 0 6px rgba(255, 215, 0, 0.05);
+}
+.dialog-nav-btn:hover {
+  background: rgba(255, 215, 0, 0.15);
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.3), inset 0 0 10px rgba(255, 215, 0, 0.08);
 }
 
 .dialog-nav-btn:hover {
@@ -708,6 +808,7 @@ body {
   height: clamp(320px, 42vw, 560px);
   flex-shrink: 0;
   cursor: pointer;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.15)) drop-shadow(0 0 40px rgba(180, 140, 60, 0.1));
 }
 
 .bp2-hud-svg {
@@ -772,32 +873,33 @@ body {
 }
 
 .bp2-event-inner-title {
-  font-family: var(--font-pixel);
-  font-size: clamp(11px, 1.6vw, 17px);
-  font-weight: 700;
-  color: #e4dcd0;
-  letter-spacing: 4px;
-  line-height: 1.5;
+  font-family: 'Black Ops One', sans-serif;
+  font-size: clamp(16px, 2.2vw, 26px);
+  color: #EDD68A;
+  -webkit-text-stroke: 1px #5a3a0a;
+  letter-spacing: 3px;
+  line-height: 1.4;
   margin-bottom: 12px;
   text-shadow:
-    0 0 12px rgba(180, 150, 100, 0.25),
-    0 2px 6px rgba(0,0,0,0.9);
+    3px 3px 0 #3a2200,
+    4px 4px 2px rgba(0,0,0,0.5),
+    0 0 15px rgba(255, 215, 0, 0.3);
 }
 
 .bp2-event-inner-subtitle {
-  font-family: var(--font-pixel);
-  font-size: clamp(7px, 1vw, 9px);
-  font-weight: 500;
-  color: #c4beb4;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(8px, 1vw, 10px);
+  font-weight: 700;
+  color: #d0ccc4;
   letter-spacing: 2px;
   line-height: 1.4;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.7), 0 0 8px rgba(255, 215, 0, 0.15);
   background: linear-gradient(180deg, #8a8a92 0%, #6a6a72 20%, #4a4a52 50%, #5a5a62 80%, #6a6a72 100%);
-  padding: 7px 28px;
+  padding: 8px 28px;
   border-radius: 2px;
   border-top: 1px solid rgba(255,255,255,0.12);
   border-bottom: 1px solid rgba(0,0,0,0.4);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.7), 0 0 8px rgba(180, 140, 60, 0.1), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 /* --- Progress bar at bottom --- */
@@ -842,24 +944,27 @@ body {
 
 /* Explore More button inside medallion */
 .bp2-explore-btn {
-  font-family: var(--font-pixel);
-  font-size: clamp(7px, 0.9vw, 9px);
-  color: #e4dcd0;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(8px, 1vw, 10px);
+  font-weight: 700;
+  color: #EDD68A;
   background: linear-gradient(180deg, #5a4230 0%, #3a2818 50%, #4a3828 100%);
   border: 2px solid #8a6830;
-  padding: 8px 18px;
-  margin-top: 12px;
+  padding: 10px 22px;
+  margin-top: 14px;
   cursor: pointer;
   letter-spacing: 2px;
   border-radius: 2px;
   pointer-events: auto;
-  transition: background 0.2s, border-color 0.2s;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5), 0 0 12px rgba(255, 215, 0, 0.1), inset 0 1px 0 rgba(255,255,255,0.08);
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
 }
 .bp2-explore-btn:hover {
   background: linear-gradient(180deg, #6a5238 0%, #4a3828 50%, #5a4430 100%);
   border-color: #c0a050;
   color: #fff;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5), 0 0 20px rgba(255, 215, 0, 0.25), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
 /* ===== Quest Card Modal ===== */
@@ -884,7 +989,7 @@ body {
 
 .quest-card {
   position: relative;
-  width: clamp(340px, 42vw, 460px);
+  width: clamp(400px, 50vw, 600px);
   cursor: default;
 }
 
@@ -905,17 +1010,21 @@ body {
     radial-gradient(ellipse at 80% 70%, rgba(160, 120, 60, 0.12) 0%, transparent 50%),
     linear-gradient(175deg, #e8d8b4 0%, #dcc8a0 15%, #e2d0a8 30%, #d8c498 50%, #decda8 70%, #e0d0a4 85%, #d4c094 100%);
   border-radius: 4px;
-  padding: 32px 30px 28px;
-  box-shadow: inset 0 0 30px rgba(120, 90, 40, 0.15), 0 4px 20px rgba(0,0,0,0.5);
+  padding: 36px 34px 32px;
+  box-shadow: inset 0 0 30px rgba(120, 90, 40, 0.15), 0 4px 20px rgba(0,0,0,0.5), 0 0 30px rgba(180, 140, 60, 0.15);
 }
 
 .quest-title {
-  font-family: var(--font-pixel);
-  font-size: clamp(16px, 2vw, 22px);
-  color: #2a2218;
-  letter-spacing: 3px;
-  text-shadow: 0 1px 0 rgba(255,240,200,0.5);
-  margin-bottom: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(14px, 1.8vw, 20px);
+  color: #FFD93D;
+  letter-spacing: 2px;
+  text-shadow:
+    2px 2px 0 #C47A00,
+    4px 4px 0 #8B5A00,
+    1px 1px 0 #E8A200,
+   -1px -1px 0 #FFF5A0;
+  margin-bottom: 10px;
   line-height: 1.4;
 }
 
@@ -931,10 +1040,12 @@ body {
 .quest-divider-dot { width: 4px; height: 4px; background: #8a7448; border-radius: 50%; flex-shrink: 0; }
 
 .quest-desc {
-  font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  color: #3a3228;
-  line-height: 1.65;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  font-weight: 700;
+  color: #2a2218;
+  line-height: 2.2;
+  letter-spacing: 0.5px;
   margin-bottom: 20px;
 }
 
@@ -945,8 +1056,9 @@ body {
   align-items: center;
   gap: 10px;
   margin-bottom: 14px;
-  font-family: var(--font-pixel);
-  font-size: 11px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
   color: #3a2e20;
 }
 .quest-stat-bullet { width: 6px; height: 6px; background: #6a5838; border-radius: 1px; transform: rotate(45deg); flex-shrink: 0; }
@@ -957,24 +1069,26 @@ body {
 
 .quest-close-btn {
   position: absolute;
-  top: -8px;
-  right: -8px;
+  top: -10px;
+  right: -10px;
   z-index: 2;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: #4a3828;
   border: 2px solid #8a6830;
   color: #e4dcd0;
-  font-family: var(--font-pixel);
-  font-size: 14px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5), 0 0 12px rgba(180, 140, 60, 0.2);
+  transition: background 0.2s, box-shadow 0.2s;
 }
-.quest-close-btn:hover { background: #5a4230; border-color: #c0a050; }
+.quest-close-btn:hover { background: #5a4230; border-color: #c0a050; box-shadow: 0 3px 8px rgba(0,0,0,0.5), 0 0 20px rgba(255, 215, 0, 0.3); }
 
 /* Event Card Modal — RPG style matching BP1 */
 .modal-overlay {
@@ -1170,6 +1284,37 @@ body {
   background: radial-gradient(ellipse at center top, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.45) 100%);
   pointer-events: none;
 }
+/* Timeline decorative emojis — hidden on desktop, shown on mobile */
+.tl-decor {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.tl-decor-emoji {
+  position: absolute;
+  font-size: 24px;
+  opacity: 0.25;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.3));
+  animation: tl-emoji-float 6s ease-in-out infinite;
+}
+.tl-decor-emoji:nth-child(even) { animation-delay: -3s; }
+.tl-decor-emoji:nth-child(3n) { animation-duration: 8s; }
+@keyframes tl-emoji-float {
+  0%, 100% { transform: translateY(0); opacity: 0.2; }
+  50% { transform: translateY(-8px); opacity: 0.35; }
+}
+
+/* Mobile: moderate blur — video still slightly visible */
+@media (max-width: 768px) {
+  .timeline-overlay {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .tl-decor { display: block; }
+}
 
 /* SVG winding path */
 #timeline-svg {
@@ -1233,13 +1378,13 @@ body {
 }
 
 .tl-pin-name {
-  font-family: var(--font-pixel);
+  font-family: 'Orbitron', sans-serif;
   font-size: clamp(8px, 1.2vw, 11px);
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: 1px;
   line-height: 1.6;
-  text-shadow: 0 0 10px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.9), 0 2px 6px rgba(0,0,0,0.8);
+  text-shadow: 0 0 10px rgba(0,0,0,1), 0 0 20px rgba(0,0,0,0.9), 0 2px 6px rgba(0,0,0,0.8), 0 0 6px rgba(255,215,0,0.2);
   white-space: nowrap;
 }
 
@@ -1258,13 +1403,13 @@ body {
   z-index: 5;
   background: rgba(8, 6, 20, 0.96);
   border: 2px solid var(--gold);
-  padding: 20px 24px;
-  width: min(300px, 85vw);
+  padding: 22px 26px;
+  width: min(320px, 85vw);
   opacity: 0;
   transform: scale(0.9);
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: auto;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 215, 0, 0.2);
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.2), 0 0 50px rgba(255, 215, 0, 0.08), inset 0 1px 0 rgba(255, 215, 0, 0.2);
 }
 
 .tl-card::before {
@@ -1281,25 +1426,28 @@ body {
 }
 
 .tl-card-name {
-  font-family: var(--font-pixel);
-  font-size: 11px;
+  font-family: 'Black Ops One', sans-serif;
+  font-size: 14px;
   color: var(--gold);
   margin-bottom: 10px;
-  line-height: 2;
-  letter-spacing: 1px;
+  line-height: 1.6;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
 }
 
 .tl-card-desc {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: #ccc;
-  line-height: 1.7;
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: #d0d0d0;
+  line-height: 2;
+  letter-spacing: 0.5px;
   margin-bottom: 14px;
 }
 
 .tl-card-meta {
-  font-family: var(--font-pixel);
-  font-size: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
   color: var(--text-muted);
   letter-spacing: 1px;
   line-height: 2;
@@ -1307,19 +1455,23 @@ body {
 }
 
 .tl-card-close {
-  font-family: var(--font-pixel);
-  font-size: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
   background: none;
-  border: 1px solid var(--gold);
+  border: 2px solid var(--gold);
   color: var(--gold);
-  padding: 6px 16px;
+  padding: 8px 18px;
   cursor: pointer;
   letter-spacing: 1px;
-  transition: background 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.1);
 }
 
 .tl-card-close:hover {
   background: rgba(255, 215, 0, 0.15);
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.25);
 }
 
 /* Left date indicator */
@@ -1462,20 +1614,69 @@ body {
    ======================================== */
 @media (max-width: 768px) {
   .hud-countdown { font-size: 10px; padding: 6px 10px; }
-  .hud-logo { height: 36px; }
-  .hud-nav-btn { font-size: 8px; padding: 8px 12px; min-width: 130px; }
+  .hud-logo { height: 52px; }
   .hud-scroll-hint { font-size: 8px; }
 
+  /* Collapsible HUD nav on mobile — toggle at bottom-right, items expand upward */
+  .hud-nav {
+    bottom: 16px;
+    right: 16px;
+    gap: 0;
+    align-items: flex-end;
+    flex-direction: column-reverse;
+  }
+  /* Toggle appears first (bottom) due to column-reverse + last in DOM */
+  .hud-nav-toggle {
+    display: flex;
+  }
+  /* Nav buttons: collapsed by default, expand upward above toggle */
+  .hud-nav-btn {
+    font-size: 10px;
+    font-weight: 900;
+    padding: 10px 16px;
+    min-width: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    margin: 0;
+    transition: max-height 0.3s ease, opacity 0.25s ease, padding 0.3s ease, border-width 0.3s ease, margin 0.3s ease;
+  }
+  .hud-nav.open .hud-nav-btn {
+    max-height: 60px;
+    opacity: 1;
+    padding: 10px 16px;
+    border-width: 2px;
+    margin-top: 6px;
+  }
+
   /* BP1 dialog */
-  .dialog-text { font-size: 12px; max-width: 95%; }
-  .dialog-text-panel { padding: 20px 24px 20px 20px; }
+  .dialog-speaker-name { font-size: 11px !important; top: 8px !important; left: 18px !important; }
+  .dialog-slide-counter { top: 8px !important; right: 18px !important; }
+  .dialog-content-row { margin-top: 16px; gap: 12px; }
+  .dialog-heading { font-size: clamp(12px, 2.5vw, 18px); margin-bottom: 8px; }
+  .dialog-text { font-size: 11px; line-height: 1.9; }
+  .dialog-text-panel { padding: 18px 20px 14px 20px; }
   .dialog-nav-btn { font-size: 9px; padding: 8px 14px; }
-  .npc-wrapper { width: clamp(180px, 24vw, 280px); }
-  .npc-wrapper.companion { width: clamp(100px, 14vw, 140px); top: auto; bottom: 0; left: 2vw; right: auto; transform: translateX(0); }
+  .dialog-icon { font-size: clamp(36px, 7vw, 56px); width: clamp(50px, 10vw, 80px); }
+  .dialog-btn-row { padding-top: 6px; }
+
+  /* NPC centered on mobile — bigger */
+  .npc-wrapper { width: clamp(180px, 38vw, 260px); left: 50%; transform: translateX(-50%); }
+  .npc-wrapper.companion { width: clamp(90px, 16vw, 130px); top: auto; bottom: 0; left: 6vw; right: auto; transform: translateX(0); }
 
   /* BP2 radial HUD */
   .bp2-hud-container { width: 85vw; height: 85vw; }
   .bp2-progress-bar { width: 200px; }
+  .bp2-event-inner-title { font-size: clamp(14px, 3.5vw, 20px); }
+
+  /* Quest card fullscreen on mobile */
+  .quest-card { width: 94vw; }
+  .quest-parchment { padding: 28px 22px 24px; }
+  .quest-title { font-size: 12px; }
+  .quest-desc { font-size: 10px; line-height: 2; }
 
   .tl-card {
     width: 90vw;
@@ -1494,24 +1695,48 @@ body {
   /* Timeline SVG: fill viewport on mobile */
   #timeline-svg { width: 100%; height: 100%; }
 
+  /* Thicker, glowier path on dark blurred background */
+  .timeline-path {
+    stroke-width: 4;
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.7)) drop-shadow(0 0 30px rgba(255, 215, 0, 0.3));
+  }
+  .timeline-path-bg {
+    stroke-width: 3;
+    stroke: rgba(255, 215, 0, 0.08);
+  }
+  .timeline-dot { filter: drop-shadow(0 0 12px var(--gold)) drop-shadow(0 0 24px var(--gold)); }
+
   .event-card { padding: 20px 24px; }
   .event-card-meta { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 480px) {
   .hud-countdown { font-size: 8px; }
-  .hud-logo { height: 28px; }
-  .hud-nav { bottom: 12px; right: 8px; }
-  .hud-nav-btn { font-size: 7px; padding: 8px 10px; min-height: 44px; min-width: 44px; }
+  .hud-logo { height: 44px; }
+  .hud-nav { bottom: 12px; right: 10px; }
+  .hud-nav-btn { font-size: 9px; font-weight: 900; min-height: 40px; }
+  .hud-nav.open .hud-nav-btn { padding: 8px 14px; }
 
   /* BP1 dialog mobile */
   .dialog-box { height: 42vh; }
-  .dialog-text { font-size: 11px; }
-  .dialog-text-panel { padding: 16px 20px; }
-  .dialog-nav-btn { font-size: 8px; padding: 7px 12px; }
-  .npc-wrapper { width: clamp(160px, 40vw, 220px); }
-  .npc-wrapper.companion { width: clamp(80px, 18vw, 110px); top: auto; bottom: 0; left: 2vw; right: auto; transform: translateX(0); }
-  .quest-card { width: 90vw; }
+  .dialog-speaker-name { font-size: 10px !important; top: 6px !important; left: 14px !important; }
+  .dialog-slide-counter { top: 6px !important; right: 14px !important; font-size: 8px !important; }
+  .dialog-content-row { margin-top: 12px; gap: 8px; }
+  .dialog-heading { font-size: 10px; margin-bottom: 4px; text-shadow: 1px 1px 0 #C47A00, 2px 2px 0 #8B5A00; }
+  .dialog-text { font-size: 9px; line-height: 1.7; }
+  .dialog-text-panel { padding: 12px 14px 8px 14px; }
+  .dialog-nav-btn { font-size: 7px; padding: 6px 10px; min-height: 36px; }
+  .dialog-icon { font-size: 28px; width: 38px; }
+  .dialog-btn-row { padding-top: 4px; gap: 10px; }
+
+  /* NPC centered on mobile — prominent */
+  .npc-wrapper { width: clamp(140px, 34vw, 200px); bottom: 42vh; left: 50%; transform: translateX(-50%); }
+  .npc-wrapper.companion { width: clamp(80px, 18vw, 110px); top: auto; bottom: 0; left: 6vw; right: auto; transform: translateX(0); }
+
+  .quest-card { width: 96vw; }
+  .quest-parchment { padding: 24px 18px 20px; }
+  .quest-title { font-size: 11px; }
+  .quest-desc { font-size: 9px; }
 
   /* BP2 */
   .bp2-hud-container { width: 90vw; height: 90vw; }
@@ -1577,11 +1802,12 @@ body {
     <div class="hud-countdown" id="hud-countdown"></div>
   </div>
   <div class="hud-scroll-hint" id="scroll-hint">SCROLL TO EXPLORE ▼</div>
-  <nav class="hud-nav" aria-label="Section navigation">
+  <nav class="hud-nav" id="hud-nav" aria-label="Section navigation">
     <button class="hud-nav-btn" data-target="0.00">▶ START</button>
-    <button class="hud-nav-btn" data-target="0.17">🗼 TOWER</button>
-    <button class="hud-nav-btn" data-target="0.48">💎 ROTUNDA</button>
+    <button class="hud-nav-btn" data-target="0.17">🗼 THE CLOCK TOWER</button>
+    <button class="hud-nav-btn" data-target="0.48">💎 THE ROTUNDA</button>
     <button class="hud-nav-btn" data-target="0.85">🗺 TIMELINE</button>
+    <button class="hud-nav-toggle" id="hud-nav-toggle" aria-label="Toggle navigation">☰</button>
   </nav>
 </div>
 
@@ -1822,9 +2048,15 @@ body {
     <div class="dialog-corner dialog-corner--top-left"></div>
     <div class="dialog-corner dialog-corner--top-right"></div>
     <div class="dialog-text-panel">
-      <div class="dialog-speaker-name" id="dialog-speaker" style="position:absolute;top:12px;left:28px;font-family:var(--font-pixel);font-size:10px;color:var(--gold);letter-spacing:1px;">???</div>
+      <div class="dialog-speaker-name" id="dialog-speaker" style="position:absolute;top:12px;left:28px;font-family:'Black Ops One',sans-serif;font-size:14px;color:#EDD68A;letter-spacing:2px;-webkit-text-stroke:1px #5a3a0a;text-shadow:2px 2px 0 #3a2200,0 0 10px rgba(255,215,0,0.3);">???</div>
       <div class="dialog-slide-counter" id="dialog-counter">1 / 3</div>
-      <div class="dialog-text" id="dialog-text"></div>
+      <div class="dialog-content-row">
+        <div class="dialog-content-left">
+          <div class="dialog-heading" id="dialog-heading">THE LEGEND</div>
+          <div class="dialog-text" id="dialog-text"></div>
+        </div>
+        <div class="dialog-icon" id="dialog-icon">🏰</div>
+      </div>
       <div class="dialog-btn-row">
         <button class="dialog-nav-btn dialog-nav-btn--prev hidden" id="dialog-prev">◄ PREV</button>
         <button class="dialog-nav-btn dialog-nav-btn--next" id="dialog-next">▶ NEXT</button>
@@ -2030,35 +2262,35 @@ body {
         <div class="bp2-event-inner-subtitle">SCROLL TO EXPLORE</div>
       </div>
 
-      <!-- Section 1: Startup Pitch -->
+      <!-- Section 1: Studentpreneur -->
       <div class="bp2-anim-layer" data-bp2-anim="1">
-        <div class="bp2-event-icon">🎤</div>
-        <div class="bp2-event-inner-title">STARTUP<br>PITCH</div>
-        <div class="bp2-event-inner-subtitle">COMPETITION&nbsp; •&nbsp; 2 DAYS</div>
+        <div class="bp2-event-icon">🚀</div>
+        <div class="bp2-event-inner-title">STUDENT-<br>PRENEUR</div>
+        <div class="bp2-event-inner-subtitle">FLAGSHIP&nbsp; •&nbsp; COMPETITION</div>
         <button class="bp2-explore-btn" data-quest="0">▶ EXPLORE MORE</button>
       </div>
 
-      <!-- Section 2: Ideathon -->
+      <!-- Section 2: Dropshipping -->
       <div class="bp2-anim-layer" data-bp2-anim="2">
-        <div class="bp2-event-icon">💡</div>
-        <div class="bp2-event-inner-title">IDEATHON</div>
-        <div class="bp2-event-inner-subtitle">IDEATHON&nbsp; •&nbsp; 1 DAY</div>
+        <div class="bp2-event-icon">📦</div>
+        <div class="bp2-event-inner-title">DROP-<br>SHIPPING</div>
+        <div class="bp2-event-inner-subtitle">FLAGSHIP&nbsp; •&nbsp; COMPETITION</div>
         <button class="bp2-explore-btn" data-quest="1">▶ EXPLORE MORE</button>
       </div>
 
-      <!-- Section 3: Design Sprint -->
+      <!-- Section 3: Startup Expo -->
       <div class="bp2-anim-layer" data-bp2-anim="3">
-        <div class="bp2-event-icon">🎨</div>
-        <div class="bp2-event-inner-title">DESIGN<br>SPRINT</div>
-        <div class="bp2-event-inner-subtitle">WORKSHOP&nbsp; +&nbsp; 1 DAY</div>
+        <div class="bp2-event-icon">🏛</div>
+        <div class="bp2-event-inner-title">STARTUP<br>EXPO</div>
+        <div class="bp2-event-inner-subtitle">FLAGSHIP&nbsp; •&nbsp; SHOWCASE</div>
         <button class="bp2-explore-btn" data-quest="2">▶ EXPLORE MORE</button>
       </div>
 
-      <!-- Section 4: Hack The Future -->
+      <!-- Section 4: Solve for Pilani -->
       <div class="bp2-anim-layer" data-bp2-anim="4">
-        <div class="bp2-event-icon">🔥</div>
-        <div class="bp2-event-inner-title">HACK THE<br>FUTURE</div>
-        <div class="bp2-event-inner-subtitle">HACKATHON&nbsp; •&nbsp; 2 DAYS</div>
+        <div class="bp2-event-icon">🧩</div>
+        <div class="bp2-event-inner-title">SOLVE FOR<br>PILANI</div>
+        <div class="bp2-event-inner-subtitle">FLAGSHIP&nbsp; •&nbsp; CHALLENGE</div>
         <button class="bp2-explore-btn" data-quest="3">▶ EXPLORE MORE</button>
       </div>
     </div>
@@ -2168,6 +2400,17 @@ body {
 <!-- ============ Timeline: Winding Path with Event Pins ============ -->
 <div id="timeline-section">
   <div class="timeline-overlay"></div>
+  <!-- Decorative floating emojis (mobile atmosphere) -->
+  <div class="tl-decor" aria-hidden="true">
+    <span class="tl-decor-emoji" style="top:5%;left:8%;">✨</span>
+    <span class="tl-decor-emoji" style="top:15%;right:10%;">🚀</span>
+    <span class="tl-decor-emoji" style="top:30%;left:5%;">💡</span>
+    <span class="tl-decor-emoji" style="top:45%;right:8%;">🏆</span>
+    <span class="tl-decor-emoji" style="top:55%;left:10%;">⚡</span>
+    <span class="tl-decor-emoji" style="top:70%;right:6%;">🎯</span>
+    <span class="tl-decor-emoji" style="top:82%;left:7%;">🔥</span>
+    <span class="tl-decor-emoji" style="top:92%;right:12%;">🎪</span>
+  </div>
 
   <!-- Winding SVG path (top→bottom, clock tower to campus bottom) -->
   <svg id="timeline-svg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
@@ -2266,18 +2509,81 @@ function formatCountdown(target) {
 const video = document.getElementById('bg-video');
 let videoReady = false;
 let lastScrollFrac = -1;
+let videoSeeking = false;
+let videoUnlocked = false;
 
+// Desktop: canplaythrough is ideal
 video.addEventListener('canplaythrough', () => {
   videoReady = true;
 }, { once: true });
 
-// Also handle loadeddata as fallback
+// Mobile fallback: loadeddata with readyState >= 2 (HAVE_CURRENT_DATA) is enough
 video.addEventListener('loadeddata', () => {
-  if (video.readyState >= 3) videoReady = true;
+  if (video.readyState >= 2) videoReady = true;
 }, { once: true });
+
+// Extra fallback: loadedmetadata means we at least have duration
+video.addEventListener('loadedmetadata', () => {
+  // On mobile, try to unlock the video with a brief play+pause
+  const playPromise = video.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      video.pause();
+      video.currentTime = 0;
+      videoReady = true;
+      videoUnlocked = true;
+    }).catch(() => {
+      if (video.readyState >= 1) videoReady = true;
+    });
+  }
+}, { once: true });
+
+// Mobile: unlock video on first user interaction (touch/scroll)
+function unlockVideoOnInteraction() {
+  if (videoUnlocked) return;
+  videoUnlocked = true;
+  const p = video.play();
+  if (p !== undefined) {
+    p.then(() => {
+      video.pause();
+      video.currentTime = 0;
+      videoReady = true;
+    }).catch(() => {});
+  }
+}
+document.addEventListener('touchstart', unlockVideoOnInteraction, { once: true, passive: true });
+document.addEventListener('scroll', unlockVideoOnInteraction, { once: true, passive: true });
+
+// On mobile, periodically check if video has buffered enough
+// and try to pre-buffer by seeking through key timestamps
+video.addEventListener('progress', () => {
+  if (video.buffered.length > 0) {
+    const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+    if (bufferedEnd >= (video.duration || 20) * 0.8) {
+      videoReady = true;
+    }
+  }
+});
+
+// Track seeking state to avoid queuing multiple seeks on mobile
+video.addEventListener('seeking', () => { videoSeeking = true; });
+video.addEventListener('seeked', () => { videoSeeking = false; });
 
 function scrubVideo(frac) {
   if (!videoReady || !video.duration) return;
+  // On mobile, skip if a seek is already in progress to avoid jank
+  // But reset seeking flag if stuck for too long (mobile can get stuck)
+  if (videoSeeking) {
+    if (!scrubVideo._seekStart) scrubVideo._seekStart = Date.now();
+    if (Date.now() - scrubVideo._seekStart > 500) {
+      videoSeeking = false;
+      scrubVideo._seekStart = null;
+    } else {
+      return;
+    }
+  } else {
+    scrubVideo._seekStart = null;
+  }
 
   let targetTime;
 
@@ -2297,7 +2603,7 @@ function scrubVideo(frac) {
     targetTime = video.duration;
   }
 
-  if (Math.abs(video.currentTime - targetTime) > 0.03) {
+  if (Math.abs(video.currentTime - targetTime) > 0.05) {
     video.currentTime = targetTime;
   }
 }
@@ -2311,13 +2617,19 @@ let loadProgress = 0;
 let loadingDone = false;
 const loadStartTime = Date.now();
 
+const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+// On mobile, slow down loading bar to give video more buffer time
+const loadSpeed = isMobileDevice ? 0.025 : 0.05;
+const minLoadTime = isMobileDevice ? 3000 : 1500;
+
 function simulateLoading() {
   if (loadingDone) return;
   if (loadProgress < 90) {
-    loadProgress += (90 - loadProgress) * 0.05;
+    loadProgress += (90 - loadProgress) * loadSpeed;
     loadingBar.style.width = loadProgress + '%';
   }
-  if (videoReady && loadProgress >= 89) {
+  const elapsed = Date.now() - loadStartTime;
+  if (videoReady && loadProgress >= 89 && elapsed >= minLoadTime) {
     finishLoading();
     return;
   }
@@ -2329,23 +2641,32 @@ function finishLoading() {
   loadingDone = true;
   loadingBar.style.width = '100%';
   const elapsed = Date.now() - loadStartTime;
-  const remaining = Math.max(0, 1500 - elapsed);
+  const remaining = Math.max(0, minLoadTime - elapsed);
   setTimeout(() => {
     loadingScreen.classList.add('hidden');
     initSections();
+    // On mobile, try to pre-seek to cache key frames after load
+    if (isMobileDevice && video.duration) {
+      setTimeout(() => {
+        // Briefly seek to a midpoint to help buffer ahead
+        const mid = video.duration * 0.5;
+        video.currentTime = mid;
+        setTimeout(() => { video.currentTime = 0; }, 100);
+      }, 500);
+    }
   }, remaining);
 }
 
 // Start loading simulation
 requestAnimationFrame(simulateLoading);
 
-// Fallback: force finish after 8 seconds
+// Fallback: force finish after timeout (mobile gets more time to buffer)
 setTimeout(() => {
   if (!loadingDone) {
     videoReady = true;
     finishLoading();
   }
-}, 8000);
+}, isMobileDevice ? 8000 : 8000);
 
 // ========================================
 // 5: CRT Noise Canvas
@@ -2394,12 +2715,35 @@ function updateHUDCountdown() {
   hudCountdown.textContent = cd.text;
 }
 
-// Nav button click → scroll
+// Mobile nav toggle
+const hudNav = document.getElementById('hud-nav');
+const hudNavToggle = document.getElementById('hud-nav-toggle');
+hudNavToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  hudNav.classList.toggle('open');
+  hudNavToggle.classList.toggle('open');
+  hudNavToggle.textContent = hudNav.classList.contains('open') ? '✕' : '☰';
+});
+
+// Close mobile nav on outside tap
+document.addEventListener('click', (e) => {
+  if (hudNav.classList.contains('open') && !hudNav.contains(e.target)) {
+    hudNav.classList.remove('open');
+    hudNavToggle.classList.remove('open');
+    hudNavToggle.textContent = '☰';
+  }
+});
+
+// Nav button click → scroll (and close mobile menu)
 navBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     const target = parseFloat(btn.dataset.target);
     const scrollH = document.documentElement.scrollHeight - window.innerHeight;
     window.scrollTo({ top: target * scrollH, behavior: 'smooth' });
+    // Close mobile menu after selection
+    hudNav.classList.remove('open');
+    hudNavToggle.classList.remove('open');
+    hudNavToggle.textContent = '☰';
   });
 });
 
@@ -2443,14 +2787,20 @@ const dialogCounter = document.getElementById('dialog-counter');
 const dialogSlides = [
   {
     speaker: '???',
+    heading: 'THE LEGEND',
+    icon: '🏰',
     text: "Welcome to BITS Pilani,\nAdventurer. You stand\nbefore a place where\nlegends are forged."
   },
   {
     speaker: 'THE\nWATCHER',
+    heading: 'THE ARENA',
+    icon: '⚔️',
     text: "E-Summit 2026 is the\nlargest entrepreneurship\nfestival in Rajasthan.\n20+ events. 3 epic days."
   },
   {
     speaker: 'THE\nWATCHER',
+    heading: 'YOUR QUEST',
+    icon: '🗺️',
     text: "Prizes. Speakers. Founders.\nAll waiting below.\n\nScroll down to begin\nyour quest."
   }
 ];
@@ -2520,6 +2870,12 @@ function showSlide(idx) {
   // Update speaker
   document.getElementById('dialog-speaker').innerHTML = slide.speaker.replace('\n', '<br/>');
 
+  // Update heading
+  document.getElementById('dialog-heading').textContent = slide.heading || '';
+
+  // Update icon
+  document.getElementById('dialog-icon').textContent = slide.icon || '';
+
   // Update buttons
   updateDialogButtons();
 
@@ -2540,8 +2896,12 @@ dialogNext.addEventListener('click', () => {
   }
   if (currentSlide < dialogSlides.length - 1) {
     showSlide(currentSlide + 1);
+  } else {
+    // Last slide "BEGIN QUEST" — smooth scroll to BP2 (The Rotunda)
+    const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+    const target = 0.48 * scrollH;
+    window.scrollTo({ top: target, behavior: 'smooth' });
   }
-  // Last slide "BEGIN QUEST" — just let user scroll
 });
 
 // Prev button
@@ -2552,6 +2912,30 @@ dialogPrev.addEventListener('click', () => {
   }
   if (currentSlide > 0) {
     showSlide(currentSlide - 1);
+  }
+});
+
+// Tap on dialog text area to skip typewriter on mobile
+dialogText.addEventListener('click', () => {
+  if (isTyping) {
+    finishTyping();
+  }
+});
+
+// Enter / Space to skip typewriter or advance slide
+document.addEventListener('keydown', (e) => {
+  if (!dialogVisible) return;
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    if (isTyping) {
+      finishTyping();
+    } else if (currentSlide < dialogSlides.length - 1) {
+      showSlide(currentSlide + 1);
+    } else {
+      const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+      const target = 0.48 * scrollH;
+      window.scrollTo({ top: target, behavior: 'smooth' });
+    }
   }
 });
 
@@ -2573,13 +2957,17 @@ function showCharacter() {
   }
 }
 
+function getDialogHeight() {
+  return window.innerWidth <= 480 ? '42vh' : '38vh';
+}
+
 function hideCharacter() {
   if (!npcCharacterVisible) return;
   npcCharacterVisible = false;
   npc.classList.remove('idle', 'companion');
   npc.style.opacity = '0';
-  npc.style.top = '2vh';
-  npc.style.bottom = '';
+  npc.style.top = '';
+  npc.style.bottom = getDialogHeight();
   npc.style.left = '50%';
   npc.style.right = '';
   npc.style.transform = 'translateX(-50%)';
@@ -2638,15 +3026,15 @@ function enterCompanionMode() {
   // Ensure positioning overrides for bottom-left
   npc.style.top = 'auto';
   npc.style.bottom = '0';
-  npc.style.left = '2vw';
+  npc.style.left = '6vw';
   npc.style.right = 'auto';
   npc.style.transform = 'translateX(0)';
 }
 
 function exitCompanionMode() {
   npc.classList.remove('companion');
-  npc.style.top = '2vh';
-  npc.style.bottom = '';
+  npc.style.top = '';
+  npc.style.bottom = getDialogHeight();
   npc.style.left = '50%';
   npc.style.right = '';
   npc.style.transform = 'translateX(-50%)';
@@ -2783,43 +3171,43 @@ const BP2_TOTAL_SECTIONS = 5;
 // Event data for the modal (kept for compatibility)
 const gemEvents = [
   {
-    name: 'STARTUP PITCH',
-    category: 'Competition',
+    name: 'STUDENTPRENEUR',
+    category: 'Flagship',
     color: '#ff4444',
-    prize: '₹1,00,000',
-    difficulty: 4,
-    duration: '2 Days',
-    description: 'Pitch your startup idea to VCs and industry leaders. Top teams win funding and mentorship.',
-    announced: true
-  },
-  {
-    name: 'IDEATHON',
-    category: 'Ideathon',
-    color: '#3366ff',
-    prize: '₹75,000',
-    difficulty: 3,
-    duration: '1 Day',
-    description: 'Rapid ideation challenge. Prototype a solution in 24 hours.',
-    announced: true
-  },
-  {
-    name: 'DESIGN SPRINT',
-    category: 'Workshop',
-    color: '#33cc66',
-    prize: '₹50,000',
-    difficulty: 2,
-    duration: '1 Day',
-    description: 'Learn design thinking from industry experts. Build a prototype from scratch.',
-    announced: true
-  },
-  {
-    name: 'HACK THE FUTURE',
-    category: 'Competition',
-    color: '#ffaa00',
-    prize: '₹80,000',
+    prize: 'TBA',
     difficulty: 5,
-    duration: '2 Days',
-    description: 'The ultimate hackathon. Build, ship, demo. Tracks: AI/ML, FinTech, HealthTech.',
+    duration: 'Multi-Day',
+    description: 'The ultimate entrepreneurship competition. Build, pitch, and scale your startup idea from concept to reality. Compete against the brightest student founders for funding and mentorship.',
+    announced: true
+  },
+  {
+    name: 'DROPSHIPPING',
+    category: 'Flagship',
+    color: '#3366ff',
+    prize: 'TBA',
+    difficulty: 4,
+    duration: 'Multi-Day',
+    description: 'Launch and run a real e-commerce dropshipping business in a time-bound challenge. Source products, build your store, drive sales, and prove your business acumen.',
+    announced: true
+  },
+  {
+    name: 'STARTUP EXPO',
+    category: 'Flagship',
+    color: '#33cc66',
+    prize: 'TBA',
+    difficulty: 3,
+    duration: 'Multi-Day',
+    description: 'A grand showcase of the most promising student-led startups. Demo your product, connect with investors, and gain visibility in the startup ecosystem.',
+    announced: true
+  },
+  {
+    name: 'SOLVE FOR PILANI',
+    category: 'Flagship',
+    color: '#ffaa00',
+    prize: 'TBA',
+    difficulty: 4,
+    duration: 'Multi-Day',
+    description: 'Tackle real-world problems facing the city of Pilani and its community. Design innovative, sustainable solutions that create lasting impact beyond the campus.',
     announced: true
   }
 ];
@@ -3056,22 +3444,23 @@ let tlAnimatedIn = false;
 // Event pins along the winding path (t = 0 at top, 1 at bottom)
 // Desktop pin positions (viewport %) — DO NOT CHANGE
 const tlEvents = [
-  { name: 'OPENING CEREMONY', icon: '🎪', date: 'DAY 1', t: 0.04, x: 42, y: 32, desc: 'Grand inauguration with keynote speakers and the official E-Summit launch.', category: 'CEREMONY', color: '#FFD700', tba: false },
-  { name: 'STARTUP PITCH', icon: '🎤', date: 'DAY 1', t: 0.14, x: 55, y: 38, desc: 'Pitch your startup idea to VCs and industry leaders. Top teams win funding and mentorship.', category: 'COMP', color: '#E74C3C', tba: false },
-  { name: 'AI/ML WORKSHOP', icon: '🤖', date: 'DAY 1', t: 0.25, x: 41, y: 45, desc: 'Hands-on deep learning workshop with cutting-edge industry tools.', category: 'WORKSHOP', color: '#3498DB', tba: false },
-  { name: 'IDEATHON', icon: '💡', date: 'DAY 1', t: 0.37, x: 57, y: 50, desc: 'Rapid ideation challenge. Prototype a solution in 24 hours.', category: 'COMP', color: '#9B59B6', tba: false },
-  { name: 'DESIGN SPRINT', icon: '🎨', date: 'DAY 2', t: 0.48, x: 44, y: 56, desc: 'Learn design thinking from industry experts. Build a prototype from scratch.', category: 'WORKSHOP', color: '#2ECC71', tba: false },
-  { name: 'VC PANEL', icon: '🚀', date: 'DAY 2', t: 0.58, x: 57, y: 63, desc: 'Top VCs discuss the future of AI investment and startup landscape.', category: 'TALK', color: '#F39C12', tba: false },
-  { name: 'HACK THE FUTURE', icon: '🔥', date: 'DAY 2', t: 0.70, x: 44, y: 71, desc: 'The ultimate 36-hour hackathon. Build, ship, demo. Tracks: AI/ML, FinTech, HealthTech.', category: 'COMP', color: '#E74C3C', tba: false },
-  { name: 'MYSTERY EVENT', icon: '❓', date: 'DAY 3', t: 0.82, x: 56, y: 80, desc: 'To be announced. Stay tuned!', category: '???', color: '#666', tba: true },
-  { name: 'CLOSING CEREMONY', icon: '🏆', date: 'DAY 3', t: 0.95, x: 41, y: 92, desc: 'Grand finale with surprise guest speaker, awards, and networking.', category: 'CEREMONY', color: '#FFD700', tba: false }
+  { name: 'MAKE 48', icon: '⚡', date: 'DAY 1', t: 0.04, x: 42, y: 32, desc: 'A high-intensity, 48-hour challenge where participants must build a functional product prototype or business solution from scratch.', category: 'CHALLENGE', color: '#E74C3C', tba: false },
+  { name: 'MARKET SIMULATOR', icon: '📈', date: 'DAY 1', t: 0.14, x: 55, y: 38, desc: 'A dynamic game where participants make strategic investment and trading decisions in a simulated stock or financial market environment.', category: 'GAME', color: '#3498DB', tba: false },
+  { name: 'SPEED NETWORKING', icon: '🤝', date: 'DAY 1', t: 0.25, x: 41, y: 45, desc: 'High-tempo, structured session designed for students, founders, and VCs to exchange elevator pitches and make maximum professional contacts in minimum time.', category: 'NETWORKING', color: '#2ECC71', tba: false },
+  { name: 'HACKATHON', icon: '💻', date: 'DAY 2', t: 0.37, x: 57, y: 50, desc: 'An intensive, time-bound innovation sprint where students and developers collaborate in teams to ideate, build, and prototype technology-driven solutions to real-world problem statements.', category: 'COMP', color: '#9B59B6', tba: false },
+  { name: '??? MYSTERY ???', icon: '🔮', date: 'DAY 2', t: 0.48, x: 44, y: 56, desc: 'Something big is coming. Stay tuned for the reveal...', category: '???', color: '#666', tba: true },
+  { name: '??? MYSTERY ???', icon: '🎭', date: 'DAY 2', t: 0.58, x: 57, y: 63, desc: 'This event is still under wraps. Check back soon...', category: '???', color: '#666', tba: true },
+  { name: '??? MYSTERY ???', icon: '⚔', date: 'DAY 3', t: 0.70, x: 44, y: 71, desc: 'A secret challenge awaits. Are you ready?', category: '???', color: '#666', tba: true },
+  { name: '??? MYSTERY ???', icon: '🗝', date: 'DAY 3', t: 0.82, x: 56, y: 80, desc: 'Unlock this event when the time comes...', category: '???', color: '#666', tba: true },
+  { name: '??? MYSTERY ???', icon: '❓', date: 'DAY 3', t: 0.95, x: 41, y: 92, desc: 'The final surprise. All will be revealed at E-Summit 2026.', category: '???', color: '#666', tba: true }
 ];
 
 // Desktop path data — DO NOT CHANGE
 const TL_PATH_DESKTOP = "M 499,306 C 500,309 509,317 507,323 C 505,329 484,336 485,344 C 486,352 512,358 511,369 C 510,380 483,398 480,412 C 478,426 488,443 496,454 C 504,465 520,468 530,477 C 540,486 555,494 555,506 C 555,518 540,533 532,548 C 524,563 510,577 509,594 C 508,611 518,631 525,648 C 532,666 551,681 550,699 C 549,717 531,734 520,755 C 509,776 490,798 482,823 C 474,848 472,885 472,906 C 472,928 480,944 482,952";
 
-// Mobile path data — provided by designer for portrait screens
-const TL_PATH_MOBILE = "M 519,316 C 519,330 493,330 466,343 S 510,352 553,361 S 505,379 456,397 S 467,422 478,448 S 544,463 609,478 S 646,493 682,509 S 632,534 583,558 S 562,582 541,605 S 595,637 648,669 S 669,687 689,706 S 593,749 498,791 S 450,828 403,864 S 425,919 447,974";
+// Mobile path — aesthetic centered snake (blurred bg, no need to trace video)
+// Designed in a 0-1000 x 0-1000 space, snaking left-right centered around x=500
+const TL_PATH_MOBILE = "M 500,50 C 500,70 620,80 650,120 S 580,180 500,200 S 380,230 350,280 S 420,340 500,370 S 620,400 650,450 S 580,510 500,540 S 380,570 350,620 S 420,680 500,710 S 620,740 650,790 S 580,840 500,870 S 420,910 450,950";
 
 const tlSvg = document.getElementById('timeline-svg');
 const tlPathBg = document.getElementById('tl-path-bg');
@@ -3082,12 +3471,11 @@ function isMobileTimeline() {
 }
 
 function svgPointToViewport(svgX, svgY) {
-  // Convert SVG coords to viewport percentages using the SVG's screen CTM
   const pt = tlSvg.createSVGPoint();
   pt.x = svgX;
   pt.y = svgY;
   const ctm = tlSvg.getScreenCTM();
-  if (!ctm) return { x: svgX / 10, y: svgY / 10 }; // fallback
+  if (!ctm) return { x: svgX / 10, y: svgY / 10 };
   const screenPt = pt.matrixTransform(ctm);
   return {
     x: (screenPt.x / window.innerWidth) * 100,
@@ -3103,19 +3491,20 @@ function applyTimelinePath() {
   tlPathBg.setAttribute('d', pathData);
 
   if (mobile) {
-    // Mobile: use a portrait viewBox cropped to the path area (x:350-740, y:280-1020)
-    // preserveAspectRatio none stretches to fill — use xMidYMid meet to keep proportions
-    tlSvg.setAttribute('viewBox', '350 280 390 740');
+    // Portrait viewBox — taller to match phone aspect, centered on the snake
+    const phoneAspect = window.innerWidth / window.innerHeight;
+    // Path spans x:350-650 (w:300), y:50-950 (h:900). Center: 500,500
+    const vbH = 1000;
+    const vbW = vbH * phoneAspect;
+    const vbX = 500 - vbW / 2;
+    tlSvg.setAttribute('viewBox', `${vbX} 0 ${vbW} ${vbH}`);
     tlSvg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   } else {
-    // Desktop: original square viewBox
     tlSvg.setAttribute('viewBox', '0 0 1000 1000');
     tlSvg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   }
 
   tlIsMobile = mobile;
-
-  // Reset path length so it recalculates
   tlPathLength = 0;
 }
 
@@ -3168,13 +3557,13 @@ function repositionTLPins() {
     const evt = tlEvents[idx];
 
     if (mobile) {
-      // On mobile, compute position from the path itself
+      // On mobile, compute position from the path itself using SVG→viewport transform
       const pathPoint = tlPath.getPointAtLength(evt.t * tlPathLength);
       const vp = svgPointToViewport(pathPoint.x, pathPoint.y);
-      // Alternate pins left/right of path for readability
-      const offset = (idx % 2 === 0) ? -12 : 12;
-      pin.style.left = Math.max(2, Math.min(85, vp.x + offset)) + '%';
-      pin.style.top = vp.y + '%';
+      // Alternate pins left/right of path for readability (smaller offset on mobile)
+      const offset = (idx % 2 === 0) ? -8 : 8;
+      pin.style.left = Math.max(2, Math.min(88, vp.x + offset)) + '%';
+      pin.style.top = Math.max(2, Math.min(96, vp.y)) + '%';
     } else {
       // Desktop: use fixed positions
       pin.style.left = evt.x + '%';
@@ -3395,165 +3784,6 @@ function setVH() {
 setVH();
 window.addEventListener('resize', setVH);
 
-// ========================================
-// DEBUG: Scroll fraction overlay (remove before production)
-// ========================================
-(function addDebugOverlay() {
-  const dbg = document.createElement('div');
-  dbg.id = 'debug-scroll';
-  dbg.style.cssText = 'position:fixed;top:50px;left:16px;z-index:9999;font-family:monospace;font-size:13px;color:#0f0;background:rgba(0,0,0,0.85);padding:10px 14px;border-radius:6px;border:1px solid #0f0;pointer-events:none;line-height:1.8;white-space:pre;';
-  document.body.appendChild(dbg);
-
-  function getBPName(f) {
-    if (f <= 0.17) return 'BP0.5 Clock';
-    if (f <= 0.30) return 'BP1   NPC';
-    if (f <= 0.48) return '---   Video scrub';
-    if (f <= 0.65) return 'BP2   Radial';
-    if (f <= 0.85) return '---   Video scrub';
-    return 'TL    Timeline';
-  }
-
-  // --- Mouse coordinate tracker ---
-  let mouseX = 0, mouseY = 0;
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  function update() {
-    const f = getScrollFraction();
-    const v = document.getElementById('bg-video');
-    const vTime = v ? v.currentTime.toFixed(2) : '?';
-    const vDur = (v && v.duration) ? v.duration.toFixed(2) : '?';
-    // Convert mouse position to percentage of viewport
-    const xPct = ((mouseX / window.innerWidth) * 100).toFixed(1);
-    const yPct = ((mouseY / window.innerHeight) * 100).toFixed(1);
-    dbg.textContent =
-      'scroll: ' + f.toFixed(4) + '\n' +
-      'video:  ' + vTime + 's / ' + vDur + 's\n' +
-      'active: ' + getBPName(f) + '\n' +
-      'cursor: x=' + xPct + '% y=' + yPct + '%';
-    requestAnimationFrame(update);
-  }
-  update();
-
-  // --- PATH DRAWING MODE ---
-  // Press 'D' to toggle draw mode. Click to place points. Press 'C' to copy path. Press 'X' to clear.
-  let drawMode = false;
-  let drawPoints = [];
-  const drawCanvas = document.createElement('canvas');
-  drawCanvas.id = 'draw-canvas';
-  drawCanvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:9998;pointer-events:none;';
-  document.body.appendChild(drawCanvas);
-  const drawCtx = drawCanvas.getContext('2d');
-
-  const drawLabel = document.createElement('div');
-  drawLabel.style.cssText = 'position:fixed;top:50px;right:16px;z-index:9999;font-family:monospace;font-size:12px;color:#ff0;background:rgba(0,0,0,0.85);padding:8px 12px;border-radius:6px;border:1px solid #ff0;display:none;line-height:1.6;white-space:pre;pointer-events:none;';
-  document.body.appendChild(drawLabel);
-
-  function resizeDrawCanvas() {
-    drawCanvas.width = window.innerWidth;
-    drawCanvas.height = window.innerHeight;
-    redrawPath();
-  }
-  window.addEventListener('resize', resizeDrawCanvas);
-  resizeDrawCanvas();
-
-  function redrawPath() {
-    drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-    if (drawPoints.length === 0) return;
-
-    // Draw lines between points
-    drawCtx.strokeStyle = '#ff0';
-    drawCtx.lineWidth = 3;
-    drawCtx.lineJoin = 'round';
-    drawCtx.setLineDash([8, 4]);
-    drawCtx.beginPath();
-    drawPoints.forEach((p, i) => {
-      const px = (p.x / 100) * drawCanvas.width;
-      const py = (p.y / 100) * drawCanvas.height;
-      if (i === 0) drawCtx.moveTo(px, py);
-      else drawCtx.lineTo(px, py);
-    });
-    drawCtx.stroke();
-    drawCtx.setLineDash([]);
-
-    // Draw dots at each point
-    drawPoints.forEach((p, i) => {
-      const px = (p.x / 100) * drawCanvas.width;
-      const py = (p.y / 100) * drawCanvas.height;
-      drawCtx.fillStyle = i === 0 ? '#0f0' : (i === drawPoints.length - 1 ? '#f00' : '#ff0');
-      drawCtx.beginPath();
-      drawCtx.arc(px, py, 6, 0, Math.PI * 2);
-      drawCtx.fill();
-      // Label
-      drawCtx.fillStyle = '#fff';
-      drawCtx.font = '10px monospace';
-      drawCtx.fillText(i + ': ' + p.x.toFixed(1) + ',' + p.y.toFixed(1), px + 10, py - 6);
-    });
-  }
-
-  function generateSVGPath() {
-    if (drawPoints.length < 2) return 'Need at least 2 points';
-    // Convert % to SVG coords (viewBox 0 0 1000 1000)
-    const svgPts = drawPoints.map(p => ({ x: p.x * 10, y: p.y * 10 }));
-    // Build a smooth cubic bezier path through the points
-    let d = 'M ' + svgPts[0].x.toFixed(0) + ',' + svgPts[0].y.toFixed(0);
-    for (let i = 1; i < svgPts.length; i++) {
-      const prev = svgPts[i - 1];
-      const curr = svgPts[i];
-      // Simple smooth curve using S command
-      const cx = (prev.x + curr.x) / 2;
-      const cy = prev.y + (curr.y - prev.y) * 0.5;
-      if (i === 1) {
-        d += ' C ' + prev.x.toFixed(0) + ',' + ((prev.y + curr.y) / 2).toFixed(0);
-        d += ' ' + cx.toFixed(0) + ',' + cy.toFixed(0);
-        d += ' ' + curr.x.toFixed(0) + ',' + curr.y.toFixed(0);
-      } else {
-        d += ' S ' + cx.toFixed(0) + ',' + cy.toFixed(0);
-        d += ' ' + curr.x.toFixed(0) + ',' + curr.y.toFixed(0);
-      }
-    }
-    return d;
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'd' || e.key === 'D') {
-      drawMode = !drawMode;
-      drawCanvas.style.pointerEvents = drawMode ? 'auto' : 'none';
-      drawCanvas.style.cursor = drawMode ? 'crosshair' : '';
-      drawLabel.style.display = drawMode ? 'block' : 'none';
-      drawLabel.textContent = 'DRAW MODE ON\nClick to add points\nC = copy SVG path\nZ = undo last\nX = clear all\nD = toggle off\n\nPoints: ' + drawPoints.length;
-    }
-    if (e.key === 'x' || e.key === 'X') {
-      drawPoints = [];
-      redrawPath();
-      drawLabel.textContent = 'DRAW MODE ON\nCleared!\nPoints: 0';
-    }
-    if (e.key === 'z' || e.key === 'Z') {
-      drawPoints.pop();
-      redrawPath();
-      drawLabel.textContent = 'DRAW MODE ON\nUndo! Points: ' + drawPoints.length;
-    }
-    if (e.key === 'c' || e.key === 'C') {
-      const path = generateSVGPath();
-      navigator.clipboard.writeText(path).then(() => {
-        drawLabel.textContent = 'COPIED TO CLIPBOARD!\n\n' + path + '\n\nPoints (' + drawPoints.length + '):\n' + drawPoints.map((p,i) => i + ': x=' + p.x.toFixed(1) + '% y=' + p.y.toFixed(1) + '%').join('\n');
-      }).catch(() => {
-        drawLabel.textContent = 'PATH (copy manually):\n\n' + path + '\n\nPoints (' + drawPoints.length + '):\n' + drawPoints.map((p,i) => i + ': x=' + p.x.toFixed(1) + '% y=' + p.y.toFixed(1) + '%').join('\n');
-      });
-    }
-  });
-
-  drawCanvas.addEventListener('click', (e) => {
-    if (!drawMode) return;
-    const xPct = (e.clientX / window.innerWidth) * 100;
-    const yPct = (e.clientY / window.innerHeight) * 100;
-    drawPoints.push({ x: xPct, y: yPct });
-    redrawPath();
-    drawLabel.textContent = 'DRAW MODE ON\nClick to add points\nC = copy SVG path\nZ = undo last\nX = clear all\nD = toggle off\n\nPoints: ' + drawPoints.length + '\nLast: ' + xPct.toFixed(1) + '%, ' + yPct.toFixed(1) + '%';
-  });
-})();
 </script>
 
 </body>
