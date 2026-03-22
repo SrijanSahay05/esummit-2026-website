@@ -1,9 +1,46 @@
 import type { Metadata } from 'next';
-import { pixelFont, bodyFont } from '@/lib/fonts';
-import { createMetadata } from '@/lib/metadata';
+import {
+  pixelFont,
+  bodyFont,
+  orbitronFont,
+  bungeeFont,
+  blackOpsFont,
+} from '@/lib/fonts';
+import { createMetadata, viewport as viewportConfig } from '@/lib/metadata';
+import { SITE } from '@/lib/constants';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = createMetadata();
+export const viewport = viewportConfig;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: 'E-Summit 2026',
+  description: SITE.tagline,
+  startDate: '2026-04-10',
+  endDate: '2026-04-12',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  eventStatus: 'https://schema.org/EventScheduled',
+  location: {
+    '@type': 'Place',
+    name: 'BITS Pilani',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Vidya Vihar',
+      addressLocality: 'Pilani',
+      addressRegion: 'Rajasthan',
+      postalCode: '333031',
+      addressCountry: 'IN',
+    },
+  },
+  organizer: {
+    '@type': 'Organization',
+    name: 'PIEDS - BITS Pilani',
+    url: SITE.url,
+  },
+  url: SITE.url,
+};
 
 export default function RootLayout({
   children,
@@ -11,8 +48,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${pixelFont.variable} ${bodyFont.variable}`}>
-      <body className="min-h-screen bg-bg-primary font-body text-text-primary antialiased">
+    <html
+      lang="en"
+      className={`${pixelFont.variable} ${bodyFont.variable} ${orbitronFont.variable} ${bungeeFont.variable} ${blackOpsFont.variable}`}
+    >
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {children}
       </body>
     </html>

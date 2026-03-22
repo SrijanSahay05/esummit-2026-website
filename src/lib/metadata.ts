@@ -1,5 +1,11 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { SITE } from './constants';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#000000',
+};
 
 export function createMetadata(overrides: Partial<Metadata> = {}): Metadata {
   const title = overrides.title
@@ -13,12 +19,25 @@ export function createMetadata(overrides: Partial<Metadata> = {}): Metadata {
     title,
     description,
     metadataBase: new URL(SITE.url),
+    keywords: [
+      'E-Summit',
+      'BITS Pilani',
+      'entrepreneurship summit',
+      'startup competition',
+      'college fest',
+      'PIEDS',
+      'E-Summit 2026',
+      'startup expo',
+      'hackathon',
+      'networking',
+    ],
     openGraph: {
       title: title as string,
       description,
       siteName: SITE.name,
       type: 'website',
       locale: 'en_IN',
+      url: SITE.url,
     },
     twitter: {
       card: 'summary_large_image',
@@ -28,6 +47,9 @@ export function createMetadata(overrides: Partial<Metadata> = {}): Metadata {
     robots: {
       index: true,
       follow: true,
+    },
+    alternates: {
+      canonical: SITE.url,
     },
     ...overrides,
   };

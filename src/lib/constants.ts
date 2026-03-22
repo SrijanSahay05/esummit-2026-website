@@ -6,7 +6,7 @@ export const SITE = {
   date: 'April 2026',
   venue: 'BITS Pilani, Pilani Campus',
   organizer: 'PIEDS',
-  url: 'https://esummit.bitspilani.ac.in', // placeholder
+  url: 'https://esummit.bitspilani.ac.in',
 } as const;
 
 export const STATS = [
@@ -46,3 +46,28 @@ export const BREAKPOINTS = {
   xl: 1280,
   '2xl': 1536,
 } as const;
+
+// Scroll-driven breakpoint fractions
+export const VIDEO_FREEZE_TIME = 12; // seconds — frame to hold during radial
+
+export const BP = {
+  TITLE_END: 0,
+  CLOCK_START: 0,
+  CLOCK_END: 0.17,
+  NPC_START: 0.17,
+  NPC_END: 0.3,
+  GEM_START: 0.48,
+  GEM_END: 0.65,
+  // 0.65→0.85 = video scrub 12s→20.56s (no overlay)
+  TIMELINE_START: 0.85,
+  TIMELINE_END: 1.0,
+} as const;
+
+export const EVENT_DATE = new Date('2026-04-10T09:00:00+05:30');
+
+export const NAV_ITEMS = [
+  { label: '▶ START', target: 0.0 },
+  { label: '🗼 THE CLOCK TOWER', target: 0.17 },
+  { label: '💎 THE ROTUNDA', target: 0.48 },
+  { label: '🗺 TIMELINE', target: 0.85 },
+] as const;
