@@ -5,9 +5,11 @@ import {
   orbitronFont,
   bungeeFont,
   blackOpsFont,
+  vt323Font,
 } from '@/lib/fonts';
 import { createMetadata, viewport as viewportConfig } from '@/lib/metadata';
 import { SITE } from '@/lib/constants';
+import CloudTransitionProvider from '@/components/CloudTransitionProvider';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = createMetadata();
@@ -50,14 +52,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${pixelFont.variable} ${bodyFont.variable} ${orbitronFont.variable} ${bungeeFont.variable} ${blackOpsFont.variable}`}
+      className={`${pixelFont.variable} ${bodyFont.variable} ${orbitronFont.variable} ${bungeeFont.variable} ${blackOpsFont.variable} ${vt323Font.variable}`}
     >
       <body>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {children}
+        <CloudTransitionProvider>
+          {children}
+        </CloudTransitionProvider>
       </body>
     </html>
   );

@@ -63,8 +63,6 @@ export const EVENT_DATE = new Date('2026-04-10T09:00:00+05:30');
 export const VIDEO_BREAKPOINT_START = 11.00;
 export const VIDEO_BREAKPOINT_END = 13.80;
 
-/** URL where the esummit-nextjs world app is running */
-export const WORLD_APP_URL = 'http://localhost:3001';
 
 export const NAV_ITEMS = [
   { label: '▶ START', target: 0.0 },

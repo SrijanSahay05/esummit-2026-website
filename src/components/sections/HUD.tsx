@@ -55,7 +55,7 @@ export default function HUD({ scrollFraction }: HUDProps) {
     <div id="hud" className="visible">
       <div className="hud-top-right">
         <img
-          src="/images/logo/esummit-logo.png"
+          src="/images/E-Summit_Logo_new.svg"
           alt="E-Summit 2026"
           className="hud-logo"
         />

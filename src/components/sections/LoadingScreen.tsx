@@ -9,7 +9,7 @@ export default function LoadingScreen({ progress, hidden }: LoadingScreenProps) 
   return (
     <div id="loading-screen" className={hidden ? 'hidden' : ''}>
       <img
-        src="/images/logo/esummit-logo.png"
+        src="/images/E-Summit_Logo_new.svg"
         alt="E-Summit 2026"
         className="logo"
       />

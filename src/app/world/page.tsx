@@ -1,41 +1,42 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import CloudTransition, {
-  type CloudTransitionHandle,
-} from '@/components/CloudTransition';
-import { WORLD_APP_URL } from '@/lib/constants';
+import { useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import { useCloudTransition } from '@/components/CloudTransitionProvider';
+
+const WorldPageClient = dynamic(() => import('@/components/world/WorldPageClient'), {
+  ssr: false,
+});
 
 export default function WorldPage() {
-  const cloudRef = useRef<CloudTransitionHandle>(null);
+  const cloudRef = useCloudTransition();
+  const router = useRouter();
 
-  // On mount, play the cloud uncover animation for a seamless entry
+  // Uncover the shared cloud transition on mount
+  // (clouds are already covering from the main page's cover() call)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      cloudRef.current?.uncover();
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+    // Only uncover if we arrived via client-side navigation (clouds are covering)
+    const cameFromMain = sessionStorage.getItem('navigatingToWorld');
+    if (cameFromMain) {
+      sessionStorage.removeItem('navigatingToWorld');
+      const timer = setTimeout(() => {
+        cloudRef.current?.uncover();
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [cloudRef]);
 
-  const handleReturn = () => {
-    cloudRef.current?.play(() => {
-      window.location.href = '/?restore=1';
+  const handleReturn = useCallback(() => {
+    sessionStorage.setItem('restoreFromWorld', '1');
+    cloudRef.current?.cover(() => {
+      router.push('/');
     });
-  };
+  }, [cloudRef, router]);
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', background: '#000' }}>
-      <iframe
-        src={WORLD_APP_URL}
-        style={{
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          display: 'block',
-        }}
-        allow="autoplay; fullscreen"
-        title="E-Summit World"
-      />
+    <div style={{ position: 'relative', width: '100%', minHeight: '100vh', background: '#000' }}>
+      <WorldPageClient />
 
       <button
         onClick={handleReturn}
@@ -61,8 +62,6 @@ export default function WorldPage() {
       >
         Get Back to BITS
       </button>
-
-      <CloudTransition ref={cloudRef} />
     </div>
   );
 }

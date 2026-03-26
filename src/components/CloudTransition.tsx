@@ -14,6 +14,8 @@ import {
 export interface CloudTransitionHandle {
   /** Cover the screen with clouds, fire onCovered when fully hidden, then exit and fire onDone. */
   play: (onCovered?: () => void, onDone?: () => void) => void;
+  /** Cover the screen and stay covered. Calls onCovered when fully hidden. Use uncover() later to reveal. */
+  cover: (onCovered?: () => void) => void;
   /** Start with clouds already covering, then animate them off. */
   uncover: (onDone?: () => void) => void;
 }
@@ -269,6 +271,46 @@ const CloudTransition = forwardRef<CloudTransitionHandle>((_, ref) => {
     [buildAndInsert, clearClouds],
   );
 
+  /* ── cover(): animate clouds on and stay covered ── */
+  const cover = useCallback(
+    (onCovered?: () => void) => {
+      if (isRunning.current) return;
+      isRunning.current = true;
+
+      const curtain = curtainRef.current;
+      const sky = skyRef.current;
+      if (!curtain || !sky) return;
+
+      curtain.style.pointerEvents = 'all';
+      sky.style.opacity = '1';
+      sky.style.transition = 'none';
+
+      const cloudEls = buildAndInsert();
+      const IN_DUR = 700;
+      const IN_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+      cloudEls.forEach((wrap) => {
+        const ms = parseFloat(wrap.dataset.delay!) * 1000;
+        setTimeout(() => {
+          wrap.style.transition = `transform ${IN_DUR}ms ${IN_EASE}, opacity 90ms ease`;
+          wrap.style.transform = 'translateX(0)';
+          wrap.style.opacity = '1';
+        }, ms);
+      });
+
+      const maxInDelay =
+        Math.max(...cloudEls.map((w) => parseFloat(w.dataset.delay!))) * 1000;
+      const coverDone = maxInDelay + IN_DUR + 60;
+
+      setTimeout(() => {
+        // Stay covered — isRunning stays true so uncover() must reset it
+        isRunning.current = false;
+        if (typeof onCovered === 'function') onCovered();
+      }, coverDone);
+    },
+    [buildAndInsert],
+  );
+
   /* ── uncover(): start covered, animate clouds off ── */
   const uncover = useCallback(
     (onDone?: () => void) => {
@@ -283,12 +325,16 @@ const CloudTransition = forwardRef<CloudTransitionHandle>((_, ref) => {
       sky.style.opacity = '1';
       sky.style.transition = 'none';
 
-      // Build clouds already in "covered" position
-      const cloudEls = buildAndInsert();
-      cloudEls.forEach((wrap) => {
-        wrap.style.transform = 'translateX(0)';
-        wrap.style.opacity = '1';
-      });
+      // Reuse existing clouds if present (from a prior cover() call),
+      // otherwise build fresh ones in covered position
+      let cloudEls = Array.from(curtain.querySelectorAll('.cloud-wrap')) as HTMLDivElement[];
+      if (cloudEls.length === 0) {
+        cloudEls = buildAndInsert();
+        cloudEls.forEach((wrap) => {
+          wrap.style.transform = 'translateX(0)';
+          wrap.style.opacity = '1';
+        });
+      }
 
       // Small delay then animate off
       const OUT_DUR = 580;
@@ -326,7 +372,7 @@ const CloudTransition = forwardRef<CloudTransitionHandle>((_, ref) => {
     [buildAndInsert, clearClouds],
   );
 
-  useImperativeHandle(ref, () => ({ play, uncover }), [play, uncover]);
+  useImperativeHandle(ref, () => ({ play, cover, uncover }), [play, cover, uncover]);
 
   // Cleanup on unmount
   useEffect(() => () => clearClouds(), [clearClouds]);

@@ -1,10 +1,11 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useScrollFraction } from '@/hooks/useScrollFraction';
 import { useVideoScrub } from '@/hooks/useVideoScrub';
 import { useIOSViewportFix } from '@/hooks/useIOSViewportFix';
+import { useCloudTransition } from '@/components/CloudTransitionProvider';
 import { BP } from '@/lib/constants';
 
 import LoadingScreen from '@/components/sections/LoadingScreen';
@@ -18,14 +19,11 @@ import InfoMenu from '@/components/sections/InfoMenu';
 import ScrollContainer from '@/components/sections/ScrollContainer';
 import ScrollDebugHUD from '@/components/sections/ScrollDebugHUD';
 import DetailedPage from '@/components/sections/DetailedPage';
-import CloudTransition, {
-  type CloudTransitionHandle,
-} from '@/components/CloudTransition';
 
 export default function PageClient() {
-  const searchParams = useSearchParams();
+  const router = useRouter();
+  const cloudRef = useCloudTransition();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const cloudRef = useRef<CloudTransitionHandle>(null);
   const scrollFraction = useScrollFraction();
   const { videoReady, bpStartFrac, bpEndFrac } = useVideoScrub(
     videoRef,
@@ -38,8 +36,6 @@ export default function PageClient() {
   const [loadProgress, setLoadProgress] = useState(0);
   const loadStartRef = useRef(Date.now());
   const loadDoneRef = useRef(false);
-
-  // Dialog zone visibility (no scroll freeze)
 
   // Loading simulation
   useEffect(() => {
@@ -92,23 +88,23 @@ export default function PageClient() {
 
   // Restore scroll position when returning from /world
   useEffect(() => {
-    if (searchParams.get('restore') === '1' && bpEndFrac > 0) {
+    const shouldRestore = sessionStorage.getItem('restoreFromWorld');
+    if (shouldRestore && bpEndFrac > 0) {
+      sessionStorage.removeItem('restoreFromWorld');
       setReturnedFromWorld(true);
       welcomeBackShownRef.current = false;
 
       const scrollH =
         document.documentElement.scrollHeight - window.innerHeight;
-      // Scroll to the middle of the dialog zone so it's clearly visible
       const midFrac = (bpStartFrac + bpEndFrac) / 2;
       window.scrollTo(0, midFrac * scrollH);
 
-      setTimeout(() => {
+      // Uncover the shared cloud transition (already covering from /world page)
+      requestAnimationFrame(() => {
         cloudRef.current?.uncover();
-      }, 100);
-
-      window.history.replaceState({}, '', '/');
+      });
     }
-  }, [searchParams, bpStartFrac, bpEndFrac]);
+  }, [bpStartFrac, bpEndFrac, cloudRef]);
 
   // Dialog visible when scroll is in the dialog zone
   const showDialog =
@@ -122,7 +118,6 @@ export default function PageClient() {
       welcomeBackShownRef.current = true;
     }
     if (returnedFromWorld && welcomeBackShownRef.current && !showDialog) {
-      // Delay reset so the welcome-back dialog fully closes before variant switches
       const t = setTimeout(() => {
         setReturnedFromWorld(false);
         welcomeBackShownRef.current = false;
@@ -133,10 +128,11 @@ export default function PageClient() {
 
   // "Enter the World" click handler
   const handleEnterWorld = useCallback(() => {
-    cloudRef.current?.play(() => {
-      window.location.href = '/world';
+    cloudRef.current?.cover(() => {
+      sessionStorage.setItem('navigatingToWorld', '1');
+      router.push('/world');
     });
-  }, []);
+  }, [cloudRef, router]);
 
   // Timeline visibility
   const timelineVisible = scrollFraction >= BP.TIMELINE_START;
@@ -186,8 +182,6 @@ export default function PageClient() {
       )}
 
       <ScrollContainer />
-
-      <CloudTransition ref={cloudRef} />
 
       {process.env.NODE_ENV === 'development' && (
         <ScrollDebugHUD scrollFraction={scrollFraction} videoRef={videoRef} />
