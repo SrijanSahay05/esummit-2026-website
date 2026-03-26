@@ -48,26 +48,25 @@ export const BREAKPOINTS = {
 } as const;
 
 // Scroll-driven breakpoint fractions
-export const VIDEO_FREEZE_TIME = 12; // seconds — frame to hold during radial
-
 export const BP = {
   TITLE_END: 0,
   CLOCK_START: 0,
-  CLOCK_END: 0.17,
-  NPC_START: 0.17,
-  NPC_END: 0.3,
-  GEM_START: 0.48,
-  GEM_END: 0.65,
-  // 0.65→0.85 = video scrub 12s→20.56s (no overlay)
+  CLOCK_END: 0.20,
+  // 0.20→0.85 = video scrub continues
   TIMELINE_START: 0.85,
   TIMELINE_END: 1.0,
 } as const;
 
 export const EVENT_DATE = new Date('2026-04-10T09:00:00+05:30');
 
+/** Video time range (seconds) for the "Enter the World" dialog zone */
+export const VIDEO_BREAKPOINT_START = 11.00;
+export const VIDEO_BREAKPOINT_END = 13.80;
+
+/** URL where the esummit-nextjs world app is running */
+export const WORLD_APP_URL = 'http://localhost:3001';
+
 export const NAV_ITEMS = [
   { label: '▶ START', target: 0.0 },
-  { label: '🗼 THE CLOCK TOWER', target: 0.17 },
-  { label: '💎 THE ROTUNDA', target: 0.48 },
   { label: '🗺 TIMELINE', target: 0.85 },
 ] as const;

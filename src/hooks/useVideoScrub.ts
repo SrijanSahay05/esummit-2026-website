@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, type RefObject } from 'react';
-import { BP, VIDEO_FREEZE_TIME } from '@/lib/constants';
+import { BP, VIDEO_BREAKPOINT_START, VIDEO_BREAKPOINT_END } from '@/lib/constants';
 
 /**
  * Manages scroll-synced video scrubbing with mobile unlock and seek-stuck recovery.
@@ -13,8 +13,10 @@ import { BP, VIDEO_FREEZE_TIME } from '@/lib/constants';
 export function useVideoScrub(
   videoRef: RefObject<HTMLVideoElement | null>,
   scrollFraction: number,
-): { videoReady: boolean } {
+): { videoReady: boolean; bpStartFrac: number; bpEndFrac: number } {
   const [videoReady, setVideoReady] = useState(false);
+  const [bpStartFrac, setBpStartFrac] = useState(0);
+  const [bpEndFrac, setBpEndFrac] = useState(0);
   const videoUnlocked = useRef(false);
   const videoSeeking = useRef(false);
   const seekStart = useRef<number | null>(null);
@@ -69,6 +71,17 @@ export function useVideoScrub(
       }
     };
 
+    // Compute breakpoint fractions once duration is known
+    const onDurationChange = () => {
+      if (video.duration && video.duration > 0) {
+        const d = video.duration;
+        setBpStartFrac(Math.min((VIDEO_BREAKPOINT_START / d) * BP.TIMELINE_START, BP.TIMELINE_START));
+        setBpEndFrac(Math.min((VIDEO_BREAKPOINT_END / d) * BP.TIMELINE_START, BP.TIMELINE_START));
+      }
+    };
+    if (video.duration && video.duration > 0) onDurationChange();
+    video.addEventListener('durationchange', onDurationChange);
+
     video.addEventListener('canplaythrough', onCanPlayThrough, { once: true });
     video.addEventListener('loadeddata', onLoadedData, { once: true });
     video.addEventListener('loadedmetadata', onLoadedMetadata, { once: true });
@@ -100,6 +113,7 @@ export function useVideoScrub(
     });
 
     return () => {
+      video.removeEventListener('durationchange', onDurationChange);
       video.removeEventListener('canplaythrough', onCanPlayThrough);
       video.removeEventListener('loadeddata', onLoadedData);
       video.removeEventListener('loadedmetadata', onLoadedMetadata);
@@ -132,18 +146,10 @@ export function useVideoScrub(
 
     let targetTime: number;
 
-    if (scrollFraction <= BP.GEM_START) {
-      // Before radial: scroll 0 -> GEM_START maps to video 0 -> VIDEO_FREEZE_TIME
-      const t = scrollFraction / BP.GEM_START;
-      targetTime = t * VIDEO_FREEZE_TIME;
-    } else if (scrollFraction <= BP.GEM_END) {
-      // During radial: freeze at VIDEO_FREEZE_TIME
-      targetTime = VIDEO_FREEZE_TIME;
-    } else if (scrollFraction <= BP.TIMELINE_START) {
-      // After radial, before timeline: scroll GEM_END -> TIMELINE_START maps to video 12s -> end
-      const t =
-        (scrollFraction - BP.GEM_END) / (BP.TIMELINE_START - BP.GEM_END);
-      targetTime = VIDEO_FREEZE_TIME + t * (video.duration - VIDEO_FREEZE_TIME);
+    if (scrollFraction <= BP.TIMELINE_START) {
+      // Scroll 0 -> TIMELINE_START maps to video 0 -> end
+      const t = scrollFraction / BP.TIMELINE_START;
+      targetTime = t * video.duration;
     } else {
       // During timeline: freeze at end of video
       targetTime = video.duration;
@@ -154,5 +160,5 @@ export function useVideoScrub(
     }
   }, [videoRef, scrollFraction, videoReady]);
 
-  return { videoReady };
+  return { videoReady, bpStartFrac, bpEndFrac };
 }
