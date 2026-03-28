@@ -4,6 +4,7 @@ import {
   Orbitron,
   Bungee,
   Black_Ops_One,
+  VT323,
 } from 'next/font/google';
 
 export const pixelFont = Press_Start_2P({
@@ -38,4 +39,11 @@ export const blackOpsFont = Black_Ops_One({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-blackops',
+});
+
+export const vt323Font = VT323({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-vt323',
 });

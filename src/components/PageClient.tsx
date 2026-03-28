@@ -1,29 +1,34 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useScrollFraction } from '@/hooks/useScrollFraction';
 import { useVideoScrub } from '@/hooks/useVideoScrub';
 import { useIOSViewportFix } from '@/hooks/useIOSViewportFix';
+import { useCloudTransition } from '@/components/CloudTransitionProvider';
 import { BP } from '@/lib/constants';
 
 import LoadingScreen from '@/components/sections/LoadingScreen';
 import BackgroundVideo from '@/components/sections/BackgroundVideo';
 import CRTOverlay from '@/components/sections/CRTOverlay';
 import HUD from '@/components/sections/HUD';
-import BP1BlurOverlay from '@/components/sections/BP1BlurOverlay';
-import NPCCharacter from '@/components/sections/NPCCharacter';
-import BP1DialogBox from '@/components/sections/BP1DialogBox';
-import BP2RadialHUD from '@/components/sections/BP2RadialHUD';
 import TimelineSection from '@/components/sections/TimelineSection';
 import InfoPinsSection from '@/components/sections/InfoPinsSection';
 import InfoCardOverlay from '@/components/sections/InfoCardOverlay';
 import InfoMenu from '@/components/sections/InfoMenu';
 import ScrollContainer from '@/components/sections/ScrollContainer';
+import ScrollDebugHUD from '@/components/sections/ScrollDebugHUD';
+import DetailedPage from '@/components/sections/DetailedPage';
 
 export default function PageClient() {
+  const router = useRouter();
+  const cloudRef = useCloudTransition();
   const videoRef = useRef<HTMLVideoElement>(null);
   const scrollFraction = useScrollFraction();
-  const { videoReady } = useVideoScrub(videoRef, scrollFraction);
+  const { videoReady, bpStartFrac, bpEndFrac } = useVideoScrub(
+    videoRef,
+    scrollFraction,
+  );
   useIOSViewportFix();
 
   // Loading state
@@ -63,7 +68,6 @@ export default function PageClient() {
 
     raf = requestAnimationFrame(tick);
 
-    // Fallback timeout
     const fallback = setTimeout(() => {
       if (!loadDoneRef.current) {
         loadDoneRef.current = true;
@@ -78,62 +82,89 @@ export default function PageClient() {
     };
   }, [videoReady]);
 
-  // BP1: NPC and dialog visibility
-  const npcVisible = scrollFraction >= BP.NPC_START;
-  const inDialogRange =
-    scrollFraction >= BP.NPC_START && scrollFraction <= BP.NPC_END;
-  const companionMode =
-    npcVisible && !inDialogRange && scrollFraction > BP.NPC_END;
+  // Track whether user just returned from /world
+  const [returnedFromWorld, setReturnedFromWorld] = useState(false);
+  const welcomeBackShownRef = useRef(false);
 
-  // BP1: blur overlay
-  const blurVisible = inDialogRange;
+  // Restore scroll position when returning from /world
+  useEffect(() => {
+    const shouldRestore = sessionStorage.getItem('restoreFromWorld');
+    if (shouldRestore && bpEndFrac > 0) {
+      sessionStorage.removeItem('restoreFromWorld');
+      setReturnedFromWorld(true);
+      welcomeBackShownRef.current = false;
 
-  // BP2 visibility
-  const bp2Visible =
-    scrollFraction >= BP.GEM_START && scrollFraction <= BP.GEM_END;
+      const scrollH =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const midFrac = (bpStartFrac + bpEndFrac) / 2;
+      window.scrollTo(0, midFrac * scrollH);
+
+      // Uncover the shared cloud transition (already covering from /world page)
+      requestAnimationFrame(() => {
+        cloudRef.current?.uncover();
+      });
+    }
+  }, [bpStartFrac, bpEndFrac, cloudRef]);
+
+  // Dialog visible when scroll is in the dialog zone
+  const showDialog =
+    bpStartFrac > 0 &&
+    scrollFraction >= bpStartFrac &&
+    scrollFraction <= bpEndFrac;
+
+  // Track that welcome-back dialog was actually displayed, then reset once user scrolls away
+  useEffect(() => {
+    if (returnedFromWorld && showDialog) {
+      welcomeBackShownRef.current = true;
+    }
+    if (returnedFromWorld && welcomeBackShownRef.current && !showDialog) {
+      const t = setTimeout(() => {
+        setReturnedFromWorld(false);
+        welcomeBackShownRef.current = false;
+      }, 600);
+      return () => clearTimeout(t);
+    }
+  }, [returnedFromWorld, showDialog]);
+
+  // "Enter the World" click handler
+  const handleEnterWorld = useCallback(() => {
+    cloudRef.current?.cover(() => {
+      sessionStorage.setItem('navigatingToWorld', '1');
+      router.push('/world');
+    });
+  }, [cloudRef, router]);
 
   // Timeline visibility
   const timelineVisible = scrollFraction >= BP.TIMELINE_START;
-
-  // Info pins visibility
   const infoPinsVisible = scrollFraction >= 0.95;
   const infoMenuVisible = scrollFraction >= BP.TIMELINE_START;
 
   // Info card state
   const [infoKey, setInfoKey] = useState<string | null>(null);
 
-  const handleBeginQuest = useCallback(() => {
-    const scrollH =
-      document.documentElement.scrollHeight - window.innerHeight;
-    const target = BP.GEM_START * scrollH;
-    window.scrollTo({ top: target, behavior: 'smooth' });
-  }, []);
-
   return (
     <>
       <LoadingScreen progress={loadProgress} hidden={loadingHidden} />
-      <BackgroundVideo ref={videoRef} />
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 0,
+          overflow: 'hidden',
+        }}
+      >
+        <BackgroundVideo ref={videoRef} />
+      </div>
       <CRTOverlay />
 
       {loadingHidden && (
         <>
           <HUD scrollFraction={scrollFraction} />
 
-          <BP1BlurOverlay visible={blurVisible} />
-          <NPCCharacter
-            visible={npcVisible}
-            companion={companionMode}
-            scrollFraction={scrollFraction}
-          />
-          <BP1DialogBox
-            visible={inDialogRange}
-            scrollFraction={scrollFraction}
-            onBeginQuest={handleBeginQuest}
-          />
-
-          <BP2RadialHUD
-            visible={bp2Visible}
-            scrollFraction={scrollFraction}
+          <DetailedPage
+            visible={showDialog}
+            onEnter={handleEnterWorld}
+            variant={returnedFromWorld ? 'welcome-back' : 'quest'}
           />
 
           <TimelineSection
@@ -141,22 +172,20 @@ export default function PageClient() {
             scrollFraction={scrollFraction}
           />
 
-          <InfoPinsSection
-            visible={infoPinsVisible}
-            onPinClick={setInfoKey}
-          />
+          <InfoPinsSection visible={infoPinsVisible} onPinClick={setInfoKey} />
           <InfoCardOverlay
             infoKey={infoKey}
             onClose={() => setInfoKey(null)}
           />
-          <InfoMenu
-            visible={infoMenuVisible}
-            onSelect={setInfoKey}
-          />
+          <InfoMenu visible={infoMenuVisible} onSelect={setInfoKey} />
         </>
       )}
 
       <ScrollContainer />
+
+      {process.env.NODE_ENV === 'development' && (
+        <ScrollDebugHUD scrollFraction={scrollFraction} videoRef={videoRef} />
+      )}
     </>
   );
 }
