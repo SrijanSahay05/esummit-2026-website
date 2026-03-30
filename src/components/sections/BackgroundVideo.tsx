@@ -10,7 +10,7 @@ const BackgroundVideo = React.forwardRef<HTMLVideoElement>(
         ref={ref}
         muted
         playsInline
-        preload="auto"
+        preload="metadata"
         style={{
           position: 'fixed',
           inset: 0,
@@ -20,6 +20,7 @@ const BackgroundVideo = React.forwardRef<HTMLVideoElement>(
           zIndex: 0,
         }}
       >
+        <source src="/videos/esummit_video_website.webm" type="video/webm" />
         <source src="/videos/esummit_video_website.mp4" type="video/mp4" />
       </video>
     );

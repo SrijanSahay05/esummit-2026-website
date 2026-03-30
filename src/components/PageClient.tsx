@@ -180,6 +180,33 @@ export default function PageClient() {
             scrollFraction={scrollFraction}
           />
 
+          {timelineVisible && (
+            <button
+              onClick={handleEnterWorld}
+              style={{
+                position: 'fixed',
+                bottom: '2rem',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 10,
+                padding: '14px 36px',
+                fontFamily: 'var(--font-pixel), monospace',
+                fontSize: 'clamp(0.6rem, 1.2vw, 0.85rem)',
+                fontWeight: 700,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                border: '2px solid rgba(255,255,255,0.3)',
+                borderRadius: 4,
+                background: 'linear-gradient(135deg, #E87A20, #C43030)',
+                color: '#fff',
+                cursor: 'pointer',
+                boxShadow: '0 0 20px rgba(232,122,32,0.4)',
+              }}
+            >
+              Explore the World
+            </button>
+          )}
+
         </>
       )}
 

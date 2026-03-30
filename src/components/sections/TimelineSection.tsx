@@ -316,7 +316,6 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ visible, scrollFracti
           >
             <div className="tl-pin-icon">{evt.icon}</div>
             <div className="tl-pin-name">{evt.name}</div>
-            <div className="tl-pin-date">{evt.date}</div>
           </div>
         );
       })}
@@ -338,7 +337,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ visible, scrollFracti
             )}
             <div className="tl-card-desc">{cardEvent.desc}</div>
             <div className="tl-card-meta">
-              {cardEvent.category} {'\u2022'} {cardEvent.date}
+              {cardEvent.category}
             </div>
           </>
         )}
