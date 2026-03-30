@@ -52,19 +52,20 @@ export default function ContactSection() {
             </a>
             <div className="social-links">
               {[
-                { label: 'IG', ariaLabel: 'Instagram' },
-                { label: 'TW', ariaLabel: 'Twitter' },
-                { label: 'LI', ariaLabel: 'LinkedIn' },
-                { label: 'EM', ariaLabel: 'Email' },
-              ].map(({ label, ariaLabel }) => (
+                { label: 'IG', ariaLabel: 'Instagram', href: 'https://www.instagram.com/pieds_bitspilani/' },
+                { label: 'TW', ariaLabel: 'Twitter', href: 'https://x.com/BITS_PIEDS' },
+                { label: 'LI', ariaLabel: 'LinkedIn', href: 'https://www.linkedin.com/company/pilani-innovation-entrepreneurship-development-society-pieds-bits-pilani/posts/?feedView=all' },
+                { label: 'EM', ariaLabel: 'Email', href: 'mailto:ignite@pieds-bitspilani.org' },
+              ].map(({ label, ariaLabel, href }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={href}
                   className="social-link"
                   aria-label={ariaLabel}
+                  target={label !== 'EM' ? '_blank' : undefined}
+                  rel={label !== 'EM' ? 'noopener noreferrer' : undefined}
                   onMouseEnter={playHoverSound}
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     playClickSound();
                   }}
                 >

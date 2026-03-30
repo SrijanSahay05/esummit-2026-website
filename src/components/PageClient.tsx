@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useScrollFraction } from '@/hooks/useScrollFraction';
 import { useVideoScrub } from '@/hooks/useVideoScrub';
 import { useIOSViewportFix } from '@/hooks/useIOSViewportFix';
+import { useAutoScroll } from '@/hooks/useAutoScroll';
 import { useCloudTransition } from '@/components/CloudTransitionProvider';
 import { BP } from '@/lib/constants';
 
@@ -13,11 +14,7 @@ import BackgroundVideo from '@/components/sections/BackgroundVideo';
 import CRTOverlay from '@/components/sections/CRTOverlay';
 import HUD from '@/components/sections/HUD';
 import TimelineSection from '@/components/sections/TimelineSection';
-import InfoPinsSection from '@/components/sections/InfoPinsSection';
-import InfoCardOverlay from '@/components/sections/InfoCardOverlay';
-import InfoMenu from '@/components/sections/InfoMenu';
 import ScrollContainer from '@/components/sections/ScrollContainer';
-import ScrollDebugHUD from '@/components/sections/ScrollDebugHUD';
 import DetailedPage from '@/components/sections/DetailedPage';
 
 export default function PageClient() {
@@ -30,6 +27,11 @@ export default function PageClient() {
     scrollFraction,
   );
   useIOSViewportFix();
+
+  // Mobile detection (stable across renders — only computed once)
+  const [isMobile] = useState(
+    () => typeof window !== 'undefined' && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent),
+  );
 
   // Loading state
   const [loadingHidden, setLoadingHidden] = useState(false);
@@ -126,6 +128,17 @@ export default function PageClient() {
     }
   }, [returnedFromWorld, showDialog]);
 
+  // Mobile auto-scroll: first visit → dialog zone, after return → timeline
+  useAutoScroll({
+    isMobile,
+    loadingHidden,
+    bpStartFrac,
+    returnedFromWorld,
+    showDialog,
+    timelineStartFrac: BP.TIMELINE_START,
+    videoRef,
+  });
+
   // "Enter the World" click handler
   const handleEnterWorld = useCallback(() => {
     cloudRef.current?.cover(() => {
@@ -136,11 +149,6 @@ export default function PageClient() {
 
   // Timeline visibility
   const timelineVisible = scrollFraction >= BP.TIMELINE_START;
-  const infoPinsVisible = scrollFraction >= 0.95;
-  const infoMenuVisible = scrollFraction >= BP.TIMELINE_START;
-
-  // Info card state
-  const [infoKey, setInfoKey] = useState<string | null>(null);
 
   return (
     <>
@@ -172,20 +180,11 @@ export default function PageClient() {
             scrollFraction={scrollFraction}
           />
 
-          <InfoPinsSection visible={infoPinsVisible} onPinClick={setInfoKey} />
-          <InfoCardOverlay
-            infoKey={infoKey}
-            onClose={() => setInfoKey(null)}
-          />
-          <InfoMenu visible={infoMenuVisible} onSelect={setInfoKey} />
         </>
       )}
 
       <ScrollContainer />
 
-      {process.env.NODE_ENV === 'development' && (
-        <ScrollDebugHUD scrollFraction={scrollFraction} videoRef={videoRef} />
-      )}
     </>
   );
 }

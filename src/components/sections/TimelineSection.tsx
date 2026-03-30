@@ -333,6 +333,9 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ visible, scrollFracti
             <div className="tl-card-name" style={{ color: cardEvent.color }}>
               {cardEvent.icon} {cardEvent.name}
             </div>
+            {cardEvent.prize && (
+              <div className="tl-card-prize">{'\u{1F3C6}'} Prize: {cardEvent.prize}</div>
+            )}
             <div className="tl-card-desc">{cardEvent.desc}</div>
             <div className="tl-card-meta">
               {cardEvent.category} {'\u2022'} {cardEvent.date}
