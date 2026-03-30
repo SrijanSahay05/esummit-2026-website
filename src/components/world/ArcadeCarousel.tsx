@@ -89,17 +89,19 @@ export default function ArcadeCarousel() {
                 {Array.from({ length: 5 }, (_, j) => j < event.difficulty ? '\u2605' : '\u2606').join('')}
               </div>
               <a
-                href="#"
+                href={event.link || '#'}
                 className="arcade-register-btn"
+                target={event.link ? '_blank' : undefined}
+                rel={event.link ? 'noopener noreferrer' : undefined}
                 onClick={(e) => {
-                  e.preventDefault();
+                  if (!event.link) e.preventDefault();
                   const rect = e.currentTarget.getBoundingClientRect();
                   showScorePopup(rect.left + rect.width / 2, rect.top, 'QUEST ACCEPTED!');
                   playClickSound();
                 }}
                 onMouseEnter={playHoverSound}
               >
-                {'\u25B6'} START GAME
+                {'\u25B6'} {event.link ? 'REGISTER' : 'COMING SOON'}
               </a>
             </div>
           ))}

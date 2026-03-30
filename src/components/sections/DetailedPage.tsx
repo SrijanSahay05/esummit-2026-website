@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useTilt3D } from '@/hooks/useTilt3D';
 
 const QUEST_TEXT =
   "Adventurer! You stand at the gates of a world full of possibilities... " +
@@ -25,6 +26,14 @@ interface DetailedPageProps {
 export default function DetailedPage({ visible, onEnter, variant = 'quest' }: DetailedPageProps) {
   const isWelcomeBack = variant === 'welcome-back';
   const dialogText = isWelcomeBack ? WELCOME_BACK_TEXT : QUEST_TEXT;
+
+  const { cardRef, specularRef } = useTilt3D<HTMLDivElement>({
+    maxRotateX: 8,
+    maxRotateY: 12,
+    hoverScale: 1.02,
+    springFactor: 0.1,
+    perspective: 1400,
+  });
 
   const [displayed, setDisplayed] = useState('');
   const [typingDone, setTypingDone] = useState(false);
@@ -104,8 +113,9 @@ export default function DetailedPage({ visible, onEnter, variant = 'quest' }: De
         transition: 'background 0.4s ease',
       }}
     >
-      {/* Dialog box */}
+      {/* Dialog box with 3D tilt */}
       <div
+        ref={cardRef}
         onClick={handleSkip}
         style={{
           pointerEvents: 'all',
@@ -121,11 +131,26 @@ export default function DetailedPage({ visible, onEnter, variant = 'quest' }: De
           boxShadow:
             '0 0 0 3px #000, 0 0 60px rgba(245,200,66,0.3), 0 0 120px rgba(245,200,66,0.1), inset 0 0 60px rgba(245,200,66,0.05)',
           imageRendering: 'pixelated',
+          transformStyle: 'preserve-3d',
+          willChange: 'transform',
           opacity: showBox ? 1 : 0,
-          transform: showBox ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.92)',
-          transition: 'opacity 0.4s ease, transform 0.4s ease',
+          visibility: showBox ? 'visible' : 'hidden',
+          transition: 'opacity 0.4s ease, visibility 0.4s ease',
         }}
       >
+        {/* Specular reflection overlay */}
+        <div
+          ref={specularRef}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 6,
+            opacity: 0,
+            pointerEvents: 'none',
+            zIndex: 10,
+            transition: 'opacity 0.3s ease',
+          }}
+        />
         {/* Corner decorations */}
         {['top-left', 'top-right', 'bottom-left', 'bottom-right'].map((pos) => {
           const isTop = pos.includes('top');

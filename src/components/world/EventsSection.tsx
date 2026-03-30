@@ -121,16 +121,18 @@ export default function EventsSection() {
                   />
                 </div>
                 <a
-                  href="#"
+                  href={event.link || '#'}
                   className="retro-card-btn"
+                  target={event.link ? '_blank' : undefined}
+                  rel={event.link ? 'noopener noreferrer' : undefined}
                   onClick={(e) => {
-                    e.preventDefault();
+                    if (!event.link) e.preventDefault();
                     const rect = e.currentTarget.getBoundingClientRect();
                     showScorePopup(rect.left + rect.width / 2, rect.top, 'QUEST ACCEPTED!');
                   }}
                   onMouseEnter={playHoverSound}
                 >
-                  {'\u25B6'} START GAME
+                  {'\u25B6'} {event.link ? 'REGISTER' : 'COMING SOON'}
                 </a>
               </div>
             </div>

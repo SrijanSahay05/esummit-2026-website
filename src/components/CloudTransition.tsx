@@ -184,7 +184,12 @@ const CloudTransition = forwardRef<CloudTransitionHandle>((_, ref) => {
       const sky = skyRef.current;
       const bar = barRef.current;
       const text = textRef.current;
-      if (!curtain || !sky) return;
+      if (!curtain || !sky) {
+        isRunning.current = false;
+        if (typeof onCovered === 'function') onCovered();
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
 
       curtain.style.pointerEvents = 'all';
       sky.style.opacity = '1';
@@ -279,7 +284,11 @@ const CloudTransition = forwardRef<CloudTransitionHandle>((_, ref) => {
 
       const curtain = curtainRef.current;
       const sky = skyRef.current;
-      if (!curtain || !sky) return;
+      if (!curtain || !sky) {
+        isRunning.current = false;
+        if (typeof onCovered === 'function') onCovered();
+        return;
+      }
 
       curtain.style.pointerEvents = 'all';
       sky.style.opacity = '1';
@@ -288,6 +297,14 @@ const CloudTransition = forwardRef<CloudTransitionHandle>((_, ref) => {
       const cloudEls = buildAndInsert();
       const IN_DUR = 700;
       const IN_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+      if (cloudEls.length === 0) {
+        isRunning.current = false;
+        setTimeout(() => {
+          if (typeof onCovered === 'function') onCovered();
+        }, IN_DUR);
+        return;
+      }
 
       cloudEls.forEach((wrap) => {
         const ms = parseFloat(wrap.dataset.delay!) * 1000;
@@ -303,7 +320,6 @@ const CloudTransition = forwardRef<CloudTransitionHandle>((_, ref) => {
       const coverDone = maxInDelay + IN_DUR + 60;
 
       setTimeout(() => {
-        // Stay covered — isRunning stays true so uncover() must reset it
         isRunning.current = false;
         if (typeof onCovered === 'function') onCovered();
       }, coverDone);
@@ -319,7 +335,11 @@ const CloudTransition = forwardRef<CloudTransitionHandle>((_, ref) => {
 
       const curtain = curtainRef.current;
       const sky = skyRef.current;
-      if (!curtain || !sky) return;
+      if (!curtain || !sky) {
+        isRunning.current = false;
+        if (typeof onDone === 'function') onDone();
+        return;
+      }
 
       curtain.style.pointerEvents = 'all';
       sky.style.opacity = '1';

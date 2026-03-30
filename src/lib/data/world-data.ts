@@ -44,6 +44,7 @@ export const WORLD_EVENTS = [
     difficulty: 3,
     barPercent: 60,
     legendary: false,
+    link: 'https://forms.gle/T9gQ2yYLxqL1dhMb7',
   },
   {
     icon: '\u{1F9E9}',
@@ -55,6 +56,7 @@ export const WORLD_EVENTS = [
     difficulty: 4,
     barPercent: 80,
     legendary: false,
+    link: 'https://docs.google.com/forms/d/e/1FAIpQLSdRWpjb8mxyIiBwPOX8K9NLQbZA5bhc6lfKOjBVoWbvpd4fNA/viewform',
   },
   {
     icon: '\u{1F680}',
@@ -66,6 +68,7 @@ export const WORLD_EVENTS = [
     difficulty: 5,
     barPercent: 100,
     legendary: true,
+    link: '',
   },
   {
     icon: '\u{1F3AA}',
@@ -77,6 +80,7 @@ export const WORLD_EVENTS = [
     difficulty: 2,
     barPercent: 35,
     legendary: false,
+    link: 'https://forms.gle/3D3svMtTo76Md6NZ9',
   },
 ] as const;
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import '@/styles/world.css';
 import { useParallax } from '@/hooks/useParallax';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
@@ -15,6 +15,7 @@ import PacDivider from './PacDivider';
 import AboutSection from './AboutSection';
 import PipeDivider from './PipeDivider';
 import BitsSection from './BitsSection';
+import PacmanShowcase from './PacmanShowcase';
 import GhostParade from './GhostParade';
 import EventsSection from './EventsSection';
 import PiedsSection from './PiedsSection';
@@ -23,10 +24,19 @@ import AudioToggle from './AudioToggle';
 import CursorTrail from './CursorTrail';
 import KonamiEasterEgg from './KonamiEasterEgg';
 
-export default function WorldPageClient() {
+interface WorldPageClientProps {
+  onReady?: () => void;
+}
+
+export default function WorldPageClient({ onReady }: WorldPageClientProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   useParallax(containerRef);
   useScrollReveal(containerRef);
+
+  // Signal parent that the component has mounted and is ready
+  useEffect(() => {
+    if (onReady) onReady();
+  }, [onReady]);
 
   return (
     <div className="world-page" ref={containerRef}>
@@ -41,6 +51,7 @@ export default function WorldPageClient() {
       <AboutSection />
       <PipeDivider />
       <BitsSection />
+      <PacmanShowcase />
       <GhostParade />
       <EventsSection />
       <PiedsSection />
