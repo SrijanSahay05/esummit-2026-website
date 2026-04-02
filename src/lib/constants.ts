@@ -47,24 +47,34 @@ export const BREAKPOINTS = {
   '2xl': 1536,
 } as const;
 
-// Scroll-driven breakpoint fractions
+// ── Frame sequence constants ────────────────────────────────────────
+export const TOTAL_FRAMES = 493;
+
+/** Frame-based UI triggers (0-indexed, range 0–492) */
+export const DIALOG_START_FRAME = 265;
+export const DIALOG_END_FRAME = 325;
+
+/**
+ * Virtual scroll progress range:
+ *   0 → 1.0  =  frame sequence (frames 0–492)
+ *   1.0 → 2.0  =  timeline section animation
+ */
+export const MAX_PROGRESS = 2.0;
+
+// Scroll-driven breakpoint fractions (extended range 0–2)
 export const BP = {
   TITLE_END: 0,
   CLOCK_START: 0,
   CLOCK_END: 0.20,
-  // 0.20→0.85 = video scrub continues
-  TIMELINE_START: 0.85,
-  TIMELINE_END: 1.0,
+  // 0.20→1.0 = frame sequence continues
+  FRAME_END: 1.0,
+  TIMELINE_START: 1.0,
+  TIMELINE_END: 2.0,
 } as const;
 
 export const EVENT_DATE = new Date('2026-04-10T09:00:00+05:30');
 
-/** Video time range (seconds) for the "Enter the World" dialog zone */
-export const VIDEO_BREAKPOINT_START = 11.00;
-export const VIDEO_BREAKPOINT_END = 13.80;
-
-
 export const NAV_ITEMS = [
   { label: '▶ START', target: 0.0 },
-  { label: '🗺 TIMELINE', target: 0.85 },
+  { label: '🗺 TIMELINE', target: 1.0 },
 ] as const;

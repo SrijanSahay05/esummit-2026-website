@@ -54,6 +54,11 @@ export default function RootLayout({
       lang="en"
       className={`${pixelFont.variable} ${bodyFont.variable} ${orbitronFont.variable} ${bungeeFont.variable} ${blackOpsFont.variable} ${vt323Font.variable}`}
     >
+      <head>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="mobile-web-app-capable" content="yes" />
+      </head>
       <body>
         <script
           type="application/ld+json"
