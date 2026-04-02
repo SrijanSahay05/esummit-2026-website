@@ -23,6 +23,7 @@ import ContactSection from './ContactSection';
 import AudioToggle from './AudioToggle';
 import CursorTrail from './CursorTrail';
 import KonamiEasterEgg from './KonamiEasterEgg';
+import TeamPanel from './TeamPanel';
 
 interface WorldPageClientProps {
   onReady?: () => void;
@@ -46,6 +47,7 @@ export default function WorldPageClient({ onReady }: WorldPageClientProps) {
       <PixelMoon />
       <NebulaBackground />
       <BubbleNav />
+      <TeamPanel />
       <HeroSection />
       <PacDivider />
       <AboutSection />
