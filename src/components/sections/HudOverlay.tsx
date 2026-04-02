@@ -1,6 +1,8 @@
 'use client';
 
-import Link from 'next/link';
+import { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCloudTransition } from '@/components/CloudTransitionProvider';
 
 /**
  * HudOverlay — Cinematic retro HUD frame around the viewport.
@@ -10,6 +12,16 @@ import Link from 'next/link';
  * z-index sits above canvas (0) but below interactive overlays (10+).
  */
 export default function HudOverlay() {
+  const router = useRouter();
+  const cloudRef = useCloudTransition();
+
+  const handleRegister = useCallback(() => {
+    cloudRef.current?.cover(() => {
+      sessionStorage.setItem('navigatingToWorld', '1');
+      router.push('/world');
+    });
+  }, [cloudRef, router]);
+
   return (
     <div className="hud-overlay-wrap">
       {/* Vignette — radial gradient darkening the edges */}
@@ -46,10 +58,10 @@ export default function HudOverlay() {
       <div className="hud-edge hud-edge--right" />
 
       {/* ── Register button — flush bottom-right ─────────────────── */}
-      <Link href="/world" className="hud-register-btn">
+      <button onClick={handleRegister} className="hud-register-btn">
         <span className="hud-register-arrow">{'\u25B6'}</span>
         <span className="hud-register-text">REGISTER</span>
-      </Link>
+      </button>
     </div>
   );
 }

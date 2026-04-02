@@ -1447,7 +1447,7 @@ body {
 #timeline-section {
   position: fixed;
   inset: 0;
-  z-index: 2;
+  z-index: 6;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -1575,17 +1575,25 @@ body {
   margin-top: 2px;
 }
 
+.tl-card-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
 .tl-card {
-  position: absolute;
-  z-index: 5;
+  position: relative;
   background: rgba(8, 6, 20, 0.96);
   border: 2px solid var(--gold);
   padding: 26px 30px;
   width: min(420px, 88vw);
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: auto;
+  touch-action: auto;
   box-shadow: 0 0 25px rgba(255, 215, 0, 0.2), 0 0 50px rgba(255, 215, 0, 0.08), inset 0 1px 0 rgba(255, 215, 0, 0.2);
 }
 
@@ -1599,7 +1607,6 @@ body {
 
 .tl-card.open {
   opacity: 1;
-  transform: scale(1);
 }
 
 .tl-card-name {
@@ -1642,15 +1649,24 @@ body {
 }
 
 .tl-card-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
   font-family: var(--font-orbitron), 'Orbitron', sans-serif;
-  font-size: 9px;
+  font-size: 18px;
   font-weight: 700;
-  background: none;
+  background: rgba(0, 0, 0, 0.6);
   border: 2px solid var(--gold);
   color: var(--gold);
-  padding: 8px 18px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  letter-spacing: 1px;
+  border-radius: 4px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition: background 0.2s, box-shadow 0.2s;
   text-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
   box-shadow: 0 0 8px rgba(255, 215, 0, 0.1);
@@ -2137,15 +2153,13 @@ body {
   .quest-title { font-size: 12px; }
   .quest-desc { font-size: 10px; line-height: 2; }
 
+  .tl-card-backdrop {
+    align-items: flex-end;
+    padding-bottom: 20px;
+  }
   .tl-card {
     width: 90vw;
-    left: 5vw !important;
-    right: auto !important;
-    bottom: 10px !important;
-    top: auto !important;
-    transform: none !important;
   }
-  .tl-card.open { transform: none !important; }
   .tl-pin-icon { font-size: 20px; }
   .tl-pin-name { font-size: 7px; white-space: normal; max-width: 80px; line-height: 1.4; }
   .tl-pin-date { font-size: 6px; }
