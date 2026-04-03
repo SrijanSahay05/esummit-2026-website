@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import anime from 'animejs';
 import {
   tlEvents,
@@ -180,35 +181,8 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ visible, scrollFracti
   }, [visible, scrollFraction]);
 
   const openCard = useCallback(
-    (idx: number, pinEl: HTMLDivElement) => {
-      const mobile = isMobileTimeline();
-      let style: React.CSSProperties = {};
-
-      if (mobile) {
-        // Mobile: card fixed at bottom center (CSS handles positioning)
-        style = {};
-      } else {
-        const rect = pinEl.getBoundingClientRect();
-        const isRight = rect.left > window.innerWidth / 2;
-        const isBottom = rect.top > window.innerHeight / 2;
-
-        style.top = isBottom ? `${rect.top - 10}px` : `${rect.bottom + 10}px`;
-        if (isBottom) {
-          style.transform = 'translateY(-100%) scale(1)';
-        } else {
-          style.transform = 'scale(1)';
-        }
-
-        if (isRight) {
-          style.right = `${window.innerWidth - rect.left + 16}px`;
-          style.left = 'auto';
-        } else {
-          style.left = `${rect.right + 16}px`;
-          style.right = 'auto';
-        }
-      }
-
-      setCard({ open: true, idx, style });
+    (idx: number) => {
+      setCard({ open: true, idx, style: {} });
 
       if (!reducedMotion.current && cardRef.current) {
         anime({
@@ -219,7 +193,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ visible, scrollFracti
         });
       }
     },
-    [isMobileTimeline]
+    []
   );
 
   const closeCard = useCallback(() => {
@@ -241,6 +215,7 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ visible, scrollFracti
   const cardEvent = card.open && card.idx >= 0 ? tlEvents[card.idx] : null;
 
   return (
+    <>
     <div
       id="timeline-section"
       ref={sectionRef}
@@ -308,50 +283,63 @@ const TimelineSection: React.FC<TimelineSectionProps> = ({ visible, scrollFracti
             data-index={i}
             data-t={evt.t}
             style={{ left: pos.left, top: pos.top }}
-            onClick={(e) => {
+            onClick={() => {
               if (!evt.tba) {
-                openCard(i, e.currentTarget as HTMLDivElement);
+                openCard(i);
               }
             }}
           >
             <div className="tl-pin-icon">{evt.icon}</div>
             <div className="tl-pin-name">{evt.name}</div>
+            <div className="tl-pin-date">{evt.date}</div>
           </div>
         );
       })}
 
-      {/* Side info card */}
-      <div
-        id="tl-card"
-        ref={cardRef}
-        className={`tl-card ${card.open ? 'open' : ''}`}
-        style={card.style}
-      >
-        {cardEvent && (
-          <>
-            <div className="tl-card-name" style={{ color: cardEvent.color }}>
-              {cardEvent.icon} {cardEvent.name}
-            </div>
-            {cardEvent.prize && (
-              <div className="tl-card-prize">{'\u{1F3C6}'} Prize: {cardEvent.prize}</div>
-            )}
-            <div className="tl-card-desc">{cardEvent.desc}</div>
-            <div className="tl-card-meta">
-              {cardEvent.category}
-            </div>
-          </>
-        )}
-        <button
-          className="tl-card-close"
-          onClick={(e) => {
-            e.stopPropagation();
-            closeCard();
-          }}
-        >
-          CLOSE
-        </button>
-      </div>
     </div>
+
+    {/* Portal: card renders at document.body level — above all other UI */}
+    {typeof document !== 'undefined' && card.open && cardEvent && createPortal(
+      <div
+        className="tl-card-backdrop"
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          closeCard();
+        }}
+      >
+        <div
+          id="tl-card"
+          ref={cardRef}
+          className="tl-card open"
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <button
+            className="tl-card-close"
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              closeCard();
+            }}
+            aria-label="Close"
+          >
+            ✕
+          </button>
+          <div className="tl-card-name" style={{ color: cardEvent.color }}>
+            {cardEvent.icon} {cardEvent.name}
+          </div>
+          {cardEvent.prize && (
+            <div className="tl-card-prize">{'\u{1F3C6}'} Prize: {cardEvent.prize}</div>
+          )}
+          <div className="tl-card-desc">{cardEvent.desc}</div>
+          <div className="tl-card-meta">
+            {cardEvent.category} {'\u2022'} {cardEvent.date}
+          </div>
+        </div>
+      </div>,
+      document.body,
+    )}
+    </>
   );
 };
 

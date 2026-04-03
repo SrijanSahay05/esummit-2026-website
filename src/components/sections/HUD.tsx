@@ -1,18 +1,18 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useCountdown } from '@/hooks/useCountdown';
 import { EVENT_DATE, NAV_ITEMS } from '@/lib/constants';
 
 interface HUDProps {
   scrollFraction: number;
+  onNavClick?: (target: number) => void;
 }
 
-export default function HUD({ scrollFraction }: HUDProps) {
+export default function HUD({ scrollFraction, onNavClick }: HUDProps) {
   const countdown = useCountdown(EVENT_DATE);
   const [navOpen, setNavOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
-  const toggleRef = useRef<HTMLButtonElement>(null);
 
   // Determine active nav button index
   const activeIdx = (() => {
@@ -30,11 +30,10 @@ export default function HUD({ scrollFraction }: HUDProps) {
   const scrollHintOpacity = scrollFraction > 0.02 ? 0 : 1;
 
   // Handle nav button click
-  const handleNavClick = useCallback((target: number) => {
-    const scrollH = document.documentElement.scrollHeight - window.innerHeight;
-    window.scrollTo({ top: target * scrollH, behavior: 'smooth' });
+  function handleClick(target: number) {
+    onNavClick?.(target);
     setNavOpen(false);
-  }, []);
+  }
 
   // Close mobile nav on outside click
   useEffect(() => {
@@ -83,7 +82,7 @@ export default function HUD({ scrollFraction }: HUDProps) {
             key={item.target}
             className={`hud-nav-btn${i === activeIdx ? ' active' : ''}`}
             data-target={item.target.toFixed(2)}
-            onClick={() => handleNavClick(item.target)}
+            onClick={() => handleClick(item.target)}
           >
             {item.label}
           </button>
@@ -91,7 +90,6 @@ export default function HUD({ scrollFraction }: HUDProps) {
         <button
           className={`hud-nav-toggle${navOpen ? ' open' : ''}`}
           id="hud-nav-toggle"
-          ref={toggleRef}
           aria-label="Toggle navigation"
           onClick={(e) => {
             e.stopPropagation();
