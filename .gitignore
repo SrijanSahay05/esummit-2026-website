@@ -34,8 +34,6 @@ Thumbs.db
 *.swp
 *.swo
 
-# Generated frame sequences (run scripts/extract-frames.js to regenerate)
-public/videos/frames/
 
 # Vercel
 .vercel
