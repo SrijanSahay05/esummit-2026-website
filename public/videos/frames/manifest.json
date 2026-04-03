@@ -1,0 +1,14 @@
+{
+  "fps": 24,
+  "desktop": {
+    "count": 493,
+    "width": 1920,
+    "height": 1080
+  },
+  "mobile": {
+    "count": 493,
+    "width": 960,
+    "height": 540
+  },
+  "pattern": "frame_%04d.webp"
+}
