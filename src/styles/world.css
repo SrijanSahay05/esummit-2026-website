@@ -3113,4 +3113,269 @@
         font-size: 0.75rem;
     }
 }
+
+/* ===== TEAM PANEL ===== */
+
+/* Fixed anchor — top-left, mirrors BubbleNav's right:1.2rem spacing */
+.world-page .tp-container {
+    position: fixed;
+    top: 1.2rem;
+    left: 1.2rem;
+    z-index: 1001;
+}
+
+/* ── Trigger bubble (matches BubbleNav .bubble-link style) ── */
+.world-page .tp-trigger {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(10, 8, 30, 0.85);
+    border: 2px solid var(--border-light);
+    color: var(--text);
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.2, 0, 0.3, 1);
+    backdrop-filter: blur(8px);
+    box-shadow:
+        2px 2px 0 rgba(0, 0, 0, 0.5),
+        0 0 12px rgba(67, 152, 205, 0.05);
+    animation: bubble-float 4s ease-in-out 0.6s infinite;
+}
+
+.world-page .tp-container:hover .tp-trigger {
+    border-color: var(--primary);
+    background: rgba(232, 200, 64, 0.12);
+    box-shadow:
+        2px 2px 0 rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(232, 200, 64, 0.2);
+    animation: none;
+}
+
+/* ── Panel shell ── */
+.world-page .tp-panel {
+    position: absolute;
+    top: 0;
+    left: 56px;           /* 48px trigger + 8px gap */
+    width: 340px;
+    max-height: 500px;
+    background: rgba(8, 6, 22, 0.97);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Hidden state */
+    opacity: 0;
+    transform: translateX(-8px) scale(0.98);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow:
+        4px 4px 0 rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(67, 152, 205, 0.08);
+}
+
+.world-page .tp-panel.tp-open {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    pointer-events: auto;
+}
+
+/* Override card-corner defaults inside the panel (panel has its own border) */
+.world-page .tp-panel .card-corner {
+    color: var(--border-light);
+    font-size: 0.65rem;
+}
+
+/* ── Panel header ── */
+.world-page .tp-header {
+    padding: 0.85rem 1rem 0.6rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+/* Compact badge variant just for the team panel */
+.world-page .tp-badge {
+    font-size: 0.42rem !important;
+    padding: 0.3rem 0.9rem !important;
+    margin-bottom: 0 !important;
+    letter-spacing: 1.5px;
+}
+
+/* ── Tabs ── */
+.world-page .tp-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.world-page .tp-tab {
+    flex: 1;
+    padding: 0.55rem 0.3rem 0.45rem;
+    background: transparent;
+    border: none;
+    border-right: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.42rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    line-height: 1.4;
+}
+
+.world-page .tp-tab:last-child {
+    border-right: none;
+}
+
+.world-page .tp-tab:hover {
+    background: rgba(67, 152, 205, 0.07);
+    color: var(--text);
+}
+
+.world-page .tp-tab.tp-tab-active {
+    color: var(--primary);
+    background: rgba(232, 200, 64, 0.07);
+    box-shadow: inset 0 -2px 0 var(--primary);
+}
+
+.world-page .tp-count {
+    font-size: 0.5rem;
+    opacity: 0.6;
+}
+
+/* ── Scrollable member list ── */
+.world-page .tp-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.45rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-light) transparent;
+}
+
+.world-page .tp-list::-webkit-scrollbar { width: 3px; }
+.world-page .tp-list::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 2px;
+}
+
+/* ── Member card ── */
+.world-page .tp-card {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 0.6rem;
+    background: rgba(20, 14, 45, 0.55);
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.world-page .tp-card:hover {
+    border-color: var(--border-light);
+    background: rgba(30, 22, 58, 0.75);
+}
+
+/* ── Avatar ── */
+.world-page .tp-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.52rem;
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 700;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    image-rendering: auto;
+}
+
+.world-page .tp-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: auto;
+}
+
+/* ── Member info ── */
+.world-page .tp-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.world-page .tp-name {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.42rem;
+    color: var(--text);
+    line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 1px;
+}
+
+.world-page .tp-role {
+    font-family: var(--font-vt323), 'VT323', monospace;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.2;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Social links ── */
+.world-page .tp-links {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.world-page .tp-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: border-color 0.18s, color 0.18s, background 0.18s;
+    flex-shrink: 0;
+}
+
+.world-page .tp-social:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(232, 200, 64, 0.1);
+}
+
+/* ── Mobile: shrink panel to fit narrow screens ── */
+@media (max-width: 480px) {
+    .world-page .tp-trigger {
+        width: 36px;
+        height: 36px;
+    }
+
+    .world-page .tp-panel {
+        left: 44px;
+        width: calc(100vw - 60px);
+        max-width: 300px;
+        max-height: 420px;
+    }
+}
+
 /* ===== END WORLD.CSS ===== */

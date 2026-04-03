@@ -1,11 +1,13 @@
 export const SITE = {
-  name: 'E-Summit 2026 | BITS Pilani',
+  name: 'E-Summit 2026 | Apogee × BITS Pilani',
+  shortName: 'E-Summit 2026',
   tagline: 'Where ideas meet execution. Where Founders meet the Future.',
   cta: 'Be there. Build something real.',
   legacy: 'Enabling Innovation Since 2013',
   date: 'April 2026',
   venue: 'BITS Pilani, Pilani Campus',
   organizer: 'PIEDS',
+  organizerFullName: 'Pilani Innovation & Entrepreneurship Development Society',
   url: 'https://esummit.bitspilani.ac.in',
 } as const;
 
